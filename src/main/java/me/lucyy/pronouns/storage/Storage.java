@@ -2,12 +2,13 @@ package me.lucyy.pronouns.storage;
 
 import me.lucyy.pronouns.PronounSet;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface Storage {
-    String[] GetPronouns(UUID uuid);
-    void SetPronouns(UUID uuid, PronounSet set);
-    void AddPronouns(UUID uuid, PronounSet set);
-    void RemovePronouns(UUID uuid, PronounSet set);
+    void AddPronounSet(PronounSet pronounSet);
+    List<String> GetPronouns(UUID uuid);
+    List<String> GetAllPronouns();
+    void SetPronouns(UUID uuid, List<PronounSet> set);
     void ClearPronouns(UUID uuid);
 }

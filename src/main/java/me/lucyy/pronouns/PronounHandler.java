@@ -5,41 +5,59 @@ import me.lucyy.pronouns.storage.Storage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class PronounHandler {
 
-    private static Storage storage;
+    private Storage storage;
 
-    private static HashMap<String, PronounSet> SetIndex = new HashMap<>();
+    private HashMap<String, PronounSet> SetIndex = new HashMap<>();
 
-    static {
-        SetIndex.put("he/him", new PronounSet("he", "him",
-                "he's", "his", "his", "himself"));
-        SetIndex.put("she/her", new PronounSet("she", "her",
-                "she's", "her", "hers", "herself"));
-        SetIndex.put("they/them", new PronounSet("they", "them",
-                "they're", "their", "theirs", "themself"));
+    public PronounHandler(Storage storage) {
+        this.storage = storage;
+        for (String set : storage.GetAllPronouns()) FromString(set, false);
     }
 
     public void SetStorage(Storage storage) {
         this.storage = storage;
     }
 
-    public static List<String> GetAllPronouns() {
+    public void SetUserPronouns(UUID uuid, List<PronounSet> set) {
+        storage.SetPronouns(uuid, set);
+    }
+
+    public List<String> GetAllPronouns() {
         List<String> pronouns = new ArrayList<>();
         SetIndex.values().forEach(set -> pronouns.add(set.toString()));
         return pronouns;
     }
 
-    public static PronounSet fromString(String set) {
+    public PronounSet[] GetUserPronouns(UUID uuid) {
+        List<PronounSet> pronounsList = new ArrayList<>();
+        for (String pronoun : storage.GetPronouns(uuid)) {
+            pronounsList.add(FromString(pronoun));
+        }
+        return pronounsList.toArray(new PronounSet[0]);
+    }
+
+    public PronounSet FromString(String set) {
+        return FromString(set, true);
+    }
+
+    public PronounSet FromString(String set, boolean addToStorage) throws IllegalArgumentException {
         String[] pronouns = set.split("/");
-        if ( pronouns.length < 2 ) throw new IllegalArgumentException(set);
-        if ( SetIndex.containsKey(pronouns[0] + "/" + pronouns[1]) ) return SetIndex.get(set);
+        if (pronouns.length != 1 && pronouns.length != 6) throw new IllegalArgumentException(set);
+        if (SetIndex.containsKey(pronouns[0].toLowerCase())) return SetIndex.get(pronouns[0].toLowerCase());
 
-        if ( pronouns.length != 6 ) throw new IllegalArgumentException(set);
+        if (pronouns.length != 6) throw new IllegalArgumentException(set);
 
-        PronounSet newSet = new PronounSet(pronouns[0], pronouns[1], pronouns[2], pronouns[3], pronouns[4], pronouns[5]);
-        SetIndex.putIfAbsent(newSet.getName(), newSet);
-        return SetIndex.get(set);
+        PronounSet newSet = new PronounSet(pronouns[0].replace(" ", ""),
+                pronouns[1].replace(" ", ""),
+                pronouns[2].replace(" ", ""),
+                pronouns[3].replace(" ", ""),
+                pronouns[4].replace(" ", ""),
+                pronouns[5].replace(" ", ""));
+        if (SetIndex.putIfAbsent(newSet.Subjective, newSet) == null && addToStorage) storage.AddPronounSet(newSet);
+        return SetIndex.get(newSet.Subjective);
     }
 }

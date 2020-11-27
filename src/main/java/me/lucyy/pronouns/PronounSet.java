@@ -12,13 +12,27 @@ public class PronounSet {
         return input.substring(0,1).toUpperCase() + input.substring(1).toLowerCase();
     }
 
+    public static String FriendlyPrintSet(PronounSet[] pronounSets) {
+        StringBuilder out = new StringBuilder();
+        for (PronounSet set : pronounSets) {
+            out.append(set.getName());
+            out.append(", ");
+        }
+        String msg = out.toString();
+        try {
+            return msg.substring(0, msg.length() - 2);
+        } catch (StringIndexOutOfBoundsException e) {
+            return "Unset";
+        }
+    }
+
     public PronounSet(String subjective, String objective, String progressive, String possessiveAdjectival, String possessivePronoun, String reflexive) {
-        Subjective = subjective;
-        Objective = objective;
-        Progressive = progressive;
-        PossessiveAdjectival = possessiveAdjectival;
-        PossessivePronoun = possessivePronoun;
-        Reflexive = reflexive;
+        Subjective = subjective.toLowerCase();
+        Objective = objective.toLowerCase();
+        Progressive = progressive.toLowerCase();
+        PossessiveAdjectival = possessiveAdjectival.toLowerCase();
+        PossessivePronoun = possessivePronoun.toLowerCase();
+        Reflexive = reflexive.toLowerCase();
     }
 
     public String getName() {
