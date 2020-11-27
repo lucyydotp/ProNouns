@@ -47,7 +47,8 @@ public class GetPronounsSubcommand implements Subcommand {
             return true;
         }
 
-        sender.sendMessage(ConfigHandler.GetPrefix() + target.getDisplayName() + "'s pronouns are " + PronounSet.FriendlyPrintSet(pl.getPronounHandler().GetUserPronouns(target.getUniqueId())));
+        sender.sendMessage(ConfigHandler.GetPrefix() + target.getDisplayName() + "'s pronouns are " +
+                ConfigHandler.GetAccentColour() + PronounSet.FriendlyPrintSet(pl.getPronounHandler().GetUserPronouns(target.getUniqueId())));
 
         return true;
     }

@@ -31,7 +31,7 @@ public class ListPronounsSubcommand implements Subcommand {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String[] args) {
-        sender.sendMessage(ConfigHandler.GetPrefix() + "--- All Predefined Pronoun Sets ---");
+        sender.sendMessage(ConfigHandler.GetPrefix() + "All Predefined Pronoun Sets:");
         for (String set : pl.getPronounHandler().GetAllPronouns()) sender.sendMessage(set);
         return true;
     }

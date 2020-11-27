@@ -10,9 +10,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 public class PronounsCommand implements CommandExecutor {
 
@@ -28,6 +26,13 @@ public class PronounsCommand implements CommandExecutor {
         register(new GetPronounsSubcommand(pl));
         register(new SetPronounsSubcommand(pl));
         register(new ListPronounsSubcommand(pl));
+        register(new PreviewSubcommand(pl));
+
+        pl.getCommand("pronouns").setTabCompleter(new PronounsTabCompleter(this));
+    }
+
+    public List<String> getSubcommands() {
+        return new ArrayList<>(subcommands.keySet());
     }
 
     private void showDefault(CommandSender sender) {

@@ -21,7 +21,7 @@ public class SetPronounsSubcommand implements Subcommand {
     }
 
     public String getDescription() {
-        return "Sets your pronouns";
+        return "Set your pronouns.";
     }
 
     public String getUsage() {
@@ -51,7 +51,7 @@ public class SetPronounsSubcommand implements Subcommand {
 
         pl.getPronounHandler().SetUserPronouns(((Player) sender).getUniqueId(), set);
         sender.sendMessage(ConfigHandler.GetPrefix() + "Set pronouns to " +
-                PronounSet.FriendlyPrintSet(set.toArray(new PronounSet[0])));
+                ConfigHandler.GetAccentColour() + PronounSet.FriendlyPrintSet(set.toArray(new PronounSet[0])));
         return true;
     }
 }
