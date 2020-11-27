@@ -19,6 +19,8 @@ public final class ProNouns extends JavaPlugin {
 
         handler = new PronounHandler(new YamlFileStorage(this));
 
+        ConfigHandler.SetPlugin(this);
+
         getCommand("pronouns").setExecutor(new PronounsCommand(this));
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)

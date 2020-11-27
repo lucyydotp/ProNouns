@@ -1,5 +1,6 @@
 package me.lucyy.pronouns.command;
 
+import me.lucyy.pronouns.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.PronounSet;
 import org.bukkit.command.CommandSender;
@@ -30,7 +31,7 @@ public class SetPronounsSubcommand implements Subcommand {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage("This command can only be run by a player");
+            sender.sendMessage(ConfigHandler.GetPrefix() + "This command can only be run by a player.");
             return true;
         }
 
@@ -41,14 +42,16 @@ public class SetPronounsSubcommand implements Subcommand {
             try {
                 set.add(pl.getPronounHandler().FromString(arg));
             } catch (IllegalArgumentException _ignored) {
-                sender.sendMessage("The pronoun '" + arg + "' hasn't been used by anyone on this server yet.\n" +
+                sender.sendMessage(ConfigHandler.GetPrefix() + "The pronoun '" + arg +
+                        "' hasn't been used by anyone on this server yet.\n" +
                         "To use it, just write it out like it's shown in /pronouns list.");
                 return true;
             }
         }
 
         pl.getPronounHandler().SetUserPronouns(((Player) sender).getUniqueId(), set);
-        sender.sendMessage("Set pronouns to " + PronounSet.FriendlyPrintSet(set.toArray(new PronounSet[0])));
+        sender.sendMessage(ConfigHandler.GetPrefix() + "Set pronouns to " +
+                PronounSet.FriendlyPrintSet(set.toArray(new PronounSet[0])));
         return true;
     }
 }

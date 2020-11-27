@@ -1,5 +1,6 @@
 package me.lucyy.pronouns.command;
 
+import me.lucyy.pronouns.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.PronounSet;
 import org.bukkit.Bukkit;
@@ -30,9 +31,13 @@ public class PronounsCommand implements CommandExecutor {
     }
 
     private void showDefault(CommandSender sender) {
-        sender.sendMessage("--- All Pronoun Commands ---");
+        sender.sendMessage(ConfigHandler.GetMainColour() + "All " +
+                        ConfigHandler.GetAccentColour() + "Pronouns " +
+                        ConfigHandler.GetMainColour() + "Commands");
         subcommands.forEach((String label, Subcommand cmd) ->
-                sender.sendMessage("/pronouns " + label + ": " + cmd.getDescription())
+                sender.sendMessage(ConfigHandler.GetMainColour() + "/pronouns "
+                        + ConfigHandler.GetAccentColour() + label
+                        + ConfigHandler.GetMainColour() + " - " + cmd.getDescription())
         );
     }
 
@@ -52,7 +57,7 @@ public class PronounsCommand implements CommandExecutor {
         }
 
         if (!subcommand.execute(sender, Arrays.copyOfRange(args, 1, args.length))) {
-            sender.sendMessage("Usage: " + subcommand.getUsage());
+            sender.sendMessage(ConfigHandler.GetPrefix() + "Usage: " + subcommand.getUsage());
         }
 
         return true;

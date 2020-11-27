@@ -1,5 +1,6 @@
 package me.lucyy.pronouns.command;
 
+import me.lucyy.pronouns.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.PronounSet;
 import org.bukkit.Bukkit;
@@ -30,7 +31,7 @@ public class ListPronounsSubcommand implements Subcommand {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull String[] args) {
-        sender.sendMessage("--- All Predefined Pronoun Sets ---");
+        sender.sendMessage(ConfigHandler.GetPrefix() + "--- All Predefined Pronoun Sets ---");
         for (String set : pl.getPronounHandler().GetAllPronouns()) sender.sendMessage(set);
         return true;
     }

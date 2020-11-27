@@ -1,5 +1,6 @@
 package me.lucyy.pronouns.command;
 
+import me.lucyy.pronouns.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.PronounSet;
 import org.bukkit.Bukkit;
@@ -33,7 +34,7 @@ public class GetPronounsSubcommand implements Subcommand {
         Player target;
 
         if (!(sender instanceof Player) && args.length == 0) {
-            sender.sendMessage("Please specify a username");
+            sender.sendMessage(ConfigHandler.GetPrefix() + "Please specify a username.");
             return true;
         }
 
@@ -42,11 +43,11 @@ public class GetPronounsSubcommand implements Subcommand {
         } else target = (Player)sender;
 
         if (target == null) {
-            sender.sendMessage("Player '" + args[0] + "' could not be found.");
+            sender.sendMessage(ConfigHandler.GetPrefix() + "Player '" + args[0] + "' could not be found.");
             return true;
         }
 
-        sender.sendMessage(target.getDisplayName() + "'s pronouns are " + PronounSet.FriendlyPrintSet(pl.getPronounHandler().GetUserPronouns(target.getUniqueId())));
+        sender.sendMessage(ConfigHandler.GetPrefix() + target.getDisplayName() + "'s pronouns are " + PronounSet.FriendlyPrintSet(pl.getPronounHandler().GetUserPronouns(target.getUniqueId())));
 
         return true;
     }
