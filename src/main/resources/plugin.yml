@@ -1,7 +1,7 @@
 name: ProNouns
 version: ${project.version}
 main: me.lucyy.pronouns.ProNouns
-api-version: 1.15
+api-version: 1.16
 softdepend: [ PlaceholderAPI ]
 authors: [ __lucyy ]
 description: Putting the "pro" in "pronouns".
