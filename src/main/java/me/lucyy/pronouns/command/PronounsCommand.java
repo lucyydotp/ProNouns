@@ -2,12 +2,10 @@ package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
-import me.lucyy.pronouns.PronounSet;
-import org.bukkit.Bukkit;
+import me.lucyy.pronouns.command.admin.SudoSubcommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -27,8 +25,18 @@ public class PronounsCommand implements CommandExecutor {
         register(new SetPronounsSubcommand(pl));
         register(new ListPronounsSubcommand(pl));
         register(new PreviewSubcommand(pl));
+        register(new SudoSubcommand(this));
 
         pl.getCommand("pronouns").setTabCompleter(new PronounsTabCompleter(this));
+    }
+    public List<Subcommand> getUserSubcommands(CommandSender sender) {
+        List<Subcommand> cmds = new ArrayList<>();
+        subcommands.forEach((String label, Subcommand cmd) -> {
+                    if (cmd.getPermission() == null ||  sender.hasPermission(cmd.getPermission()))
+                        cmds.add(cmd);
+                }
+        );
+        return cmds;
     }
 
     public List<String> getSubcommands() {
@@ -39,16 +47,21 @@ public class PronounsCommand implements CommandExecutor {
         sender.sendMessage(ConfigHandler.GetMainColour() + "All " +
                         ConfigHandler.GetAccentColour() + "Pronouns " +
                         ConfigHandler.GetMainColour() + "Commands");
-        subcommands.forEach((String label, Subcommand cmd) ->
+        getUserSubcommands(sender).forEach(cmd -> {
+            if (cmd.getPermission() == null ||  sender.hasPermission(cmd.getPermission()))
                 sender.sendMessage(ConfigHandler.GetMainColour() + "/pronouns "
-                        + ConfigHandler.GetAccentColour() + label
-                        + ConfigHandler.GetMainColour() + " - " + cmd.getDescription())
+                        + ConfigHandler.GetAccentColour() + cmd.getName()
+                        + ConfigHandler.GetMainColour() + " - " + cmd.getDescription());
+                }
         );
     }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        return onCommand(sender, sender, args);
+    }
 
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull CommandSender target, String[] args) {
         if (args.length < 1) {
             showDefault(sender);
             return true;
@@ -61,8 +74,12 @@ public class PronounsCommand implements CommandExecutor {
             return true;
         }
 
-        if (!subcommand.execute(sender, Arrays.copyOfRange(args, 1, args.length))) {
-            sender.sendMessage(ConfigHandler.GetPrefix() + "Usage: " + subcommand.getUsage());
+        if (subcommand.getPermission() == null || sender.hasPermission(subcommand.getPermission())) {
+            if (!subcommand.execute(sender, target, Arrays.copyOfRange(args, 1, args.length))) {
+                sender.sendMessage(ConfigHandler.GetPrefix() + "Usage: " + subcommand.getUsage());
+            }
+        } else {
+            sender.sendMessage(ConfigHandler.GetPrefix() + "No permission!");
         }
 
         return true;

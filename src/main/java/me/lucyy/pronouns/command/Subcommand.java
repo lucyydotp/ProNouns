@@ -8,5 +8,6 @@ public interface Subcommand {
     String getName();
     String getDescription();
     String getUsage();
-    boolean execute(@NotNull CommandSender sender, @NotNull String[] args);
+    String getPermission();
+    boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args);
 }

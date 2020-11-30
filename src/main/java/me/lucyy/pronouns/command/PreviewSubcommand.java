@@ -28,13 +28,16 @@ public class PreviewSubcommand implements Subcommand {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String[] args) {
+    public String getPermission() { return null; }
+
+    @Override
+    public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("This command can only be run by a player");
             return true;
         }
 
-        Player player = (Player)sender;
+        Player player = (Player)target;
 
         PronounSet[] set = pl.getPronounHandler().GetUserPronouns(player.getUniqueId());
         if (set.length == 0) {

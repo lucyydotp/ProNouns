@@ -29,8 +29,11 @@ public class SetPronounsSubcommand implements Subcommand {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String[] args) {
-        if (!(sender instanceof Player)) {
+    public String getPermission() { return null; }
+
+    @Override
+    public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
+        if (!(target instanceof Player)) {
             sender.sendMessage(ConfigHandler.GetPrefix() + "This command can only be run by a player.");
             return true;
         }
@@ -49,7 +52,7 @@ public class SetPronounsSubcommand implements Subcommand {
             }
         }
 
-        pl.getPronounHandler().SetUserPronouns(((Player) sender).getUniqueId(), set);
+        pl.getPronounHandler().SetUserPronouns(((Player) target).getUniqueId(), set);
         sender.sendMessage(ConfigHandler.GetPrefix() + "Set pronouns to " +
                 ConfigHandler.GetAccentColour() + PronounSet.FriendlyPrintSet(set.toArray(new PronounSet[0])));
         return true;

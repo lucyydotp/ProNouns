@@ -6,7 +6,7 @@
 
     <groupId>me.lucyy</groupId>
     <artifactId>ProNouns</artifactId>
-    <version>0.0.0-pre2</version>
+    <version>0.0.0-pre4</version>
     <packaging>jar</packaging>
 
     <name>ProNouns</name>
@@ -33,6 +33,14 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.4</version>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>me.lucyy.pronouns</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
                 <executions>
                     <execution>
                         <phase>package</phase>

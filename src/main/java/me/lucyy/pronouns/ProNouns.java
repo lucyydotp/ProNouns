@@ -8,14 +8,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class ProNouns extends JavaPlugin {
 
     private PronounHandler handler;
-
+    private Metrics metrics;
     public PronounHandler getPronounHandler() {
         return handler;
     }
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+        int pluginId = 9519;
+        metrics = new Metrics(this, pluginId);
 
         handler = new PronounHandler(new YamlFileStorage(this));
 

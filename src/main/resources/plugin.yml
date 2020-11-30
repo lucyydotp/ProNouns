@@ -10,3 +10,8 @@ website: https://lucyy.me
 commands:
   pronouns:
     usage: 'Usage: /pronouns'
+
+permissions:
+  pronouns.admin:
+    description: "Access to admin commands - run commands as other users"
+    default: op

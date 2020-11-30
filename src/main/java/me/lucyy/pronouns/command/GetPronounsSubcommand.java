@@ -30,8 +30,11 @@ public class GetPronounsSubcommand implements Subcommand {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull String[] args) {
-        Player target;
+    public String getPermission() { return null; }
+
+    @Override
+    public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
+        Player commandTarget;
 
         if (!(sender instanceof Player) && args.length == 0) {
             sender.sendMessage(ConfigHandler.GetPrefix() + "Please specify a username.");
@@ -39,16 +42,16 @@ public class GetPronounsSubcommand implements Subcommand {
         }
 
         if (args.length > 0) {
-            target = Bukkit.getPlayer(args[0]);
-        } else target = (Player)sender;
+            commandTarget = Bukkit.getPlayer(args[0]);
+        } else commandTarget = (Player)sender;
 
-        if (target == null) {
+        if (commandTarget == null) {
             sender.sendMessage(ConfigHandler.GetPrefix() + "Player '" + args[0] + "' could not be found.");
             return true;
         }
 
-        sender.sendMessage(ConfigHandler.GetPrefix() + target.getDisplayName() + "'s pronouns are " +
-                ConfigHandler.GetAccentColour() + PronounSet.FriendlyPrintSet(pl.getPronounHandler().GetUserPronouns(target.getUniqueId())));
+        sender.sendMessage(ConfigHandler.GetPrefix() + commandTarget.getDisplayName() + "'s pronouns are " +
+                ConfigHandler.GetAccentColour() + PronounSet.FriendlyPrintSet(pl.getPronounHandler().GetUserPronouns(commandTarget.getUniqueId())));
 
         return true;
     }
