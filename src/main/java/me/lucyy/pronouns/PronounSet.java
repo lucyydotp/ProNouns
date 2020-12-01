@@ -7,6 +7,7 @@ public class PronounSet {
     public String PossessiveAdjectival;
     public String PossessivePronoun;
     public String Reflexive;
+    public boolean IsPredefined;
 
     public static String Capitalise(String input) {
         return input.substring(0,1).toUpperCase() + input.substring(1).toLowerCase();
@@ -26,13 +27,25 @@ public class PronounSet {
         }
     }
 
-    public PronounSet(String subjective, String objective, String progressive, String possessiveAdjectival, String possessivePronoun, String reflexive) {
+    public PronounSet(String subjective, String objective, String progressive, String possessiveAdjectival,
+                      String possessivePronoun, String reflexive) {
+        this(subjective, objective, progressive, possessiveAdjectival, possessivePronoun, reflexive, false);
+    }
+
+    public PronounSet(String subjective,
+                      String objective,
+                      String progressive,
+                      String possessiveAdjectival,
+                      String possessivePronoun,
+                      String reflexive,
+                      boolean isPredefined) {
         Subjective = subjective.toLowerCase();
         Objective = objective.toLowerCase();
         Progressive = progressive.toLowerCase();
         PossessiveAdjectival = possessiveAdjectival.toLowerCase();
         PossessivePronoun = possessivePronoun.toLowerCase();
         Reflexive = reflexive.toLowerCase();
+        this.IsPredefined = isPredefined;
     }
 
     public String getName() {

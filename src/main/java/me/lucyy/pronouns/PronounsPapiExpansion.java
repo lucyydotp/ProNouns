@@ -60,6 +60,9 @@ public class PronounsPapiExpansion extends PlaceholderExpansion {
             case "pronouns":
                 feedback = mainPronouns.getName();
                 break;
+            case "all":
+                feedback = mainPronouns.toString();
+                break;
             case "objective":
                 feedback = mainPronouns.Objective;
                 break;

@@ -43,10 +43,11 @@ public class SetPronounsSubcommand implements Subcommand {
         ArrayList<PronounSet> set = new ArrayList<>();
         for (String arg: args) {
             try {
-                set.add(pl.getPronounHandler().FromString(arg));
+                PronounSet parsed = pl.getPronounHandler().FromString(arg);
+                set.add(parsed);
             } catch (IllegalArgumentException _ignored) {
                 sender.sendMessage(ConfigHandler.GetPrefix() + "The pronoun '" + arg +
-                        "' hasn't been used by anyone on this server yet.\n" +
+                        "' is unrecognised.\n" +
                         "To use it, just write it out like it's shown in /pronouns list.");
                 return true;
             }

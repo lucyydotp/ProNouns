@@ -1,5 +1,7 @@
 package me.lucyy.pronouns;
 
+import me.lucyy.pronouns.command.AnyPronounSet;
+import me.lucyy.pronouns.command.PronounsCommand;
 import me.lucyy.pronouns.storage.Storage;
 
 import java.util.ArrayList;
@@ -13,9 +15,15 @@ public class PronounHandler {
 
     private HashMap<String, PronounSet> SetIndex = new HashMap<>();
 
+    public void AddToIndex(PronounSet set) {
+        set.IsPredefined = true;
+        SetIndex.put(set.Subjective, set);
+    }
+
     public PronounHandler(Storage storage) {
         this.storage = storage;
-        for (String set : storage.GetAllPronouns()) FromString(set, false);
+        for (String set : storage.GetAllPronouns()) AddToIndex(FromString(set));
+        SetIndex.put("any", new AnyPronounSet(FromString("they")));
     }
 
     public void SetStorage(Storage storage) {
@@ -40,24 +48,23 @@ public class PronounHandler {
         return pronounsList.toArray(new PronounSet[0]);
     }
 
-    public PronounSet FromString(String set) {
-        return FromString(set, true);
-    }
 
-    public PronounSet FromString(String set, boolean addToStorage) throws IllegalArgumentException {
+
+    public PronounSet FromString(String set) throws IllegalArgumentException {
         String[] pronouns = set.split("/");
-        if (pronouns.length != 1 && pronouns.length != 6) throw new IllegalArgumentException(set);
-        if (SetIndex.containsKey(pronouns[0].toLowerCase())) return SetIndex.get(pronouns[0].toLowerCase());
+        if (pronouns.length > 6) throw new IllegalArgumentException(set);
+
+        PronounSet retrieved = SetIndex.getOrDefault(pronouns[0].toLowerCase(), null);
+
+        if (retrieved != null) return retrieved;
 
         if (pronouns.length != 6) throw new IllegalArgumentException(set);
 
-        PronounSet newSet = new PronounSet(pronouns[0].replace(" ", ""),
+        return new PronounSet(pronouns[0].replace(" ", ""),
                 pronouns[1].replace(" ", ""),
                 pronouns[2].replace(" ", ""),
                 pronouns[3].replace(" ", ""),
                 pronouns[4].replace(" ", ""),
                 pronouns[5].replace(" ", ""));
-        if (SetIndex.putIfAbsent(newSet.Subjective, newSet) == null && addToStorage) storage.AddPronounSet(newSet);
-        return SetIndex.get(newSet.Subjective);
     }
 }

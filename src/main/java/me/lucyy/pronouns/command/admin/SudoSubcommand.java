@@ -31,7 +31,7 @@ public class SudoSubcommand implements Subcommand {
 
 	@Override
 	public String getUsage() {
-		return "/pronouns admin <user> <subcommand> [args]";
+		return "/pronouns sudo <user> <subcommand> [args]";
 	}
 
 	@Override

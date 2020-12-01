@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface Storage {
-    void AddPronounSet(PronounSet pronounSet);
     List<String> GetPronouns(UUID uuid);
     List<String> GetAllPronouns();
     void SetPronouns(UUID uuid, List<PronounSet> set);
