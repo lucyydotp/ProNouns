@@ -1,7 +1,7 @@
 language: java
 deploy:
   provider: releases
-  api_key: "6796247d09b02e8ed24ac5f6fb6499cfaede93a9"
+  api_key: "09d52d29a7655d818d7aaae4f3ce874805937dc1"
   file: "target/ProNouns-*.jar"
   skip_cleanup: true
   draft: true
