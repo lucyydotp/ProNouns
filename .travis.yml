@@ -1,1 +1,7 @@
-language: ruby
+language: java
+deploy:
+  provider: releases
+  api_key: "$TOKEN"
+  file: "target/ProNouns-*.jar"
+  skip_cleanup: true
+  draft: true
