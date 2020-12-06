@@ -4,7 +4,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.entity.Player;
 
 public class PronounsPapiExpansion extends PlaceholderExpansion {
-    private ProNouns plugin;
+    private final ProNouns plugin;
 
     public PronounsPapiExpansion(ProNouns pl) {
         plugin = pl;

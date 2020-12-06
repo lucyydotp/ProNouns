@@ -13,7 +13,7 @@ import java.util.Arrays;
 
 public class SudoSubcommand implements Subcommand {
 	
-	private PronounsCommand command;
+	private final PronounsCommand command;
 
 	public SudoSubcommand(PronounsCommand command) {
 		this.command = command;

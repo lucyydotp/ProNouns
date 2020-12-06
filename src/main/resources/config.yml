@@ -1,3 +1,9 @@
-prefix: "&f[&dPronouns&f] &7"
+# ProNouns Config File
+# Make changes here and update them by either using /pronouns reload
+# or by restarting the server
+
+prefix: "&f[&dPronouns&f] "
 accent: '&d'
-main: '&7'
+main: '&f'
+checkForUpdates: true
+updateUrl: "https://lucyy.me/pronouns/version.json" # don't touch this one

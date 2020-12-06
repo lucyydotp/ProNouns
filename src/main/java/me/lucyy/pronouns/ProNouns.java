@@ -3,12 +3,25 @@ package me.lucyy.pronouns;
 import me.lucyy.pronouns.command.PronounsCommand;
 import me.lucyy.pronouns.storage.YamlFileStorage;
 import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.json.JSONObject;
 
-public final class ProNouns extends JavaPlugin {
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.stream.Collectors;
+
+public final class ProNouns extends JavaPlugin implements Listener {
 
     private PronounHandler handler;
     private Metrics metrics;
+    private boolean updateAvailable = false;
     public PronounHandler getPronounHandler() {
         return handler;
     }
@@ -26,6 +39,41 @@ public final class ProNouns extends JavaPlugin {
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
             new PronounsPapiExpansion(this).register();
+
+        if (ConfigHandler.CheckForUpdates()) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    try {
+                        HttpURLConnection con = (HttpURLConnection)new URL(ConfigHandler.GetUpdateUrl()).openConnection();
+                        if (con.getResponseCode() != 200) throw new Exception();
+
+                        String text = new BufferedReader(
+                                new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8)
+                        ).lines().collect(Collectors.joining("\n"));
+
+                        JSONObject json = new JSONObject(text);
+                        if (!((JSONObject)json.get("latest")).get("version").equals(getDescription().getVersion())) {
+                            updateAvailable = true;
+                            getLogger().info("A new version of ProNouns is available! Find it at https://lucyy.me/pronouns");
+                        }
+
+                    } catch (Exception ignored) {
+                        getLogger().warning("Unable to check for ProNouns updates!");
+                    }
+                }
+            }.runTaskAsynchronously(this);
+
+            Bukkit.getPluginManager().registerEvents(this, this);
+        }
+    }
+
+    @EventHandler
+    public void on(PlayerJoinEvent e) {
+        if(updateAvailable && e.getPlayer().hasPermission("pronouns.admin"))
+            e.getPlayer().sendMessage(ConfigHandler.GetPrefix() +
+                    "A new version of ProNouns is available!\nFind it at "
+                    + ConfigHandler.GetAccentColour() + "https://lucyy.me/pronouns");
     }
 
     @Override

@@ -2,6 +2,7 @@ package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
+import me.lucyy.pronouns.command.admin.ReloadSubcommand;
 import me.lucyy.pronouns.command.admin.SudoSubcommand;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,7 +14,7 @@ import java.util.*;
 public class PronounsCommand implements CommandExecutor {
 
     private final ProNouns pl;
-    private HashMap<String, Subcommand> subcommands = new HashMap<>();
+    private final HashMap<String, Subcommand> subcommands = new HashMap<>();
 
     private void register(Subcommand cmd) {
         subcommands.put(cmd.getName(), cmd);
@@ -26,6 +27,7 @@ public class PronounsCommand implements CommandExecutor {
         register(new ListPronounsSubcommand(pl));
         register(new PreviewSubcommand(pl));
         register(new SudoSubcommand(this));
+        register(new ReloadSubcommand(pl));
 
         pl.getCommand("pronouns").setTabCompleter(new PronounsTabCompleter(this));
     }
@@ -44,9 +46,9 @@ public class PronounsCommand implements CommandExecutor {
     }
 
     private void showDefault(CommandSender sender) {
-        sender.sendMessage(ConfigHandler.GetMainColour() + "All " +
-                        ConfigHandler.GetAccentColour() + "Pronouns " +
-                        ConfigHandler.GetMainColour() + "Commands");
+        sender.sendMessage(ConfigHandler.GetAccentColour() + "ProNouns v" + pl.getDescription().getVersion() +
+                ConfigHandler.GetMainColour() + " by " + ConfigHandler.GetAccentColour() + "__lucyy");
+        sender.sendMessage(ConfigHandler.GetMainColour() + "Commands:");
         getUserSubcommands(sender).forEach(cmd -> {
             if (cmd.getPermission() == null ||  sender.hasPermission(cmd.getPermission()))
                 sender.sendMessage(ConfigHandler.GetMainColour() + "/pronouns "

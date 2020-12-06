@@ -46,12 +46,13 @@ public class GetPronounsSubcommand implements Subcommand {
         } else commandTarget = (Player)sender;
 
         if (commandTarget == null) {
-            sender.sendMessage(ConfigHandler.GetPrefix() + "Player '" + args[0] + "' could not be found.");
+            sender.sendMessage(ConfigHandler.GetPrefix() + "Player '" + args[0] + ConfigHandler.GetMainColour() + "' could not be found.");
             return true;
         }
 
-        sender.sendMessage(ConfigHandler.GetPrefix() + commandTarget.getDisplayName() + "'s pronouns are " +
-                ConfigHandler.GetAccentColour() + PronounSet.FriendlyPrintSet(pl.getPronounHandler().GetUserPronouns(commandTarget.getUniqueId())));
+        sender.sendMessage(ConfigHandler.GetPrefix() + commandTarget.getDisplayName() + ConfigHandler.GetMainColour() +
+                "'s pronouns are " + ConfigHandler.GetAccentColour() +
+                PronounSet.FriendlyPrintSet(pl.getPronounHandler().GetUserPronouns(commandTarget.getUniqueId())));
 
         return true;
     }

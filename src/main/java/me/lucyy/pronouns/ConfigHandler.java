@@ -12,7 +12,7 @@ public class ConfigHandler {
 
     public static String GetPrefix() {
         return ChatColor.translateAlternateColorCodes('&',
-                pl.getConfig().getString("prefix"));
+                pl.getConfig().getString("prefix") + GetMainColour());
     }
     public static String GetAccentColour() {
         return ChatColor.translateAlternateColorCodes('&',
@@ -22,5 +22,14 @@ public class ConfigHandler {
     public static String GetMainColour() {
         return ChatColor.translateAlternateColorCodes('&',
                 pl.getConfig().getString("main"));
+    }
+
+    public static String GetUpdateUrl() {
+        return ChatColor.translateAlternateColorCodes('&',
+                pl.getConfig().getString("updateUrl"));
+    }
+
+    public static Boolean CheckForUpdates() {
+        return pl.getConfig().getBoolean("checkForUpdates");
     }
 }

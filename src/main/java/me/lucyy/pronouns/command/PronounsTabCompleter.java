@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PronounsTabCompleter implements TabCompleter {
-    private PronounsCommand cmd;
+    private final PronounsCommand cmd;
 
     public PronounsTabCompleter(PronounsCommand cmd) {
         this.cmd = cmd;

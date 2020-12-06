@@ -4,16 +4,13 @@ import me.lucyy.pronouns.command.AnyPronounSet;
 import me.lucyy.pronouns.command.PronounsCommand;
 import me.lucyy.pronouns.storage.Storage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class PronounHandler {
 
     private Storage storage;
 
-    private HashMap<String, PronounSet> SetIndex = new HashMap<>();
+    private final HashMap<String, PronounSet> SetIndex = new HashMap<>();
 
     public void AddToIndex(PronounSet set) {
         set.IsPredefined = true;

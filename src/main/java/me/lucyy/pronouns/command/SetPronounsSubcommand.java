@@ -8,9 +8,12 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class SetPronounsSubcommand implements Subcommand {
     private final ProNouns pl;
+
     public SetPronounsSubcommand(ProNouns plugin) {
         pl = plugin;
     }
@@ -29,7 +32,9 @@ public class SetPronounsSubcommand implements Subcommand {
     }
 
     @Override
-    public String getPermission() { return null; }
+    public String getPermission() {
+        return null;
+    }
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
@@ -41,18 +46,25 @@ public class SetPronounsSubcommand implements Subcommand {
         if (args.length < 1) return false;
 
         ArrayList<PronounSet> set = new ArrayList<>();
-        for (String arg: args) {
+        for (String arg : args) {
             try {
-                PronounSet parsed = pl.getPronounHandler().FromString(arg);
-                set.add(parsed);
-            } catch (IllegalArgumentException _ignored) {
-                sender.sendMessage(ConfigHandler.GetPrefix() + "The pronoun '" + arg +
+                String[] splitArg = arg.split("/");
+                if (splitArg.length == 6) {
+                    PronounSet parsed = pl.getPronounHandler().FromString(arg);
+                    if (!set.contains(parsed)) set.add(parsed);
+                } else {
+                    for (String _splitArg : splitArg) {
+                        PronounSet parsed = pl.getPronounHandler().FromString(_splitArg);
+                        if (!set.contains(parsed)) set.add(parsed);
+                    }
+                }
+            } catch (IllegalArgumentException e) {
+                sender.sendMessage(ConfigHandler.GetPrefix() + "The pronoun '" + e.getMessage() +
                         "' is unrecognised.\n" +
                         "To use it, just write it out like it's shown in /pronouns list.");
                 return true;
             }
         }
-
         pl.getPronounHandler().SetUserPronouns(((Player) target).getUniqueId(), set);
         sender.sendMessage(ConfigHandler.GetPrefix() + "Set pronouns to " +
                 ConfigHandler.GetAccentColour() + PronounSet.FriendlyPrintSet(set.toArray(new PronounSet[0])));
