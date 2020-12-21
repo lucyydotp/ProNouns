@@ -6,7 +6,7 @@
 
     <groupId>me.lucyy</groupId>
     <artifactId>ProNouns</artifactId>
-    <version>0.0.0-pre5</version>
+    <version>0.0.0-pre6</version>
     <packaging>jar</packaging>
 
     <name>ProNouns</name>

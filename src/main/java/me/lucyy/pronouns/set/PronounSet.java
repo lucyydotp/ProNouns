@@ -1,4 +1,4 @@
-package me.lucyy.pronouns;
+package me.lucyy.pronouns.set;
 
 public class PronounSet {
     public String Subjective;

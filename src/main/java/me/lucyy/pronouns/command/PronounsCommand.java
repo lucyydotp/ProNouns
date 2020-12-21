@@ -25,6 +25,7 @@ public class PronounsCommand implements CommandExecutor {
         register(new GetPronounsSubcommand(pl));
         register(new SetPronounsSubcommand(pl));
         register(new ListPronounsSubcommand(pl));
+        register(new UnsetPronounsSubcommand(pl));
         register(new PreviewSubcommand(pl));
         register(new SudoSubcommand(this));
         register(new ReloadSubcommand(pl));

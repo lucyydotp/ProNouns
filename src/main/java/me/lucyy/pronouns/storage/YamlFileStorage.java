@@ -1,7 +1,7 @@
 package me.lucyy.pronouns.storage;
 
 import me.lucyy.pronouns.ProNouns;
-import me.lucyy.pronouns.PronounSet;
+import me.lucyy.pronouns.set.PronounSet;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -78,5 +78,6 @@ public class YamlFileStorage implements Storage {
     @Override
     public void ClearPronouns(UUID uuid) {
         config.set("players." + uuid.toString(), new String[0]);
+        save();
     }
 }

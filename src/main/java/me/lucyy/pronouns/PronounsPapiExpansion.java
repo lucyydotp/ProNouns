@@ -1,6 +1,8 @@
 package me.lucyy.pronouns;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.lucyy.pronouns.set.PronounSet;
+import me.lucyy.pronouns.set.UnsetPronounSet;
 import org.bukkit.entity.Player;
 
 public class PronounsPapiExpansion extends PlaceholderExpansion {
@@ -44,7 +46,7 @@ public class PronounsPapiExpansion extends PlaceholderExpansion {
         try {
             mainPronouns = plugin.getPronounHandler().GetUserPronouns(player.getUniqueId())[0];
         } catch (ArrayIndexOutOfBoundsException e) {
-            mainPronouns = plugin.getPronounHandler().FromString("they");
+            mainPronouns = new UnsetPronounSet(plugin.getPronounHandler().FromString("they"));
         }
         String ident = identifier.split("_")[0];
         String mod;

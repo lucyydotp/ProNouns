@@ -2,13 +2,11 @@ package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
-import me.lucyy.pronouns.PronounSet;
+import me.lucyy.pronouns.set.PronounSet;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
 
 public class GetPronounsSubcommand implements Subcommand {
     private final ProNouns pl;

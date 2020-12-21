@@ -1,7 +1,7 @@
 package me.lucyy.pronouns;
 
-import me.lucyy.pronouns.command.AnyPronounSet;
-import me.lucyy.pronouns.command.PronounsCommand;
+import me.lucyy.pronouns.set.AnyPronounSet;
+import me.lucyy.pronouns.set.PronounSet;
 import me.lucyy.pronouns.storage.Storage;
 
 import java.util.*;
@@ -45,7 +45,9 @@ public class PronounHandler {
         return pronounsList.toArray(new PronounSet[0]);
     }
 
-
+    public void UnsetUserPronouns(UUID uuid) {
+        storage.ClearPronouns(uuid);
+    }
 
     public PronounSet FromString(String set) throws IllegalArgumentException {
         String[] pronouns = set.split("/");

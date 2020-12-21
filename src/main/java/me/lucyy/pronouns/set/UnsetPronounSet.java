@@ -1,19 +1,17 @@
-package me.lucyy.pronouns.command;
+package me.lucyy.pronouns.set;
 
-import me.lucyy.pronouns.PronounSet;
-
-public class AnyPronounSet extends PronounSet {
-    public AnyPronounSet(PronounSet base) {
+public class UnsetPronounSet extends PronounSet {
+    public UnsetPronounSet(PronounSet base) {
         super(base.Subjective, base.Objective, base.Progressive, base.PossessiveAdjectival, base.PossessivePronoun, base.Reflexive, true);
     }
 
     @Override
     public String getName() {
-        return "Any";
+        return "Unset";
     }
 
     @Override
     public String toString() {
-        return "Any";
+        return "Unset";
     }
 }
