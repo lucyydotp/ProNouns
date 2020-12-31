@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import me.lucyy.pronouns.ConfigHandler;
+import me.lucyy.pronouns.config.ConfigHandler;
 
 import java.util.Arrays;
 

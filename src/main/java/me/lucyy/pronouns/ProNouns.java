@@ -1,6 +1,8 @@
 package me.lucyy.pronouns;
 
 import me.lucyy.pronouns.command.PronounsCommand;
+import me.lucyy.pronouns.config.ConfigHandler;
+import me.lucyy.pronouns.storage.MysqlFileStorage;
 import me.lucyy.pronouns.storage.YamlFileStorage;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
@@ -30,10 +32,18 @@ public final class ProNouns extends JavaPlugin implements Listener {
     public void onEnable() {
         int pluginId = 9519;
         metrics = new Metrics(this, pluginId);
-
-        handler = new PronounHandler(new YamlFileStorage(this));
-
+        metrics.addCustomChart(new Metrics.SimplePie("storage_backend", () -> ConfigHandler.GetConnectionType().name()));
         ConfigHandler.SetPlugin(this);
+
+        switch (ConfigHandler.GetConnectionType()) {
+            case YML:
+                handler = new PronounHandler(new YamlFileStorage(this));
+                break;
+            case MYSQL:
+                handler = new PronounHandler(new MysqlFileStorage());
+                break;
+        }
+
 
         getCommand("pronouns").setExecutor(new PronounsCommand(this));
 

@@ -7,3 +7,18 @@ accent: '&d'
 main: '&f'
 checkForUpdates: true
 updateUrl: "https://lucyy.me/pronouns/version.json" # don't touch this one
+
+# this setting chooses how pronouns are stored, possible values:
+# yml (default) - creates 'datastore.yml' in plugin folder
+# mysql - connects to the mysql database, configured below
+
+connection: 'yml'
+#connection: 'mysql'
+
+# this info will be provided by your host
+mysql:
+  host: '127.0.0.1'
+  port: 3306
+  database: 'pronouns'
+  username: 'pronouns'
+  password: 'password'

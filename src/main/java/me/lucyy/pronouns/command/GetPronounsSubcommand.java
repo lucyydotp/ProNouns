@@ -1,6 +1,6 @@
 package me.lucyy.pronouns.command;
 
-import me.lucyy.pronouns.ConfigHandler;
+import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.set.PronounSet;
 import org.bukkit.Bukkit;
