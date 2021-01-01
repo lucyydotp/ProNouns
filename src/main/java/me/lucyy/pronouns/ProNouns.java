@@ -57,15 +57,14 @@ public final class ProNouns extends JavaPlugin implements Listener {
                 @Override
                 public void run() {
                     try {
-                        HttpURLConnection con = (HttpURLConnection)new URL(ConfigHandler.GetUpdateUrl()).openConnection();
+                        HttpURLConnection con = (HttpURLConnection)new URL("https://api.spigotmc.org/legacy/update.php?resource=86199").openConnection();
                         if (con.getResponseCode() != 200) throw new Exception();
 
                         String text = new BufferedReader(
                                 new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8)
                         ).lines().collect(Collectors.joining("\n"));
 
-                        JSONObject json = new JSONObject(text);
-                        if (!((JSONObject)json.get("latest")).get("version").equals(getDescription().getVersion())) {
+                        if (!text.equals(getDescription().getVersion())) {
                             updateAvailable = true;
                             getLogger().info("A new version of ProNouns is available! Find it at https://lucyy.me/pronouns");
                             this.cancel();
