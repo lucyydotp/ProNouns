@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.json.JSONObject;
@@ -86,7 +87,8 @@ public final class ProNouns extends JavaPlugin implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    handler.GetUserPronouns(e.getPlayer().getUniqueId());
+                    MysqlFileStorage storage = (MysqlFileStorage)handler.getStorage();
+                    storage.GetPronouns(e.getPlayer().getUniqueId(), false);
                 }
             }.runTaskAsynchronously(this);
         }
@@ -94,6 +96,14 @@ public final class ProNouns extends JavaPlugin implements Listener {
             e.getPlayer().sendMessage(ConfigHandler.GetPrefix() +
                     "A new version of ProNouns is available!\nFind it at "
                     + ConfigHandler.GetAccentColour() + "https://lucyy.me/pronouns");
+    }
+
+    @EventHandler
+    public void on(PlayerQuitEvent e) {
+        if (ConfigHandler.GetConnectionType() == ConnectionType.MYSQL) {
+            MysqlFileStorage storage = (MysqlFileStorage) handler.getStorage();
+            storage.onPlayerDisconnect(e.getPlayer().getUniqueId());
+        }
     }
 
     @Override

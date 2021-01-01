@@ -25,6 +25,9 @@ public class PronounHandler {
         SetIndex.put("any", new AnyPronounSet(FromString("they")));
     }
 
+    public Storage getStorage() {
+        return storage;
+    }
     public void SetStorage(Storage storage) {
         this.storage = storage;
     }

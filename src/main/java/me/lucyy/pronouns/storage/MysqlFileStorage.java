@@ -12,10 +12,11 @@ import java.util.*;
 public class MysqlFileStorage implements Storage {
 
     private Connection connection;
-    private ProNouns plugin;
-    private HashMap<UUID, List<String>> cache;
+    private final ProNouns plugin;
+    private final HashMap<UUID, List<String>> cache = new HashMap<>();
 
     public MysqlFileStorage(ProNouns plugin) {
+        this.plugin = plugin;
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -35,16 +36,25 @@ public class MysqlFileStorage implements Storage {
 
         try {
             this.connection.prepareStatement("CREATE TABLE IF NOT EXISTS pronouns_players ( playerUuid VARCHAR(36), pronouns TEXT )").execute();
+            plugin.getLogger().info("Connected to MySQL.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    public void onPlayerDisconnect(UUID uuid) {
+        cache.remove(uuid);
+    }
+
     @Override
     public List<String> GetPronouns(UUID uuid) {
-        if (cache.containsKey(uuid)) return cache.get(uuid);
+        return GetPronouns(uuid, true);
+    }
+
+    public List<String> GetPronouns(UUID uuid, boolean useCache) {
+        if (useCache && cache.containsKey(uuid)) return cache.get(uuid);
         try {
-            PreparedStatement stmt = this.connection.prepareStatement("SELECT pronouns FROM pronouns_players WHERE playerUUID=?");
+            PreparedStatement stmt = connection.prepareStatement("SELECT pronouns FROM pronouns_players WHERE playerUUID=?");
             stmt.setString(1, uuid.toString());
             ResultSet set = stmt.executeQuery();
             List<String> results = new ArrayList<>();
@@ -57,6 +67,7 @@ public class MysqlFileStorage implements Storage {
             return results;
         } catch (SQLException e) {
             e.printStackTrace();
+            return null;
         }
     }
 
@@ -68,14 +79,48 @@ public class MysqlFileStorage implements Storage {
         new BukkitRunnable() {
             @Override
             public void run() {
+                try {
+                    PreparedStatement stmt = connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
+                    stmt.setString(1, uuid.toString());
+                    stmt.execute();
+                    stmt.closeOnCompletion();
 
-                connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
+                    PreparedStatement insStmt = connection.prepareStatement("INSERT INTO pronouns_players VALUES (?,?)");
+                    for (PronounSet set : sets) {
+                        insStmt.setString(1, uuid.toString());
+
+                        try {
+                            PronounSet parsed = plugin.getPronounHandler().FromString(set.Subjective);
+                            if (parsed.equals(set)) insStmt.setString(2, set.Subjective);
+                            else insStmt.setString(2, set.toString());
+                        } catch (IllegalArgumentException e) {
+                            insStmt.setString(2, set.toString());
+                        }
+                        insStmt.addBatch();
+                    }
+                    insStmt.executeBatch();
+                    insStmt.closeOnCompletion();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }.runTaskAsynchronously(plugin);
     }
 
     @Override
     public void ClearPronouns(UUID uuid) {
-
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    PreparedStatement stmt = connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
+                    stmt.setString(1, uuid.toString());
+                    stmt.execute();
+                    stmt.closeOnCompletion();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        }.runTaskAsynchronously(plugin);
     }
 }
