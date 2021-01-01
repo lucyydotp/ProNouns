@@ -4,17 +4,16 @@ import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.config.SqlInfoContainer;
 import me.lucyy.pronouns.set.PronounSet;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class MysqlFileStorage implements Storage {
 
     private Connection connection;
     private ProNouns plugin;
-    private HashMap<UUID, PronounSet[]> cache;
+    private HashMap<UUID, List<String>> cache;
 
     public MysqlFileStorage(ProNouns plugin) {
         try {
@@ -35,7 +34,7 @@ public class MysqlFileStorage implements Storage {
         }
 
         try {
-            this.connection.prepareStatement("CREATE TABLE IF NOT EXISTS pronouns_sets { UUID playerUuid, TEXT pronouns }").execute();
+            this.connection.prepareStatement("CREATE TABLE IF NOT EXISTS pronouns_players ( playerUuid VARCHAR(36), pronouns TEXT )").execute();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -43,17 +42,36 @@ public class MysqlFileStorage implements Storage {
 
     @Override
     public List<String> GetPronouns(UUID uuid) {
-        return null;
+        if (cache.containsKey(uuid)) return cache.get(uuid);
+        try {
+            PreparedStatement stmt = this.connection.prepareStatement("SELECT pronouns FROM pronouns_players WHERE playerUUID=?");
+            stmt.setString(1, uuid.toString());
+            ResultSet set = stmt.executeQuery();
+            List<String> results = new ArrayList<>();
+            while (set.next()) {
+                results.add(set.getString("pronouns"));
+            }
+            cache.put(uuid, results);
+            stmt.close();
+            set.close();
+            return results;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
-    public List<String> GetAllPronouns() {
-        return null;
-    }
+    public void SetPronouns(UUID uuid, List<PronounSet> sets) {
+        List<String> stringEquivalent = new ArrayList<>();
+        for (PronounSet set : sets) stringEquivalent.add(set.toString());
+        cache.put(uuid, stringEquivalent);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
 
-    @Override
-    public void SetPronouns(UUID uuid, List<PronounSet> set) {
-
+                connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
+            }
+        }.runTaskAsynchronously(plugin);
     }
 
     @Override

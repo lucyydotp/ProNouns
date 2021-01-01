@@ -55,11 +55,6 @@ public class YamlFileStorage implements Storage {
     }
 
     @Override
-    public List<String> GetAllPronouns() {
-        return config.getStringList("pronouns");
-    }
-
-    @Override
     public void SetPronouns(UUID uuid, List<PronounSet> sets) {
         ArrayList<String> setString = new ArrayList<>();
         for (PronounSet set : sets)  {

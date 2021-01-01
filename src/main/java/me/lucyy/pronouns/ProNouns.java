@@ -2,6 +2,7 @@ package me.lucyy.pronouns;
 
 import me.lucyy.pronouns.command.PronounsCommand;
 import me.lucyy.pronouns.config.ConfigHandler;
+import me.lucyy.pronouns.config.ConnectionType;
 import me.lucyy.pronouns.storage.MysqlFileStorage;
 import me.lucyy.pronouns.storage.YamlFileStorage;
 import org.bukkit.Bukkit;
@@ -66,13 +67,14 @@ public final class ProNouns extends JavaPlugin implements Listener {
                         if (!((JSONObject)json.get("latest")).get("version").equals(getDescription().getVersion())) {
                             updateAvailable = true;
                             getLogger().info("A new version of ProNouns is available! Find it at https://lucyy.me/pronouns");
+                            this.cancel();
                         }
 
                     } catch (Exception ignored) {
                         getLogger().warning("Unable to check for ProNouns updates!");
                     }
                 }
-            }.runTaskAsynchronously(this);
+            }.runTaskTimerAsynchronously(this, 0, 216000); // every 3 hours
 
             Bukkit.getPluginManager().registerEvents(this, this);
         }
@@ -80,6 +82,14 @@ public final class ProNouns extends JavaPlugin implements Listener {
 
     @EventHandler
     public void on(PlayerJoinEvent e) {
+        if (ConfigHandler.GetConnectionType() == ConnectionType.MYSQL) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    handler.GetUserPronouns(e.getPlayer().getUniqueId());
+                }
+            }.runTaskAsynchronously(this);
+        }
         if(updateAvailable && e.getPlayer().hasPermission("pronouns.admin"))
             e.getPlayer().sendMessage(ConfigHandler.GetPrefix() +
                     "A new version of ProNouns is available!\nFind it at "

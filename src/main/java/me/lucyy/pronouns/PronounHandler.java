@@ -19,7 +19,9 @@ public class PronounHandler {
 
     public PronounHandler(Storage storage) {
         this.storage = storage;
-        for (String set : storage.GetAllPronouns()) AddToIndex(FromString(set));
+        AddToIndex(FromString("he/him/he's/his/his/himself"));
+        AddToIndex(FromString("she/her/she's/her/hers/herself"));
+        AddToIndex(FromString("they/them/they're/their/theirs/themself"));
         SetIndex.put("any", new AnyPronounSet(FromString("they")));
     }
 
