@@ -6,6 +6,7 @@ import me.lucyy.pronouns.config.SqlInfoContainer;
 import me.lucyy.pronouns.set.PronounSet;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,8 +14,9 @@ public class MysqlFileStorage implements Storage {
 
     private Connection connection;
     private ProNouns plugin;
+    private HashMap<UUID, PronounSet[]> cache;
 
-    public void init(ProNouns plugin) throws SQLException {
+    public MysqlFileStorage(ProNouns plugin) {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -22,12 +24,23 @@ public class MysqlFileStorage implements Storage {
             return;
         }
         SqlInfoContainer sqlData = ConfigHandler.GetSqlConnectionData();
-        this.connection = DriverManager.getConnection("jdbc:mysql://" + sqlData.Host + ":" + sqlData.Port + "/"
-                + sqlData.Database + "?useSSL=false", sqlData.Username, sqlData.Password);
-        // TODO continue here
+        plugin.getLogger().info("Attempting to connect to MySQL database...");
 
-        // this.connection.prepareStatement(this.dbInitString).execute();
+
+        try {
+            this.connection = DriverManager.getConnection("jdbc:mysql://" + sqlData.Host + ":" + sqlData.Port + "/"
+                    + sqlData.Database + "?useSSL=false", sqlData.Username, sqlData.Password);
+        } catch (SQLException e) {
+            plugin.getLogger().severe("Failed to connect to MySQL! Expect things to break!");
+        }
+
+        try {
+            this.connection.prepareStatement("CREATE TABLE IF NOT EXISTS pronouns_sets { UUID playerUuid, TEXT pronouns }").execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
+
     @Override
     public List<String> GetPronouns(UUID uuid) {
         return null;

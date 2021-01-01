@@ -40,7 +40,7 @@ public final class ProNouns extends JavaPlugin implements Listener {
                 handler = new PronounHandler(new YamlFileStorage(this));
                 break;
             case MYSQL:
-                handler = new PronounHandler(new MysqlFileStorage());
+                handler = new PronounHandler(new MysqlFileStorage(this));
                 break;
         }
 
