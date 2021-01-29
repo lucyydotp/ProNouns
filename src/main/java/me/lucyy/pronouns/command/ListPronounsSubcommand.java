@@ -2,6 +2,7 @@ package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
+import me.lucyy.pronouns.set.PronounSet;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,8 +31,8 @@ public class ListPronounsSubcommand implements Subcommand {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
-        sender.sendMessage(ConfigHandler.GetPrefix() + "All Predefined Pronoun Sets:");
-        for (String set : pl.getPronounHandler().GetAllPronouns()) sender.sendMessage(set);
+        sender.sendMessage(pl.getConfigHandler().getPrefix() + "All Predefined Pronoun Sets:");
+        for (PronounSet set : pl.getPronounHandler().getAllPronouns()) sender.sendMessage(set.toString());
         return true;
     }
 }

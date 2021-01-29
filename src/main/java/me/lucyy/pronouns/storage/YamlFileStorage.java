@@ -47,7 +47,7 @@ public class YamlFileStorage implements Storage {
     }
 
     @Override
-    public List<String> GetPronouns(UUID uuid) {
+    public List<String> getPronouns(UUID uuid) {
         Object list = config.get("players." + uuid.toString());
         if (list == null) return new ArrayList<>();
         if (list instanceof List) return (List<String>)list;
@@ -55,12 +55,12 @@ public class YamlFileStorage implements Storage {
     }
 
     @Override
-    public void SetPronouns(UUID uuid, List<PronounSet> sets) {
+    public void setPronouns(UUID uuid, List<PronounSet> sets) {
         ArrayList<String> setString = new ArrayList<>();
         for (PronounSet set : sets)  {
             try {
-                PronounSet parsed = pl.getPronounHandler().FromString(set.Subjective);
-                if (parsed.equals(set)) setString.add(set.Subjective);
+                PronounSet parsed = pl.getPronounHandler().fromString(set.subjective);
+                if (parsed.equals(set)) setString.add(set.subjective);
                 else setString.add(set.toString());
             } catch (IllegalArgumentException e) {
                 setString.add(set.toString());
@@ -71,7 +71,7 @@ public class YamlFileStorage implements Storage {
     }
 
     @Override
-    public void ClearPronouns(UUID uuid) {
+    public void clearPronouns(UUID uuid) {
         config.set("players." + uuid.toString(), new String[0]);
         save();
     }

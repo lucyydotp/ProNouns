@@ -4,6 +4,7 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.lucyy.pronouns.set.PronounSet;
 import me.lucyy.pronouns.set.UnsetPronounSet;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class PronounsPapiExpansion extends PlaceholderExpansion {
     private final ProNouns plugin;
@@ -23,30 +24,30 @@ public class PronounsPapiExpansion extends PlaceholderExpansion {
     }
 
     @Override
-    public String getAuthor() {
+    public @NotNull String getAuthor() {
         return plugin.getDescription().getAuthors().toString();
     }
 
     @Override
-    public String getIdentifier() {
+    public @NotNull String getIdentifier() {
         return "pronouns";
     }
 
     @Override
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return plugin.getDescription().getVersion();
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String identifier) {
+    public String onPlaceholderRequest(Player player, @NotNull String identifier) {
 
         if (player == null) return "";
 
         PronounSet mainPronouns;
         try {
-            mainPronouns = plugin.getPronounHandler().GetUserPronouns(player.getUniqueId())[0];
+            mainPronouns = plugin.getPronounHandler().getUserPronouns(player.getUniqueId())[0];
         } catch (ArrayIndexOutOfBoundsException e) {
-            mainPronouns = new UnsetPronounSet(plugin.getPronounHandler().FromString("they"));
+            mainPronouns = new UnsetPronounSet(plugin.getPronounHandler().fromString("they"));
         }
         String ident = identifier.split("_")[0];
         String mod;
@@ -66,22 +67,22 @@ public class PronounsPapiExpansion extends PlaceholderExpansion {
                 feedback = mainPronouns.toString();
                 break;
             case "objective":
-                feedback = mainPronouns.Objective;
+                feedback = mainPronouns.objective;
                 break;
             case "subjective":
-                feedback = mainPronouns.Subjective;
+                feedback = mainPronouns.subjective;
                 break;
             case "progressive":
-                feedback = mainPronouns.Progressive;
+                feedback = mainPronouns.progressive;
                 break;
             case "possessiveadj":
-                feedback = mainPronouns.PossessiveAdjectival;
+                feedback = mainPronouns.possessiveAdjectival;
                 break;
             case "possessivepro":
-                feedback = mainPronouns.PossessivePronoun;
+                feedback = mainPronouns.possessivePronoun;
                 break;
             case "reflexive":
-                feedback = mainPronouns.Reflexive;
+                feedback = mainPronouns.reflexive;
                 break;
             default:
                 return "";

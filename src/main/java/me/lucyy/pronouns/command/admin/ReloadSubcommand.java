@@ -38,7 +38,7 @@ public class ReloadSubcommand implements Subcommand {
     @Override
     public boolean execute(@NotNull final CommandSender sender, @NotNull final CommandSender target, @NotNull final String[] args) {
         pl.reloadConfig();
-        sender.sendMessage(ConfigHandler.GetPrefix() + "Reloaded");
+        sender.sendMessage(pl.getConfigHandler().getPrefix() + "Reloaded");
         return true;
     }
 }

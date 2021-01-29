@@ -6,7 +6,7 @@
 
     <groupId>me.lucyy</groupId>
     <artifactId>ProNouns</artifactId>
-    <version>0.0.0-pre7</version>
+    <version>0.0.0-pre8</version>
     <packaging>jar</packaging>
 
     <name>ProNouns</name>
@@ -87,9 +87,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.json</groupId>
-            <artifactId>json</artifactId>
-            <version>20201115</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.16</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

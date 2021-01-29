@@ -1,6 +1,5 @@
 package me.lucyy.pronouns.command;
 
-import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -34,13 +33,13 @@ public class UnsetPronounsSubcommand implements Subcommand {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
         if (!(target instanceof Player)) {
-            sender.sendMessage(ConfigHandler.GetPrefix() + "This command can only be run by a player.");
+            sender.sendMessage(pl.getConfigHandler().getPrefix() + "This command can only be run by a player.");
             return true;
         }
 
 
-        pl.getPronounHandler().UnsetUserPronouns(((Player) target).getUniqueId());
-        sender.sendMessage(ConfigHandler.GetPrefix() + "Cleared pronouns");
+        pl.getPronounHandler().clearUserPronouns(((Player) target).getUniqueId());
+        sender.sendMessage(pl.getConfigHandler().getPrefix() + "Cleared pronouns");
         return true;
     }
 }

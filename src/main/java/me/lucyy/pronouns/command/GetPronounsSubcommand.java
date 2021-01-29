@@ -8,6 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class GetPronounsSubcommand implements Subcommand {
     private final ProNouns pl;
     public GetPronounsSubcommand(ProNouns plugin) {
@@ -33,9 +38,9 @@ public class GetPronounsSubcommand implements Subcommand {
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
         Player commandTarget;
-
+        ConfigHandler cfg = pl.getConfigHandler();
         if (!(sender instanceof Player) && args.length == 0) {
-            sender.sendMessage(ConfigHandler.GetPrefix() + "Please specify a username.");
+            sender.sendMessage(cfg.getPrefix() + "Please specify a username.");
             return true;
         }
 
@@ -44,14 +49,21 @@ public class GetPronounsSubcommand implements Subcommand {
         } else commandTarget = (Player)sender;
 
         if (commandTarget == null) {
-            sender.sendMessage(ConfigHandler.GetPrefix() + "Player '" + args[0] + ConfigHandler.GetMainColour() + "' could not be found.");
+            sender.sendMessage(cfg.getPrefix() + "Player '" + args[0] + cfg.getMainColour() + "' could not be found.");
             return true;
         }
 
-        sender.sendMessage(ConfigHandler.GetPrefix() + commandTarget.getDisplayName() + ConfigHandler.GetMainColour() +
-                "'s pronouns are " + ConfigHandler.GetAccentColour() +
-                PronounSet.FriendlyPrintSet(pl.getPronounHandler().GetUserPronouns(commandTarget.getUniqueId())));
+        sender.sendMessage(cfg.getPrefix() + commandTarget.getDisplayName() + cfg.getMainColour() +
+                "'s pronouns are " + cfg.getAccentColour() +
+                PronounSet.friendlyPrintSet(pl.getPronounHandler().getUserPronouns(commandTarget.getUniqueId())));
 
         return true;
+    }
+
+    @Override
+    public List<String> tabComplete() {
+        List<String> names = new ArrayList<>();
+        for (Player player :Bukkit.getOnlinePlayers()) names.add(player.getName());
+        return names;
     }
 }

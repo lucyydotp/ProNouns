@@ -1,6 +1,5 @@
 package me.lucyy.pronouns.storage;
 
-import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.config.SqlInfoContainer;
 import me.lucyy.pronouns.set.PronounSet;
@@ -23,7 +22,7 @@ public class MysqlFileStorage implements Storage {
             plugin.getLogger().severe("MySQL driver not found! Unable to continue - this plugin will not work!");
             return;
         }
-        SqlInfoContainer sqlData = ConfigHandler.GetSqlConnectionData();
+        SqlInfoContainer sqlData = plugin.getConfigHandler().getSqlConnectionData();
         plugin.getLogger().info("Attempting to connect to MySQL database...");
 
 
@@ -47,7 +46,7 @@ public class MysqlFileStorage implements Storage {
     }
 
     @Override
-    public List<String> GetPronouns(UUID uuid) {
+    public List<String> getPronouns(UUID uuid) {
         return GetPronouns(uuid, true);
     }
 
@@ -72,7 +71,7 @@ public class MysqlFileStorage implements Storage {
     }
 
     @Override
-    public void SetPronouns(UUID uuid, List<PronounSet> sets) {
+    public void setPronouns(UUID uuid, List<PronounSet> sets) {
         List<String> stringEquivalent = new ArrayList<>();
         for (PronounSet set : sets) stringEquivalent.add(set.toString());
         cache.put(uuid, stringEquivalent);
@@ -90,8 +89,8 @@ public class MysqlFileStorage implements Storage {
                         insStmt.setString(1, uuid.toString());
 
                         try {
-                            PronounSet parsed = plugin.getPronounHandler().FromString(set.Subjective);
-                            if (parsed.equals(set)) insStmt.setString(2, set.Subjective);
+                            PronounSet parsed = plugin.getPronounHandler().fromString(set.subjective);
+                            if (parsed.equals(set)) insStmt.setString(2, set.subjective);
                             else insStmt.setString(2, set.toString());
                         } catch (IllegalArgumentException e) {
                             insStmt.setString(2, set.toString());
@@ -108,7 +107,7 @@ public class MysqlFileStorage implements Storage {
     }
 
     @Override
-    public void ClearPronouns(UUID uuid) {
+    public void clearPronouns(UUID uuid) {
         new BukkitRunnable() {
             @Override
             public void run() {

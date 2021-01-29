@@ -23,6 +23,9 @@ public class PronounsTabCompleter implements TabCompleter {
             cmd.getUserSubcommands(sender).forEach(x -> results.add(x.getName()));
             return results;
         }
-        return null;
+
+        Subcommand subcmd = cmd.getUserSubcommandsMap(sender).get(args[0]);
+        if (subcmd == null) return null;
+        return subcmd.tabComplete();
     }
 }

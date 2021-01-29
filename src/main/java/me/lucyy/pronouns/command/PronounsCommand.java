@@ -1,5 +1,6 @@
 package me.lucyy.pronouns.command;
 
+import lombok.Getter;
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.command.admin.ReloadSubcommand;
@@ -12,8 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class PronounsCommand implements CommandExecutor {
-
-    private final ProNouns pl;
+    @Getter
+    private final ProNouns plugin;
     private final HashMap<String, Subcommand> subcommands = new HashMap<>();
 
     private void register(Subcommand cmd) {
@@ -21,16 +22,16 @@ public class PronounsCommand implements CommandExecutor {
     }
 
     public PronounsCommand(ProNouns plugin) {
-        pl = plugin;
-        register(new GetPronounsSubcommand(pl));
-        register(new SetPronounsSubcommand(pl));
-        register(new ListPronounsSubcommand(pl));
-        register(new UnsetPronounsSubcommand(pl));
-        register(new PreviewSubcommand(pl));
+        this.plugin = plugin;
+        register(new GetPronounsSubcommand(this.plugin));
+        register(new SetPronounsSubcommand(this.plugin));
+        register(new ListPronounsSubcommand(this.plugin));
+        register(new UnsetPronounsSubcommand(this.plugin));
+        register(new PreviewSubcommand(this.plugin));
         register(new SudoSubcommand(this));
-        register(new ReloadSubcommand(pl));
+        register(new ReloadSubcommand(this.plugin));
 
-        pl.getCommand("pronouns").setTabCompleter(new PronounsTabCompleter(this));
+        this.plugin.getCommand("pronouns").setTabCompleter(new PronounsTabCompleter(this));
     }
     public List<Subcommand> getUserSubcommands(CommandSender sender) {
         List<Subcommand> cmds = new ArrayList<>();
@@ -41,20 +42,31 @@ public class PronounsCommand implements CommandExecutor {
         );
         return cmds;
     }
+    public Map<String, Subcommand> getUserSubcommandsMap(CommandSender sender) {
+        Map<String, Subcommand> cmds = new HashMap<>();
+        subcommands.forEach((String label, Subcommand cmd) -> {
+                    if (cmd.getPermission() == null ||  sender.hasPermission(cmd.getPermission()))
+                        cmds.put(label, cmd);
+                }
+        );
+        return cmds;
+    }
 
     public List<String> getSubcommands() {
         return new ArrayList<>(subcommands.keySet());
     }
 
     private void showDefault(CommandSender sender) {
-        sender.sendMessage(ConfigHandler.GetAccentColour() + "ProNouns v" + pl.getDescription().getVersion() +
-                ConfigHandler.GetMainColour() + " by " + ConfigHandler.GetAccentColour() + "__lucyy");
-        sender.sendMessage(ConfigHandler.GetMainColour() + "Commands:");
+
+        ConfigHandler cfg = plugin.getConfigHandler();
+        sender.sendMessage(cfg.getAccentColour() + "ProNouns v" + plugin.getDescription().getVersion() +
+                cfg.getMainColour() + " by " + cfg.getAccentColour() + "__lucyy");
+        sender.sendMessage(cfg.getMainColour() + "Commands:");
         getUserSubcommands(sender).forEach(cmd -> {
             if (cmd.getPermission() == null ||  sender.hasPermission(cmd.getPermission()))
-                sender.sendMessage(ConfigHandler.GetMainColour() + "/pronouns "
-                        + ConfigHandler.GetAccentColour() + cmd.getName()
-                        + ConfigHandler.GetMainColour() + " - " + cmd.getDescription());
+                sender.sendMessage(cfg.getMainColour() + "/pronouns "
+                        + cfg.getAccentColour() + cmd.getName()
+                        + cfg.getMainColour() + " - " + cmd.getDescription());
                 }
         );
     }
@@ -79,10 +91,10 @@ public class PronounsCommand implements CommandExecutor {
 
         if (subcommand.getPermission() == null || sender.hasPermission(subcommand.getPermission())) {
             if (!subcommand.execute(sender, target, Arrays.copyOfRange(args, 1, args.length))) {
-                sender.sendMessage(ConfigHandler.GetPrefix() + "Usage: " + subcommand.getUsage());
+                sender.sendMessage(plugin.getConfigHandler().getPrefix() + "Usage: " + subcommand.getUsage());
             }
         } else {
-            sender.sendMessage(ConfigHandler.GetPrefix() + "No permission!");
+            sender.sendMessage(plugin.getConfigHandler().getPrefix() + "No permission!");
         }
 
         return true;

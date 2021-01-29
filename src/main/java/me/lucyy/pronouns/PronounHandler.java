@@ -12,17 +12,17 @@ public class PronounHandler {
 
     private final HashMap<String, PronounSet> SetIndex = new HashMap<>();
 
-    public void AddToIndex(PronounSet set) {
-        set.IsPredefined = true;
-        SetIndex.put(set.Subjective, set);
+    public void addToIndex(PronounSet set) {
+        set.isPredefined = true;
+        SetIndex.put(set.subjective, set);
     }
 
     public PronounHandler(Storage storage) {
         this.storage = storage;
-        AddToIndex(FromString("he/him/he's/his/his/himself"));
-        AddToIndex(FromString("she/her/she's/her/hers/herself"));
-        AddToIndex(FromString("they/them/they're/their/theirs/themself"));
-        SetIndex.put("any", new AnyPronounSet(FromString("they")));
+        addToIndex(fromString("he/him/he's/his/his/himself"));
+        addToIndex(fromString("she/her/she's/her/hers/herself"));
+        addToIndex(fromString("they/them/they're/their/theirs/themself"));
+        SetIndex.put("any", new AnyPronounSet(fromString("they")));
     }
 
     public Storage getStorage() {
@@ -32,29 +32,27 @@ public class PronounHandler {
         this.storage = storage;
     }
 
-    public void SetUserPronouns(UUID uuid, List<PronounSet> set) {
-        storage.SetPronouns(uuid, set);
+    public void setUserPronouns(UUID uuid, List<PronounSet> set) {
+        storage.setPronouns(uuid, set);
     }
 
-    public List<String> GetAllPronouns() {
-        List<String> pronouns = new ArrayList<>();
-        SetIndex.values().forEach(set -> pronouns.add(set.toString()));
-        return pronouns;
+    public Collection<PronounSet> getAllPronouns() {
+        return SetIndex.values();
     }
 
-    public PronounSet[] GetUserPronouns(UUID uuid) {
+    public PronounSet[] getUserPronouns(UUID uuid) {
         List<PronounSet> pronounsList = new ArrayList<>();
-        for (String pronoun : storage.GetPronouns(uuid)) {
-            pronounsList.add(FromString(pronoun));
+        for (String pronoun : storage.getPronouns(uuid)) {
+            pronounsList.add(fromString(pronoun));
         }
         return pronounsList.toArray(new PronounSet[0]);
     }
 
-    public void UnsetUserPronouns(UUID uuid) {
-        storage.ClearPronouns(uuid);
+    public void clearUserPronouns(UUID uuid) {
+        storage.clearPronouns(uuid);
     }
 
-    public PronounSet FromString(String set) throws IllegalArgumentException {
+    public PronounSet fromString(String set) throws IllegalArgumentException {
         String[] pronouns = set.split("/");
         if (pronouns.length > 6) throw new IllegalArgumentException(set);
 

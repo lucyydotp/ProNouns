@@ -1,19 +1,19 @@
 package me.lucyy.pronouns.set;
 
 public class PronounSet {
-    public String Subjective;
-    public String Objective;
-    public String Progressive;
-    public String PossessiveAdjectival;
-    public String PossessivePronoun;
-    public String Reflexive;
-    public boolean IsPredefined;
+    public String subjective;
+    public String objective;
+    public String progressive;
+    public String possessiveAdjectival;
+    public String possessivePronoun;
+    public String reflexive;
+    public boolean isPredefined;
 
-    public static String Capitalise(String input) {
+    public static String capitalise(String input) {
         return input.substring(0,1).toUpperCase() + input.substring(1).toLowerCase();
     }
 
-    public static String FriendlyPrintSet(PronounSet[] pronounSets) {
+    public static String friendlyPrintSet(PronounSet[] pronounSets) {
         StringBuilder out = new StringBuilder();
         for (PronounSet set : pronounSets) {
             out.append(set.getName());
@@ -39,21 +39,21 @@ public class PronounSet {
                       String possessivePronoun,
                       String reflexive,
                       boolean isPredefined) {
-        Subjective = subjective.toLowerCase();
-        Objective = objective.toLowerCase();
-        Progressive = progressive.toLowerCase();
-        PossessiveAdjectival = possessiveAdjectival.toLowerCase();
-        PossessivePronoun = possessivePronoun.toLowerCase();
-        Reflexive = reflexive.toLowerCase();
-        this.IsPredefined = isPredefined;
+        this.subjective = subjective.toLowerCase();
+        this.objective = objective.toLowerCase();
+        this.progressive = progressive.toLowerCase();
+        this.possessiveAdjectival = possessiveAdjectival.toLowerCase();
+        this.possessivePronoun = possessivePronoun.toLowerCase();
+        this.reflexive = reflexive.toLowerCase();
+        this.isPredefined = isPredefined;
     }
 
     public String getName() {
-        return Capitalise(Subjective) + "/" + Capitalise(Objective);
+        return capitalise(subjective) + "/" + capitalise(objective);
     }
 
     @Override
     public String toString() {
-        return Subjective + "/" + Objective + "/" + Progressive + "/" + PossessiveAdjectival + "/" + PossessivePronoun + "/" + Reflexive;
+        return subjective + "/" + objective + "/" + progressive + "/" + possessiveAdjectival + "/" + possessivePronoun + "/" + reflexive;
     }
 }

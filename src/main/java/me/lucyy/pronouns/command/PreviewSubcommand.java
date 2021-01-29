@@ -1,6 +1,5 @@
 package me.lucyy.pronouns.command;
 
-import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.set.PronounSet;
 import org.bukkit.command.CommandSender;
@@ -39,14 +38,14 @@ public class PreviewSubcommand implements Subcommand {
 
         Player player = (Player)target;
 
-        PronounSet[] set = pl.getPronounHandler().GetUserPronouns(player.getUniqueId());
+        PronounSet[] set = pl.getPronounHandler().getUserPronouns(player.getUniqueId());
         if (set.length == 0) {
-            sender.sendMessage(ConfigHandler.GetPrefix() + "You haven't set any pronouns yet!");
+            sender.sendMessage(pl.getConfigHandler().getPrefix() + "You haven't set any pronouns yet!");
             return true;
         }
-        sender.sendMessage(player.getDisplayName() + " is testing " + set[0].PossessiveAdjectival +
-                " pronoun selection. If this sentence seems right, then " + set[0].Subjective +
-                " will be pleased with " + set[0].PossessiveAdjectival + " choices.");
+        sender.sendMessage(player.getDisplayName() + " is testing " + set[0].possessiveAdjectival +
+                " pronoun selection. If this sentence seems right, then " + set[0].subjective +
+                " will be pleased with " + set[0].possessiveAdjectival + " choices.");
         return true;
     }
 }

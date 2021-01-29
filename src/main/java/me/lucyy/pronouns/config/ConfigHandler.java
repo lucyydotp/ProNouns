@@ -3,17 +3,14 @@ package me.lucyy.pronouns.config;
 import me.lucyy.pronouns.ProNouns;
 import org.bukkit.ChatColor;
 
-import java.util.Locale;
-
 public class ConfigHandler {
-    private static ProNouns pl;
+    private ProNouns pl;
 
-    public static void SetPlugin(ProNouns plugin) {
+    public ConfigHandler(ProNouns plugin) {
         pl = plugin;
         pl.getConfig().options().copyDefaults(true);
 
         pl.getConfig().addDefault("checkForUpdates", "true");
-        pl.getConfig().addDefault("updateUrl", "https://lucyy.me/pronouns/version.json");
         pl.getConfig().addDefault("prefix", "&f[&dPronouns&f] ");
         pl.getConfig().addDefault("accent", "&d");
         pl.getConfig().addDefault("main", "&f");
@@ -27,11 +24,11 @@ public class ConfigHandler {
         pl.saveConfig();
     }
 
-    private static String getString(String key) {
+    private String getString(String key) {
         return getString(key, null);
     }
 
-    private static String getString(String key, String defaultVal) {
+    private String getString(String key, String defaultVal) {
         String value = pl.getConfig().getString(key);
         if (value == null) {
             if (defaultVal == null) {
@@ -43,31 +40,28 @@ public class ConfigHandler {
         return value;
     }
 
-    public static String GetPrefix() {
+    public String getPrefix() {
         return ChatColor.translateAlternateColorCodes('&',
-                pl.getConfig().getString("prefix") + GetMainColour());
+                pl.getConfig().getString("prefix") + getMainColour());
     }
 
-    public static String GetAccentColour() {
+    @SuppressWarnings("ConstantConditions")
+    public String getAccentColour() {
         return ChatColor.translateAlternateColorCodes('&',
                 getString("accent", "&d"));
     }
 
-    public static String GetMainColour() {
+    @SuppressWarnings("ConstantConditions")
+    public String getMainColour() {
         return ChatColor.translateAlternateColorCodes('&',
                 getString("main", "&f"));
     }
 
-    public static String GetUpdateUrl() {
-        return ChatColor.translateAlternateColorCodes('&',
-                getString("updateUrl"));
-    }
-
-    public static ConnectionType GetConnectionType() {
+    public ConnectionType getConnectionType() {
         return ConnectionType.valueOf(getString("connection").toUpperCase());
     }
 
-    public static SqlInfoContainer GetSqlConnectionData() {
+    public SqlInfoContainer getSqlConnectionData() {
         SqlInfoContainer info = new SqlInfoContainer();
         info.Host = getString("mysql.host");
         info.Port = pl.getConfig().getInt("mysql.port", 3306);
@@ -77,7 +71,7 @@ public class ConfigHandler {
         return info;
     }
 
-    public static Boolean CheckForUpdates() {
+    public Boolean checkForUpdates() {
         return pl.getConfig().getBoolean("checkForUpdates");
     }
 }

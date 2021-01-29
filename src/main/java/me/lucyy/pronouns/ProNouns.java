@@ -1,6 +1,8 @@
 package me.lucyy.pronouns;
 
+import lombok.Getter;
 import me.lucyy.pronouns.command.PronounsCommand;
+import me.lucyy.pronouns.command.PronounsTabCompleter;
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.config.ConnectionType;
 import me.lucyy.pronouns.storage.MysqlFileStorage;
@@ -12,7 +14,6 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -23,36 +24,37 @@ import java.util.stream.Collectors;
 
 public final class ProNouns extends JavaPlugin implements Listener {
 
-    private PronounHandler handler;
-    private Metrics metrics;
+    @Getter
+    private PronounHandler pronounHandler;
+
+    @Getter
+    private ConfigHandler configHandler;
     private boolean updateAvailable = false;
-    public PronounHandler getPronounHandler() {
-        return handler;
-    }
 
     @Override
     public void onEnable() {
         int pluginId = 9519;
-        metrics = new Metrics(this, pluginId);
-        metrics.addCustomChart(new Metrics.SimplePie("storage_backend", () -> ConfigHandler.GetConnectionType().name()));
-        ConfigHandler.SetPlugin(this);
+        Metrics metrics = new Metrics(this, pluginId);
+        configHandler = new ConfigHandler(this);
+        metrics.addCustomChart(new Metrics.SimplePie("storage_backend", () -> configHandler.getConnectionType().name()));
 
-        switch (ConfigHandler.GetConnectionType()) {
+        switch (configHandler.getConnectionType()) {
             case YML:
-                handler = new PronounHandler(new YamlFileStorage(this));
+                pronounHandler = new PronounHandler(new YamlFileStorage(this));
                 break;
             case MYSQL:
-                handler = new PronounHandler(new MysqlFileStorage(this));
+                pronounHandler = new PronounHandler(new MysqlFileStorage(this));
                 break;
         }
 
-
-        getCommand("pronouns").setExecutor(new PronounsCommand(this));
+        PronounsCommand cmd = new PronounsCommand(this);
+        getCommand("pronouns").setExecutor(cmd);
+        getCommand("pronouns").setTabCompleter(new PronounsTabCompleter(cmd));
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
             new PronounsPapiExpansion(this).register();
 
-        if (ConfigHandler.CheckForUpdates()) {
+        if (configHandler.checkForUpdates()) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -82,25 +84,25 @@ public final class ProNouns extends JavaPlugin implements Listener {
 
     @EventHandler
     public void on(PlayerJoinEvent e) {
-        if (ConfigHandler.GetConnectionType() == ConnectionType.MYSQL) {
+        if (configHandler.getConnectionType() == ConnectionType.MYSQL) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    MysqlFileStorage storage = (MysqlFileStorage)handler.getStorage();
+                    MysqlFileStorage storage = (MysqlFileStorage) pronounHandler.getStorage();
                     storage.GetPronouns(e.getPlayer().getUniqueId(), false);
                 }
             }.runTaskAsynchronously(this);
         }
         if(updateAvailable && e.getPlayer().hasPermission("pronouns.admin"))
-            e.getPlayer().sendMessage(ConfigHandler.GetPrefix() +
+            e.getPlayer().sendMessage(configHandler.getPrefix() +
                     "A new version of ProNouns is available!\nFind it at "
-                    + ConfigHandler.GetAccentColour() + "https://lucyy.me/pronouns");
+                    + configHandler.getAccentColour() + "https://lucyy.me/pronouns");
     }
 
     @EventHandler
     public void on(PlayerQuitEvent e) {
-        if (ConfigHandler.GetConnectionType() == ConnectionType.MYSQL) {
-            MysqlFileStorage storage = (MysqlFileStorage) handler.getStorage();
+        if (configHandler.getConnectionType() == ConnectionType.MYSQL) {
+            MysqlFileStorage storage = (MysqlFileStorage) pronounHandler.getStorage();
             storage.onPlayerDisconnect(e.getPlayer().getUniqueId());
         }
     }

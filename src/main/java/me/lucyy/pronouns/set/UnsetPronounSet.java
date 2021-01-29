@@ -2,7 +2,7 @@ package me.lucyy.pronouns.set;
 
 public class UnsetPronounSet extends PronounSet {
     public UnsetPronounSet(PronounSet base) {
-        super(base.Subjective, base.Objective, base.Progressive, base.PossessiveAdjectival, base.PossessivePronoun, base.Reflexive, true);
+        super(base.subjective, base.objective, base.progressive, base.possessiveAdjectival, base.possessivePronoun, base.reflexive, true);
     }
 
     @Override

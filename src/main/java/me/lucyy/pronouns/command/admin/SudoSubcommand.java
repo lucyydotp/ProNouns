@@ -43,17 +43,17 @@ public class SudoSubcommand implements Subcommand {
 	public boolean execute(@NotNull final CommandSender sender, @NotNull final CommandSender target, @NotNull final String[] args) {
 		if (args.length < 2) return false;
 		if (args[1].equals("admin")) {
-			sender.sendMessage(ConfigHandler.GetPrefix() + "no recursion pls kthxbai");
+			sender.sendMessage(command.getPlugin().getConfigHandler().getPrefix() + "no recursion pls kthxbai");
 			return true;
 		}
 		Player cmdTarget = Bukkit.getPlayer(args[0]);
 
 		if (cmdTarget == null) {
-			sender.sendMessage(ConfigHandler.GetPrefix() + "Player '" + args[0] + "' couldn't be found");
+			sender.sendMessage(command.getPlugin().getConfigHandler().getPrefix() + "Player '" + args[0] + "' couldn't be found");
 			return true;
 		}
 
-		sender.sendMessage(ConfigHandler.GetPrefix() + "Running command as " + cmdTarget.getDisplayName());
+		sender.sendMessage(command.getPlugin().getConfigHandler().getPrefix() + "Running command as " + cmdTarget.getDisplayName());
 		command.onCommand(sender, cmdTarget, Arrays.copyOfRange(args, 1, args.length));
 		return true;
 	}
