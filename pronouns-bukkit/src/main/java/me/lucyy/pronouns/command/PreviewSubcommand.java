@@ -1,10 +1,12 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.ProNouns;
-import me.lucyy.pronouns.set.PronounSet;
+import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
 
 public class PreviewSubcommand implements Subcommand {
     private final ProNouns pl;
@@ -38,14 +40,17 @@ public class PreviewSubcommand implements Subcommand {
 
         Player player = (Player)target;
 
-        PronounSet[] set = pl.getPronounHandler().getUserPronouns(player.getUniqueId());
-        if (set.length == 0) {
+        Collection<PronounSet> sets = pl.getPronounHandler().getUserPronouns(player.getUniqueId());
+        if (sets.size() == 0) {
             sender.sendMessage(pl.getConfigHandler().getPrefix() + "You haven't set any pronouns yet!");
             return true;
         }
-        sender.sendMessage(player.getDisplayName() + " is testing " + set[0].possessiveAdjectival +
-                " pronoun selection. If this sentence seems right, then " + set[0].subjective +
-                " will be pleased with " + set[0].possessiveAdjectival + " choices.");
+
+        PronounSet set = sets.iterator().next();
+
+        sender.sendMessage(player.getDisplayName() + " is testing " + set.possessiveAdjective +
+                " pronoun selection. If this sentence seems right, then " + set.subjective +
+                " will be pleased with " + set.possessiveAdjective + " choices.");
         return true;
     }
 }

@@ -1,13 +1,16 @@
 package me.lucyy.pronouns;
 
-import me.lucyy.pronouns.set.AnyPronounSet;
-import me.lucyy.pronouns.set.PronounSet;
+import lombok.Getter;
+import me.lucyy.pronouns.api.PronounHandler;
+import me.lucyy.pronouns.api.set.AnyPronounSet;
+import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.storage.Storage;
 
 import java.util.*;
 
-public class PronounHandler {
+public class PronounHandlerImpl implements PronounHandler {
 
+    @Getter
     private Storage storage;
 
     private final HashMap<String, PronounSet> SetIndex = new HashMap<>();
@@ -17,19 +20,12 @@ public class PronounHandler {
         SetIndex.put(set.subjective, set);
     }
 
-    public PronounHandler(Storage storage) {
+    public PronounHandlerImpl(Storage storage) {
         this.storage = storage;
         addToIndex(fromString("he/him/he's/his/his/himself"));
         addToIndex(fromString("she/her/she's/her/hers/herself"));
         addToIndex(fromString("they/them/they're/their/theirs/themself"));
         SetIndex.put("any", new AnyPronounSet(fromString("they")));
-    }
-
-    public Storage getStorage() {
-        return storage;
-    }
-    public void SetStorage(Storage storage) {
-        this.storage = storage;
     }
 
     public void setUserPronouns(UUID uuid, List<PronounSet> set) {
@@ -40,12 +36,12 @@ public class PronounHandler {
         return SetIndex.values();
     }
 
-    public PronounSet[] getUserPronouns(UUID uuid) {
+    public Collection<PronounSet> getUserPronouns(UUID uuid) {
         List<PronounSet> pronounsList = new ArrayList<>();
         for (String pronoun : storage.getPronouns(uuid)) {
             pronounsList.add(fromString(pronoun));
         }
-        return pronounsList.toArray(new PronounSet[0]);
+        return pronounsList;
     }
 
     public void clearUserPronouns(UUID uuid) {

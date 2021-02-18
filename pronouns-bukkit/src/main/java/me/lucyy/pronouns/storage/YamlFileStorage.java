@@ -1,7 +1,7 @@
 package me.lucyy.pronouns.storage;
 
 import me.lucyy.pronouns.ProNouns;
-import me.lucyy.pronouns.set.PronounSet;
+import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 

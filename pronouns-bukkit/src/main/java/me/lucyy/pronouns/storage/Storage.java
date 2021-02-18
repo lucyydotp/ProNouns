@@ -1,6 +1,6 @@
 package me.lucyy.pronouns.storage;
 
-import me.lucyy.pronouns.set.PronounSet;
+import me.lucyy.pronouns.api.set.PronounSet;
 
 import java.util.List;
 import java.util.UUID;

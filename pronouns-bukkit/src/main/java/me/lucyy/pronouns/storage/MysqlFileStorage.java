@@ -2,7 +2,7 @@ package me.lucyy.pronouns.storage;
 
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.config.SqlInfoContainer;
-import me.lucyy.pronouns.set.PronounSet;
+import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.*;
@@ -47,10 +47,10 @@ public class MysqlFileStorage implements Storage {
 
     @Override
     public List<String> getPronouns(UUID uuid) {
-        return GetPronouns(uuid, true);
+        return getPronouns(uuid, true);
     }
 
-    public List<String> GetPronouns(UUID uuid, boolean useCache) {
+    public List<String> getPronouns(UUID uuid, boolean useCache) {
         if (useCache && cache.containsKey(uuid)) return cache.get(uuid);
         try {
             PreparedStatement stmt = connection.prepareStatement("SELECT pronouns FROM pronouns_players WHERE playerUUID=?");

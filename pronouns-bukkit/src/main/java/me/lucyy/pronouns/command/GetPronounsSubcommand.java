@@ -2,7 +2,7 @@ package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
-import me.lucyy.pronouns.set.PronounSet;
+import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

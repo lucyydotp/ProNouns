@@ -1,6 +1,7 @@
 package me.lucyy.pronouns;
 
 import lombok.Getter;
+import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.command.PronounsCommand;
 import me.lucyy.pronouns.command.PronounsTabCompleter;
 import me.lucyy.pronouns.config.ConfigHandler;
@@ -12,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -25,7 +27,7 @@ import java.util.stream.Collectors;
 public final class ProNouns extends JavaPlugin implements Listener {
 
     @Getter
-    private PronounHandler pronounHandler;
+    private PronounHandlerImpl pronounHandler;
 
     @Getter
     private ConfigHandler configHandler;
@@ -40,12 +42,14 @@ public final class ProNouns extends JavaPlugin implements Listener {
 
         switch (configHandler.getConnectionType()) {
             case YML:
-                pronounHandler = new PronounHandler(new YamlFileStorage(this));
+                pronounHandler = new PronounHandlerImpl(new YamlFileStorage(this));
                 break;
             case MYSQL:
-                pronounHandler = new PronounHandler(new MysqlFileStorage(this));
+                pronounHandler = new PronounHandlerImpl(new MysqlFileStorage(this));
                 break;
         }
+
+        this.getServer().getServicesManager().register(PronounHandler.class, pronounHandler, this, ServicePriority.Normal);
 
         PronounsCommand cmd = new PronounsCommand(this);
         getCommand("pronouns").setExecutor(cmd);
@@ -89,7 +93,7 @@ public final class ProNouns extends JavaPlugin implements Listener {
                 @Override
                 public void run() {
                     MysqlFileStorage storage = (MysqlFileStorage) pronounHandler.getStorage();
-                    storage.GetPronouns(e.getPlayer().getUniqueId(), false);
+                    storage.getPronouns(e.getPlayer().getUniqueId(), false);
                 }
             }.runTaskAsynchronously(this);
         }

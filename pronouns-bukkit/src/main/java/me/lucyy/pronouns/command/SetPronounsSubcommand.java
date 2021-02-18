@@ -2,7 +2,7 @@ package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
-import me.lucyy.pronouns.set.PronounSet;
+import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -67,7 +67,7 @@ public class SetPronounsSubcommand implements Subcommand {
         pl.getPronounHandler().setUserPronouns(((Player) target).getUniqueId(), set);
         ConfigHandler cfg = pl.getConfigHandler();
         sender.sendMessage(cfg.getPrefix() + "Set pronouns to " +
-                cfg.getAccentColour() + PronounSet.friendlyPrintSet(set.toArray(new PronounSet[0])));
+                cfg.getAccentColour() + PronounSet.friendlyPrintSet(set));
         return true;
     }
 

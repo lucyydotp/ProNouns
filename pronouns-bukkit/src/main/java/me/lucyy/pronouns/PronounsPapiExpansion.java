@@ -1,8 +1,8 @@
 package me.lucyy.pronouns;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import me.lucyy.pronouns.set.PronounSet;
-import me.lucyy.pronouns.set.UnsetPronounSet;
+import me.lucyy.pronouns.api.set.PronounSet;
+import me.lucyy.pronouns.api.set.UnsetPronounSet;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,7 +45,7 @@ public class PronounsPapiExpansion extends PlaceholderExpansion {
 
         PronounSet mainPronouns;
         try {
-            mainPronouns = plugin.getPronounHandler().getUserPronouns(player.getUniqueId())[0];
+            mainPronouns = plugin.getPronounHandler().getUserPronouns(player.getUniqueId()).iterator().next();
         } catch (ArrayIndexOutOfBoundsException e) {
             mainPronouns = new UnsetPronounSet(plugin.getPronounHandler().fromString("they"));
         }
@@ -76,7 +76,7 @@ public class PronounsPapiExpansion extends PlaceholderExpansion {
                 feedback = mainPronouns.progressive;
                 break;
             case "possessiveadj":
-                feedback = mainPronouns.possessiveAdjectival;
+                feedback = mainPronouns.possessiveAdjective;
                 break;
             case "possessivepro":
                 feedback = mainPronouns.possessivePronoun;
