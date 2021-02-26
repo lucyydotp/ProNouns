@@ -36,10 +36,17 @@ public interface PronounHandler {
     void clearUserPronouns(UUID uuid);
 
     /**
-     * Parses a pronoun set in string format, adding it to the local set cache.
-     * @param input the string to parse
+     * Parses a pronoun set in string format.
+     * @param input the string to parse. Can be formatted in a number of ways:
+     * <ul>
+     *              <li>full format as provided by {@link PronounSet#toString()}</li>
+     *              <li>if the set is a registered default (currently he/she/they as of RC1), the
+     *              {@link PronounSet#subjective} pronoun. Note that input is sanitised to ignore all content after a
+     *              slash, making this method suitable for command processing</li>
+     * </ul>
      * @return the parsed set
-     * @throws IllegalArgumentException if the input given can't be parsed
+     * @throws IllegalArgumentException if a predefined set matching the input cannot be found and if the input is not a
+     * valid set
      */
     PronounSet fromString(String input);
 }

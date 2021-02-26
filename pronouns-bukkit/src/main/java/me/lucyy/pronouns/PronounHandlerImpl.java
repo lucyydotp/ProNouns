@@ -11,13 +11,13 @@ import java.util.*;
 public class PronounHandlerImpl implements PronounHandler {
 
     @Getter
-    private Storage storage;
+    private final Storage storage;
 
-    private final HashMap<String, PronounSet> SetIndex = new HashMap<>();
+    private final HashMap<String, PronounSet> setIndex = new HashMap<>();
 
     public void addToIndex(PronounSet set) {
         set.isPredefined = true;
-        SetIndex.put(set.subjective, set);
+        setIndex.put(set.subjective, set);
     }
 
     public PronounHandlerImpl(Storage storage) {
@@ -25,7 +25,7 @@ public class PronounHandlerImpl implements PronounHandler {
         addToIndex(fromString("he/him/he's/his/his/himself"));
         addToIndex(fromString("she/her/she's/her/hers/herself"));
         addToIndex(fromString("they/them/they're/their/theirs/themself"));
-        SetIndex.put("any", new AnyPronounSet(fromString("they")));
+        setIndex.put("any", new AnyPronounSet(fromString("they")));
     }
 
     public void setUserPronouns(UUID uuid, List<PronounSet> set) {
@@ -33,7 +33,7 @@ public class PronounHandlerImpl implements PronounHandler {
     }
 
     public Collection<PronounSet> getAllPronouns() {
-        return SetIndex.values();
+        return setIndex.values();
     }
 
     public Collection<PronounSet> getUserPronouns(UUID uuid) {
@@ -52,7 +52,7 @@ public class PronounHandlerImpl implements PronounHandler {
         String[] pronouns = set.split("/");
         if (pronouns.length > 6) throw new IllegalArgumentException(set);
 
-        PronounSet retrieved = SetIndex.getOrDefault(pronouns[0].toLowerCase(), null);
+        PronounSet retrieved = setIndex.getOrDefault(pronouns[0].toLowerCase(), null);
 
         if (retrieved != null) return retrieved;
 

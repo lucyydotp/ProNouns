@@ -43,6 +43,11 @@ public class PronounSet {
      */
     public boolean isPredefined;
 
+    /**
+     * Capitalises a string input.
+     * @param input the string to capitalise
+     * @return the input, in lowercase, except for the first character which is uppercase
+     */
     public static String capitalise(String input) {
         return input.substring(0,1).toUpperCase() + input.substring(1).toLowerCase();
     }
