@@ -4,13 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>me.lucyy</groupId>
-        <artifactId>ProNouns</artifactId>
-        <version>1.0.0-RC1</version>
-    </parent>
+    <groupId>me.lucyy</groupId>
+    <artifactId>pronouns</artifactId>
+    <version>1.0.0-RC1</version>
 
-    <artifactId>pronouns-bukkit</artifactId>
 
     <description>Putting the "pro" in "pronouns".</description>
     <properties>
@@ -72,6 +69,10 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+        <repository>
+            <id>lucy</id>
+            <url>https://repo.lucyy.me/content/repositories/public</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -97,6 +98,7 @@
             <groupId>me.lucyy</groupId>
             <artifactId>pronouns-api</artifactId>
             <version>1.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>
