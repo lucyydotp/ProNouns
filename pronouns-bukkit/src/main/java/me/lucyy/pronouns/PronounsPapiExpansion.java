@@ -6,6 +6,8 @@ import me.lucyy.pronouns.api.set.UnsetPronounSet;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.NoSuchElementException;
+
 public class PronounsPapiExpansion extends PlaceholderExpansion {
     private final ProNouns plugin;
 
@@ -46,7 +48,7 @@ public class PronounsPapiExpansion extends PlaceholderExpansion {
         PronounSet mainPronouns;
         try {
             mainPronouns = plugin.getPronounHandler().getUserPronouns(player.getUniqueId()).iterator().next();
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (NoSuchElementException e) {
             mainPronouns = new UnsetPronounSet(plugin.getPronounHandler().fromString("they"));
         }
         String ident = identifier.split("_")[0];

@@ -6,7 +6,7 @@
 
     <groupId>me.lucyy</groupId>
     <artifactId>pronouns</artifactId>
-    <version>1.0.0-RC1</version>
+    <version>1.0.0-RC2</version>
 
 
     <description>Putting the "pro" in "pronouns".</description>
@@ -98,7 +98,7 @@
             <groupId>me.lucyy</groupId>
             <artifactId>pronouns-api</artifactId>
             <version>1.0</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
