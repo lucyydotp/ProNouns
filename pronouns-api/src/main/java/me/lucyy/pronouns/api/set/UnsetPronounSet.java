@@ -5,6 +5,9 @@ package me.lucyy.pronouns.api.set;
  * @author lucy
  */
 public class UnsetPronounSet extends PronounSet {
+    /**
+     * @param base the pronoun set to use for placeholders
+     */
     public UnsetPronounSet(PronounSet base) {
         super(base.subjective, base.objective, base.progressive, base.possessiveAdjective, base.possessivePronoun, base.reflexive, true);
     }

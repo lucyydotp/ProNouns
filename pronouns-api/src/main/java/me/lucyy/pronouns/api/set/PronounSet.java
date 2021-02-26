@@ -9,32 +9,32 @@ import java.util.Collection;
 public class PronounSet {
 
     /**
-     * The subjective pronoun i.e. they
+     * The subjective pronoun ie they
      */
     public String subjective;
 
     /**
-     * The objective pronoun i.e. them
+     * The objective pronoun ie them
      */
     public String objective;
 
     /**
-     * The progressive pronoun i.e. they're
+     * The progressive pronoun ie they're
      */
     public String progressive;
 
     /**
-     * The possessive adjective i.e. their
+     * The possessive adjective ie their
      */
     public String possessiveAdjective;
 
     /**
-     * The possessive pronoune i.e. theirs
+     * The possessive pronoune ie theirs
      */
     public String possessivePronoun;
 
     /**
-     * The reflexive pronoun i.e. themselves
+     * The reflexive pronoun ie themselves
      */
     public String reflexive;
 
