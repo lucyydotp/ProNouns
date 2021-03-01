@@ -1,3 +1,8 @@
+/*
+ * This code is part of bStats (https://bstats.org/), and as a result
+ * is excluded from the GPL.
+ */
+
 package me.lucyy.pronouns;
 
 import com.google.gson.JsonArray;
