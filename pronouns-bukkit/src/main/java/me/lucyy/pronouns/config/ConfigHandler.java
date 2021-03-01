@@ -81,11 +81,11 @@ public class ConfigHandler {
 
     public SqlInfoContainer getSqlConnectionData() {
         SqlInfoContainer info = new SqlInfoContainer();
-        info.Host = getString("mysql.host");
-        info.Port = pl.getConfig().getInt("mysql.port", 3306);
-        info.Database = getString("mysql.database");
-        info.Username = getString("mysql.username");
-        info.Password = getString("mysql.password");
+        info.host = getString("mysql.host");
+        info.port = pl.getConfig().getInt("mysql.port", 3306);
+        info.database = getString("mysql.database");
+        info.username = getString("mysql.username");
+        info.password = getString("mysql.password");
         return info;
     }
 

@@ -19,9 +19,9 @@
 package me.lucyy.pronouns.config;
 
 public class SqlInfoContainer {
-    public String Host;
-    public int Port;
-    public String Database;
-    public String Username;
-    public String Password;
+    public String host;
+    public int port;
+    public String database;
+    public String username;
+    public String password;
 }

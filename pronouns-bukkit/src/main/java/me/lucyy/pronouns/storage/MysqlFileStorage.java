@@ -45,8 +45,8 @@ public class MysqlFileStorage implements Storage {
 
 
         try {
-            this.connection = DriverManager.getConnection("jdbc:mysql://" + sqlData.Host + ":" + sqlData.Port + "/"
-                    + sqlData.Database + "?useSSL=false", sqlData.Username, sqlData.Password);
+            this.connection = DriverManager.getConnection("jdbc:mysql://" + sqlData.host + ":" + sqlData.port + "/"
+                    + sqlData.database + "?useSSL=false", sqlData.username, sqlData.password);
         } catch (SQLException e) {
             plugin.getLogger().severe("Failed to connect to MySQL! Expect things to break!");
         }
