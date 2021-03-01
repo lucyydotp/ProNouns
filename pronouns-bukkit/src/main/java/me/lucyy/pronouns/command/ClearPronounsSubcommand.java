@@ -23,16 +23,16 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class UnsetPronounsSubcommand implements Subcommand {
+public class ClearPronounsSubcommand implements Subcommand {
     private final ProNouns pl;
 
-    public UnsetPronounsSubcommand(ProNouns plugin) {
+    public ClearPronounsSubcommand(ProNouns plugin) {
         pl = plugin;
     }
 
     @Override
     public String getName() {
-        return "unset";
+        return "clear";
     }
 
     public String getDescription() {
@@ -40,7 +40,7 @@ public class UnsetPronounsSubcommand implements Subcommand {
     }
 
     public String getUsage() {
-        return "/pronouns unset";
+        return "/pronouns clear";
     }
 
     @Override

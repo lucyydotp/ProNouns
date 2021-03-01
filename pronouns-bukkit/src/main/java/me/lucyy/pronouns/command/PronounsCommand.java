@@ -44,7 +44,7 @@ public class PronounsCommand implements CommandExecutor {
         register(new GetPronounsSubcommand(this.plugin));
         register(new SetPronounsSubcommand(this.plugin));
         register(new ListPronounsSubcommand(this.plugin));
-        register(new UnsetPronounsSubcommand(this.plugin));
+        register(new ClearPronounsSubcommand(this.plugin));
         register(new PreviewSubcommand(this.plugin));
         register(new SudoSubcommand(this));
         register(new ReloadSubcommand(this.plugin));

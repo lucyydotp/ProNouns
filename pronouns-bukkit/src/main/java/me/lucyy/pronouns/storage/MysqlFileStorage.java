@@ -18,6 +18,7 @@
 
 package me.lucyy.pronouns.storage;
 
+import com.zaxxer.hikari.HikariDataSource;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.config.SqlInfoContainer;
 import me.lucyy.pronouns.api.set.PronounSet;
@@ -28,7 +29,7 @@ import java.util.*;
 
 public class MysqlFileStorage implements Storage {
 
-    private Connection connection;
+    private final HikariDataSource ds = new HikariDataSource();
     private final ProNouns plugin;
     private final HashMap<UUID, List<String>> cache = new HashMap<>();
 
@@ -37,26 +38,28 @@ public class MysqlFileStorage implements Storage {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            plugin.getLogger().severe("MySQL driver not found! Unable to continue - this plugin will not work!");
+            plugin.getLogger().severe("MySQL driver not found! Unable to continue!");
+            plugin.getPluginLoader().disablePlugin(plugin);
             return;
         }
         SqlInfoContainer sqlData = plugin.getConfigHandler().getSqlConnectionData();
-        plugin.getLogger().info("Attempting to connect to MySQL database...");
 
+        ds.setJdbcUrl("jdbc:mysql://" + sqlData.host + ":" + sqlData.port + "/"
+                + sqlData.database + "?useSSL=false");
+        ds.setUsername(sqlData.username);
+        ds.setPassword(sqlData.password);
+        ds.addDataSourceProperty("cachePrepStmts", "true");
+        ds.addDataSourceProperty("prepStmtCacheSize", "250");
+        ds.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        ds.addDataSourceProperty("useServerPrepStmts ", "true");
 
-        try {
-            this.connection = DriverManager.getConnection("jdbc:mysql://" + sqlData.host + ":" + sqlData.port + "/"
-                    + sqlData.database + "?useSSL=false", sqlData.username, sqlData.password);
-        } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to connect to MySQL! Expect things to break!");
-        }
-
-        try {
-            this.connection.prepareStatement("CREATE TABLE IF NOT EXISTS pronouns_players ( playerUuid VARCHAR(36), pronouns TEXT )").execute();
+        try (Connection connection = ds.getConnection()) {
+            connection.createStatement().execute("CREATE TABLE IF NOT EXISTS pronouns_players ( playerUuid VARCHAR(36), pronouns TEXT )");
             plugin.getLogger().info("Connected to MySQL.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
     }
 
     public void onPlayerDisconnect(UUID uuid) {
@@ -70,7 +73,7 @@ public class MysqlFileStorage implements Storage {
 
     public List<String> getPronouns(UUID uuid, boolean useCache) {
         if (useCache && cache.containsKey(uuid)) return cache.get(uuid);
-        try {
+        try (Connection connection = ds.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement("SELECT pronouns FROM pronouns_players WHERE playerUUID=?");
             stmt.setString(1, uuid.toString());
             ResultSet set = stmt.executeQuery();
@@ -96,11 +99,10 @@ public class MysqlFileStorage implements Storage {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try {
+                try (Connection connection = ds.getConnection()) {
                     PreparedStatement stmt = connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
                     stmt.setString(1, uuid.toString());
                     stmt.execute();
-                    stmt.closeOnCompletion();
 
                     PreparedStatement insStmt = connection.prepareStatement("INSERT INTO pronouns_players VALUES (?,?)");
                     for (PronounSet set : sets) {
@@ -116,7 +118,6 @@ public class MysqlFileStorage implements Storage {
                         insStmt.addBatch();
                     }
                     insStmt.executeBatch();
-                    insStmt.closeOnCompletion();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -129,11 +130,10 @@ public class MysqlFileStorage implements Storage {
         new BukkitRunnable() {
             @Override
             public void run() {
-                try {
+                try (Connection connection = ds.getConnection()) {
                     PreparedStatement stmt = connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
                     stmt.setString(1, uuid.toString());
                     stmt.execute();
-                    stmt.closeOnCompletion();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
