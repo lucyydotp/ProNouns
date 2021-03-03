@@ -6,7 +6,7 @@
 
     <groupId>me.lucyy</groupId>
     <artifactId>pronouns</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <name>ProNouns</name>
 
@@ -72,7 +72,7 @@
         </repository>
         <repository>
             <id>lucy</id>
-            <url>https://repo.lucyy.me/content/repositories/public</url>
+            <url>https://repo.lucyy.me/repository/public/</url>
         </repository>
     </repositories>
 

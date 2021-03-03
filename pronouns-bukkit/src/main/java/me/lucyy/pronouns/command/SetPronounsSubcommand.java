@@ -45,7 +45,7 @@ public class SetPronounsSubcommand implements Subcommand {
     }
 
     public String getUsage() {
-        return "/pronouns set <pronoun> [pronoun] ...\nExample: /pronouns set she they";
+        return "/pronouns set <pronoun> [pronoun] ...\nExample: /pronouns set she/they";
     }
 
     @Override
