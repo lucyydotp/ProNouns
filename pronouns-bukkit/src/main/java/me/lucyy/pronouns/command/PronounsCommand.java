@@ -39,7 +39,8 @@ public class PronounsCommand implements CommandExecutor {
         subcommands.put(cmd.getName(), cmd);
     }
 
-    public PronounsCommand(ProNouns plugin) {
+    @SuppressWarnings("ConstantConditions")
+	public PronounsCommand(ProNouns plugin) {
         this.plugin = plugin;
         register(new GetPronounsSubcommand(this.plugin));
         register(new SetPronounsSubcommand(this.plugin));
@@ -94,7 +95,7 @@ public class PronounsCommand implements CommandExecutor {
         return onCommand(sender, sender, args);
     }
 
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull CommandSender target, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull CommandSender target, String[] args) {
         if (args.length < 1) {
             showDefault(sender);
             return true;

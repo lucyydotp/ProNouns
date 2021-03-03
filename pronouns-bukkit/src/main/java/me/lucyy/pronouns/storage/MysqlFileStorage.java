@@ -24,7 +24,6 @@ import me.lucyy.pronouns.config.SqlInfoContainer;
 import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.net.ConnectException;
 import java.sql.*;
 import java.util.*;
 

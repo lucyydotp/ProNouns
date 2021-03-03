@@ -23,8 +23,6 @@ import me.lucyy.pronouns.command.Subcommand;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
-import me.lucyy.pronouns.config.ConfigHandler;
-
 public class ReloadSubcommand implements Subcommand {
 
     private final ProNouns pl;
