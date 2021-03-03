@@ -23,6 +23,7 @@ import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.api.set.AnyPronounSet;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.storage.Storage;
+import org.bukkit.Bukkit;
 
 import java.util.*;
 
@@ -57,7 +58,12 @@ public class PronounHandlerImpl implements PronounHandler {
     public Collection<PronounSet> getUserPronouns(UUID uuid) {
         List<PronounSet> pronounsList = new ArrayList<>();
         for (String pronoun : storage.getPronouns(uuid)) {
-            pronounsList.add(fromString(pronoun));
+        	try {
+        		pronounsList.add(fromString(pronoun));
+        	} catch (IllegalArgumentException e) {
+				Bukkit.getLogger().warning("No definition for the pronoun set '" + pronoun + "' could be found!");
+				Bukkit.getLogger().warning("If you're using MySQL, make sure predefinedSets matches on all servers!");
+			}
         }
         return pronounsList;
     }

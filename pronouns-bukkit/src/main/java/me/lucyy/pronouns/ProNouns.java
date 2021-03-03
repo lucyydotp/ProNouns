@@ -40,6 +40,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Collectors;
 
+@SuppressWarnings("ConstantConditions")
 public final class ProNouns extends JavaPlugin implements Listener {
 
 	@Getter
@@ -69,9 +70,18 @@ public final class ProNouns extends JavaPlugin implements Listener {
 				}
 		}
 
+		for (String set : configHandler.getPredefinedSets()) {
+			try {
+			pronounHandler.addToIndex(pronounHandler.fromString(set));
+			} catch (IllegalArgumentException e) {
+				getLogger().warning("'" + set + "' is an invalid set, ignoring");
+			}
+		}
+
 		this.getServer().getServicesManager().register(PronounHandler.class, pronounHandler, this, ServicePriority.Normal);
 
 		PronounsCommand cmd = new PronounsCommand(this);
+		//noinspection ConstantConditions
 		getCommand("pronouns").setExecutor(cmd);
 		getCommand("pronouns").setTabCompleter(new PronounsTabCompleter(cmd));
 

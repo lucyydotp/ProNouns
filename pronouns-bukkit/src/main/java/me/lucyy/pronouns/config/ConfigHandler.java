@@ -21,8 +21,11 @@ package me.lucyy.pronouns.config;
 import me.lucyy.pronouns.ProNouns;
 import org.bukkit.ChatColor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ConfigHandler {
-    private ProNouns pl;
+    private final ProNouns pl;
 
     public ConfigHandler(ProNouns plugin) {
         pl = plugin;
@@ -39,6 +42,8 @@ public class ConfigHandler {
         pl.getConfig().addDefault("mysql.database", "pronouns");
         pl.getConfig().addDefault("mysql.username", "pronouns");
         pl.getConfig().addDefault("mysql.password", "password");
+
+		pl.getConfig().addDefault("predefinedSets", new ArrayList<String>());
         pl.saveConfig();
     }
 
@@ -57,6 +62,10 @@ public class ConfigHandler {
         }
         return value;
     }
+
+    public List<String> getPredefinedSets() {
+    	return pl.getConfig().getStringList("predefinedSets");
+	}
 
     public String getPrefix() {
         return ChatColor.translateAlternateColorCodes('&',

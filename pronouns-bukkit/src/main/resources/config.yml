@@ -1,6 +1,8 @@
 # ProNouns Config File
 # Make changes here and update them by either using /pronouns reload
 # or by restarting the server
+# NOTE: if you're using predefined sets with MySQL, make sure they match on
+# all servers!
 
 prefix: "&f[&dPronouns&f] "
 accent: '&d'
