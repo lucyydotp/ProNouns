@@ -93,6 +93,8 @@ public final class ProNouns extends JavaPlugin implements Listener {
 				@Override
 				public void run() {
 					try {
+						getLogger().info("Checking for updates...");
+
 						HttpURLConnection con = (HttpURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=86199").openConnection();
 						if (con.getResponseCode() != 200) throw new Exception();
 
@@ -102,9 +104,9 @@ public final class ProNouns extends JavaPlugin implements Listener {
 
 						if (!text.equals(getDescription().getVersion())) {
 							updateAvailable = true;
-							getLogger().info("A new version of ProNouns is available! Find it at https://lucyy.me/pronouns");
+							getLogger().warning("A new version of ProNouns is available! Find it at https://lucyy.me/pronouns");
 							this.cancel();
-						}
+						} else getLogger().info("No update available.");
 
 					} catch (Exception ignored) {
 						getLogger().warning("Unable to check for ProNouns updates!");
@@ -113,6 +115,8 @@ public final class ProNouns extends JavaPlugin implements Listener {
 			}.runTaskTimerAsynchronously(this, 0, 216000); // every 3 hours
 
 			Bukkit.getPluginManager().registerEvents(this, this);
+		} else {
+			getLogger().warning("Update checking is disabled. You might be running an old version!");
 		}
 		getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
 	}

@@ -23,6 +23,7 @@ import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ConfigHandler {
     private final ProNouns pl;
@@ -99,6 +100,6 @@ public class ConfigHandler {
     }
 
     public Boolean checkForUpdates() {
-        return pl.getConfig().getBoolean("checkForUpdates");
+        return !Objects.equals(pl.getConfig().getString("checkForUpdates"), "false");
     }
 }
