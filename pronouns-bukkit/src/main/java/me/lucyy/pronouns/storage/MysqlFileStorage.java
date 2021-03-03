@@ -24,6 +24,7 @@ import me.lucyy.pronouns.config.SqlInfoContainer;
 import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.net.ConnectException;
 import java.sql.*;
 import java.util.*;
 
@@ -33,14 +34,13 @@ public class MysqlFileStorage implements Storage {
     private final ProNouns plugin;
     private final HashMap<UUID, List<String>> cache = new HashMap<>();
 
-    public MysqlFileStorage(ProNouns plugin) {
+    public MysqlFileStorage(ProNouns plugin) throws MysqlConnectionException {
         this.plugin = plugin;
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             plugin.getLogger().severe("MySQL driver not found! Unable to continue!");
-            plugin.getPluginLoader().disablePlugin(plugin);
-            return;
+            throw new MysqlConnectionException();
         }
         SqlInfoContainer sqlData = plugin.getConfigHandler().getSqlConnectionData();
 
@@ -57,7 +57,8 @@ public class MysqlFileStorage implements Storage {
             connection.createStatement().execute("CREATE TABLE IF NOT EXISTS pronouns_players ( playerUuid VARCHAR(36), pronouns TEXT )");
             plugin.getLogger().info("Connected to MySQL.");
         } catch (SQLException e) {
-            e.printStackTrace();
+            plugin.getLogger().severe("Failed to connect to MySQL!");
+            throw new MysqlConnectionException();
         }
 
     }

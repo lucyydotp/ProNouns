@@ -26,6 +26,7 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SetPronounsSubcommand implements Subcommand {
@@ -90,10 +91,26 @@ public class SetPronounsSubcommand implements Subcommand {
     }
 
     @Override
-    public List<String> tabComplete() {
+    public List<String> tabComplete(String[] args) {
+    	String arg = args[args.length - 1];
         List<String> allPronouns = new ArrayList<>();
-        for (PronounSet set : pl.getPronounHandler().getAllPronouns()) allPronouns.add(set.subjective);
+
         allPronouns.add("<custom>");
+
+		for (PronounSet set : pl.getPronounHandler().getAllPronouns()) {
+			allPronouns.add(set.getName().toLowerCase());
+		}
+
+        if (arg.contains("/") && !allPronouns.contains(arg)) {
+        	List<String> pronounsSoFar = Arrays.asList(arg.split("/"));
+        	String soFarJoined = String.join("/", pronounsSoFar);
+			for (PronounSet set : pl.getPronounHandler().getAllPronouns()) {
+				if (!pronounsSoFar.contains(set.subjective))
+						allPronouns.add(soFarJoined + "/" + set.subjective);
+			}
+			allPronouns.add(soFarJoined);
+		}
+
         return allPronouns;
     }
 }
