@@ -19,6 +19,7 @@
 package me.lucyy.pronouns;
 
 import lombok.Getter;
+import me.lucyy.common.update.UpdateChecker;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.command.PronounsCommand;
 import me.lucyy.pronouns.command.PronounsTabCompleter;
@@ -31,14 +32,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("ConstantConditions")
 public final class ProNouns extends JavaPlugin implements Listener {
@@ -72,7 +65,7 @@ public final class ProNouns extends JavaPlugin implements Listener {
 
 		for (String set : configHandler.getPredefinedSets()) {
 			try {
-			pronounHandler.addToIndex(pronounHandler.fromString(set));
+				pronounHandler.addToIndex(pronounHandler.fromString(set));
 			} catch (IllegalArgumentException e) {
 				getLogger().warning("'" + set + "' is an invalid set, ignoring");
 			}
@@ -88,33 +81,13 @@ public final class ProNouns extends JavaPlugin implements Listener {
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
 			new PronounsPapiExpansion(this).register();
 
+
 		if (configHandler.checkForUpdates()) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					try {
-						getLogger().info("Checking for updates...");
-
-						HttpURLConnection con = (HttpURLConnection) new URL("https://api.spigotmc.org/legacy/update.php?resource=86199").openConnection();
-						if (con.getResponseCode() != 200) throw new Exception();
-
-						String text = new BufferedReader(
-								new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8)
-						).lines().collect(Collectors.joining("\n"));
-
-						if (!text.equals(getDescription().getVersion())) {
-							updateAvailable = true;
-							getLogger().warning("A new version of ProNouns is available! Find it at https://lucyy.me/pronouns");
-							this.cancel();
-						} else getLogger().info("No update available.");
-
-					} catch (Exception ignored) {
-						getLogger().warning("Unable to check for ProNouns updates!");
-					}
-				}
-			}.runTaskTimerAsynchronously(this, 0, 216000); // every 3 hours
-
-			Bukkit.getPluginManager().registerEvents(this, this);
+			new UpdateChecker(this, "https://api.spigotmc.org/legacy/update.php?resource=86199",
+					getConfigHandler().getPrefix() +
+							"A new version of ProNouns is available!\nFind it at "
+							+ getConfigHandler().getAccentColour() + "https://lucyy.me/pronouns",
+					"pronouns.admin");
 		} else {
 			getLogger().warning("Update checking is disabled. You might be running an old version!");
 		}

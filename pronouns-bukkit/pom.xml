@@ -6,7 +6,7 @@
 
     <groupId>me.lucyy</groupId>
     <artifactId>pronouns</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <name>ProNouns</name>
 
@@ -100,6 +100,11 @@
             <artifactId>pronouns-api</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.lucyy</groupId>
+            <artifactId>LucyCommonLib</artifactId>
+            <version>1.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>

@@ -44,10 +44,6 @@ public class JoinLeaveListener implements Listener {
                 }
             }.runTaskAsynchronously(pl);
         }
-        if(pl.isUpdateAvailable() && e.getPlayer().hasPermission("pronouns.admin"))
-            e.getPlayer().sendMessage(pl.getConfigHandler().getPrefix() +
-                    "A new version of ProNouns is available!\nFind it at "
-                    + pl.getConfigHandler().getAccentColour() + "https://lucyy.me/pronouns");
     }
 
     @EventHandler
