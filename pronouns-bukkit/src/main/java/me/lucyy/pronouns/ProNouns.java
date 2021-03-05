@@ -19,10 +19,13 @@
 package me.lucyy.pronouns;
 
 import lombok.Getter;
+import me.lucyy.common.command.Command;
+import me.lucyy.common.command.HelpSubcommand;
 import me.lucyy.common.update.UpdateChecker;
 import me.lucyy.pronouns.api.PronounHandler;
-import me.lucyy.pronouns.command.PronounsCommand;
-import me.lucyy.pronouns.command.PronounsTabCompleter;
+import me.lucyy.pronouns.command.*;
+import me.lucyy.pronouns.command.admin.ReloadSubcommand;
+import me.lucyy.pronouns.command.admin.SudoSubcommand;
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.listener.JoinLeaveListener;
 import me.lucyy.pronouns.storage.MysqlConnectionException;
@@ -41,7 +44,6 @@ public final class ProNouns extends JavaPlugin implements Listener {
 
 	@Getter
 	private ConfigHandler configHandler;
-	private boolean updateAvailable = false;
 
 	@Override
 	public void onEnable() {
@@ -73,28 +75,39 @@ public final class ProNouns extends JavaPlugin implements Listener {
 
 		this.getServer().getServicesManager().register(PronounHandler.class, pronounHandler, this, ServicePriority.Normal);
 
-		PronounsCommand cmd = new PronounsCommand(this);
+		Command cmd = new Command(configHandler);
+
+		cmd.register(new GetPronounsSubcommand(this));
+		cmd.register(new SetPronounsSubcommand(this));
+		cmd.register(new ClearPronounsSubcommand(this));
+		cmd.register(new ListPronounsSubcommand(this));
+		cmd.register(new PreviewSubcommand(this));
+		cmd.register(new ReloadSubcommand(this));
+		cmd.register(new SudoSubcommand(cmd, this));
+
+		HelpSubcommand defaultSub = new HelpSubcommand(cmd, configHandler, this);
+		cmd.register(defaultSub);
+		cmd.setDefaultSubcommand(defaultSub);
+
 		//noinspection ConstantConditions
 		getCommand("pronouns").setExecutor(cmd);
-		getCommand("pronouns").setTabCompleter(new PronounsTabCompleter(cmd));
+		getCommand("pronouns").setTabCompleter(cmd);
 
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
 			new PronounsPapiExpansion(this).register();
 
-
-		if (configHandler.checkForUpdates()) {
-			new UpdateChecker(this, "https://api.spigotmc.org/legacy/update.php?resource=86199",
+		if (getConfigHandler().checkForUpdates()) {
+			new UpdateChecker(this,
+					"https://api.spigotmc.org/legacy/update.php?resource=86199",
 					getConfigHandler().getPrefix() +
 							"A new version of ProNouns is available!\nFind it at "
 							+ getConfigHandler().getAccentColour() + "https://lucyy.me/pronouns",
-					"pronouns.admin");
+					"pronouns.admin"
+			);
 		} else {
 			getLogger().warning("Update checking is disabled. You might be running an old version!");
 		}
-		getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
-	}
 
-	public boolean isUpdateAvailable() {
-		return updateAvailable;
+		getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
 	}
 }

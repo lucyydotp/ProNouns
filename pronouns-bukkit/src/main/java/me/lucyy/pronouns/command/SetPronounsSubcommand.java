@@ -18,6 +18,7 @@
 
 package me.lucyy.pronouns.command;
 
+import me.lucyy.common.command.Subcommand;
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 public class SetPronounsSubcommand implements Subcommand {
     private final ProNouns pl;
@@ -72,6 +74,12 @@ public class SetPronounsSubcommand implements Subcommand {
                     if (!set.contains(parsed)) set.add(parsed);
                 } else {
                     for (String _splitArg : splitArg) {
+						// check for objective
+						boolean cont = true;
+						for (PronounSet _set : set) {
+							if (_set.objective.toUpperCase(Locale.ROOT).equals(_splitArg.toUpperCase())) cont = false;
+						}
+						if (!cont) continue;
                         PronounSet parsed = pl.getPronounHandler().fromString(_splitArg);
                         if (!set.contains(parsed)) set.add(parsed);
                     }

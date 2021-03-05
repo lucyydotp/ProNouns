@@ -18,6 +18,7 @@
 
 package me.lucyy.pronouns.command;
 
+import me.lucyy.common.command.Subcommand;
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;

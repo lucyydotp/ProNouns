@@ -18,8 +18,8 @@
 
 package me.lucyy.pronouns.command.admin;
 
+import me.lucyy.common.command.Subcommand;
 import me.lucyy.pronouns.ProNouns;
-import me.lucyy.pronouns.command.Subcommand;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 

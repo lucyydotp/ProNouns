@@ -18,6 +18,7 @@
 
 package me.lucyy.pronouns.command;
 
+import me.lucyy.common.command.Subcommand;
 import me.lucyy.pronouns.ProNouns;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

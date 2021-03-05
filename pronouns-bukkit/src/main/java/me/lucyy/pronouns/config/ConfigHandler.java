@@ -18,6 +18,7 @@
 
 package me.lucyy.pronouns.config;
 
+import me.lucyy.common.command.FormatProvider;
 import me.lucyy.pronouns.ProNouns;
 import org.bukkit.ChatColor;
 
@@ -25,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class ConfigHandler {
+public class ConfigHandler implements FormatProvider {
     private final ProNouns pl;
 
     public ConfigHandler(ProNouns plugin) {

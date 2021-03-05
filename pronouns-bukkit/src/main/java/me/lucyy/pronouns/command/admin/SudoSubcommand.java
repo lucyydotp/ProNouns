@@ -18,8 +18,9 @@
 
 package me.lucyy.pronouns.command.admin;
 
-import me.lucyy.pronouns.command.PronounsCommand;
-import me.lucyy.pronouns.command.Subcommand;
+import me.lucyy.common.command.Command;
+import me.lucyy.common.command.Subcommand;
+import me.lucyy.pronouns.ProNouns;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -29,10 +30,12 @@ import java.util.Arrays;
 
 public class SudoSubcommand implements Subcommand {
 	
-	private final PronounsCommand command;
+	private final Command command;
+	private final ProNouns plugin;
 
-	public SudoSubcommand(PronounsCommand command) {
+	public SudoSubcommand(Command command, ProNouns plugin) {
 		this.command = command;
+		this.plugin = plugin;
 	}
 
 	@Override
@@ -59,18 +62,18 @@ public class SudoSubcommand implements Subcommand {
 	public boolean execute(@NotNull final CommandSender sender, @NotNull final CommandSender target, @NotNull final String[] args) {
 		if (args.length < 2) return false;
 		if (args[1].equals("admin")) {
-			sender.sendMessage(command.getPlugin().getConfigHandler().getPrefix() + "no recursion pls kthxbai");
+			sender.sendMessage( plugin.getConfigHandler().getPrefix() + "no recursion pls kthxbai");
 			return true;
 		}
 		Player cmdTarget = Bukkit.getPlayer(args[0]);
 
 		if (cmdTarget == null) {
-			sender.sendMessage(command.getPlugin().getConfigHandler().getPrefix() + "Player '" + args[0] + "' couldn't be found");
+			sender.sendMessage(plugin.getConfigHandler().getPrefix() + "Player '" + args[0] + "' couldn't be found");
 			return true;
 		}
 
-		sender.sendMessage(command.getPlugin().getConfigHandler().getPrefix() + "Running command as " + cmdTarget.getDisplayName());
-		command.onCommand(sender, cmdTarget, Arrays.copyOfRange(args, 1, args.length));
+		sender.sendMessage(plugin.getConfigHandler().getPrefix() + "Running command as " + cmdTarget.getDisplayName());
+		command.onCommand(sender, cmdTarget, "pronouns", Arrays.copyOfRange(args, 1, args.length));
 		return true;
 	}
 }
