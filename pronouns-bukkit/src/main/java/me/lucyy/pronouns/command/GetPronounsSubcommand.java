@@ -29,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class GetPronounsSubcommand implements Subcommand {
     private final ProNouns pl;
@@ -89,7 +90,9 @@ public class GetPronounsSubcommand implements Subcommand {
     @Override
     public List<String> tabComplete(String[] args) {
         List<String> names = new ArrayList<>();
-        for (Player player : Bukkit.getOnlinePlayers()) if (args[0].startsWith(player.getName())) names.add(player.getName());
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.getName().toUpperCase().startsWith(args[1].toUpperCase())) names.add(player.getName());
+        }
         return names;
     }
 }
