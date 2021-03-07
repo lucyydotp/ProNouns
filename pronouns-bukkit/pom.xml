@@ -6,7 +6,7 @@
 
     <groupId>me.lucyy</groupId>
     <artifactId>pronouns</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 
     <name>ProNouns</name>
 
@@ -37,6 +37,10 @@
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>me.lucyy.pronouns</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>me.lucyy.common</pattern>
+                            <shadedPattern>me.lucyy.pronouns.commonlib</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -104,7 +108,7 @@
         <dependency>
             <groupId>me.lucyy</groupId>
             <artifactId>LucyCommonLib</artifactId>
-            <version>1.1.0</version>
+            <version>1.2.3</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
