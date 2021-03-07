@@ -4,7 +4,7 @@
 # NOTE: if you're using predefined sets with MySQL, make sure they match on
 # all servers!
 
-accent: '&d'
+accent: '{#fa9efa>}%s{#9dacfa<}'
 main: '&f'
 checkForUpdates: true
 
