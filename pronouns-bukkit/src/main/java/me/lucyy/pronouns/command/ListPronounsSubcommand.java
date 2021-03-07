@@ -19,8 +19,10 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.common.command.Subcommand;
+import me.lucyy.common.format.TextFormatter;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
+import me.lucyy.pronouns.config.ConfigHandler;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +43,7 @@ public class ListPronounsSubcommand implements Subcommand {
     }
 
     public String getUsage() {
-        return "/pronouns list";
+        return "list";
     }
 
     @Override
@@ -49,8 +51,12 @@ public class ListPronounsSubcommand implements Subcommand {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
-        sender.sendMessage(pl.getConfigHandler().getPrefix() + "All Predefined Pronoun Sets:");
-        for (PronounSet set : pl.getPronounHandler().getAllPronouns()) sender.sendMessage(set.toString());
+        final ConfigHandler cfg = pl.getConfigHandler();
+        StringBuilder out = new StringBuilder();
+        sender.sendMessage(TextFormatter.formatTitle("All Predefined Pronoun Sets:", cfg));
+        for (PronounSet set : pl.getPronounHandler().getAllPronouns()) out.append(set.toString()).append("\n");
+        sender.sendMessage(cfg.formatMain(out.toString()));
+        sender.sendMessage(TextFormatter.formatTitle("*", cfg));
         return true;
     }
 }

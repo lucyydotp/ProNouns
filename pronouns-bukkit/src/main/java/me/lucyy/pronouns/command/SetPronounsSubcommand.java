@@ -48,7 +48,7 @@ public class SetPronounsSubcommand implements Subcommand {
     }
 
     public String getUsage() {
-        return "/pronouns set <pronoun> [pronoun] ...\nExample: /pronouns set she/they";
+        return "set <pronoun> [pronoun] ...\nExample: /pronouns set she/they";
     }
 
     @Override
@@ -58,8 +58,9 @@ public class SetPronounsSubcommand implements Subcommand {
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
+        final ConfigHandler cfg = pl.getConfigHandler();
         if (!(target instanceof Player)) {
-            sender.sendMessage(pl.getConfigHandler().getPrefix() + "This command can only be run by a player.");
+            sender.sendMessage(cfg.getPrefix() + cfg.formatMain("This command can only be run by a player."));
             return true;
         }
 
@@ -74,50 +75,54 @@ public class SetPronounsSubcommand implements Subcommand {
                     if (!set.contains(parsed)) set.add(parsed);
                 } else {
                     for (String _splitArg : splitArg) {
-						// check for objective
-						boolean cont = true;
-						for (PronounSet _set : set) {
-							if (_set.objective.toUpperCase(Locale.ROOT).equals(_splitArg.toUpperCase())) cont = false;
-						}
-						if (!cont) continue;
+                        // check for objective
+                        boolean cont = true;
+                        for (PronounSet _set : set) {
+                            if (_set.objective.toUpperCase(Locale.ROOT).equals(_splitArg.toUpperCase())) {
+                                cont = false;
+                                break;
+                            }
+                        }
+                        if (!cont) continue;
                         PronounSet parsed = pl.getPronounHandler().fromString(_splitArg);
                         if (!set.contains(parsed)) set.add(parsed);
                     }
                 }
             } catch (IllegalArgumentException e) {
-                sender.sendMessage(pl.getConfigHandler().getPrefix() + "The pronoun '" + e.getMessage() +
-                        "' is unrecognised.\n" +
-                        "To use it, just write it out like it's shown in /pronouns list.");
+                sender.sendMessage(cfg.getPrefix()
+                        + cfg.formatMain("The pronoun '")
+                        + cfg.formatAccent(e.getMessage())
+                        + cfg.formatMain("' is unrecognised.\n"
+                        + "To use it, just write it out like it's shown in /pronouns list."));
                 return true;
             }
         }
         pl.getPronounHandler().setUserPronouns(((Player) target).getUniqueId(), set);
-        ConfigHandler cfg = pl.getConfigHandler();
-        sender.sendMessage(cfg.getPrefix() + "Set pronouns to " +
-                cfg.getAccentColour() + PronounSet.friendlyPrintSet(set));
+        sender.sendMessage(cfg.getPrefix() + cfg.formatMain("Set pronouns to ")
+                + cfg.formatAccent(PronounSet.friendlyPrintSet(set)));
         return true;
     }
 
     @Override
     public List<String> tabComplete(String[] args) {
-    	String arg = args[args.length - 1];
+        String arg = args[args.length - 1];
         List<String> allPronouns = new ArrayList<>();
 
         allPronouns.add("<custom>");
 
-		for (PronounSet set : pl.getPronounHandler().getAllPronouns()) {
-			allPronouns.add(set.getName().toLowerCase());
-		}
+        for (PronounSet set : pl.getPronounHandler().getAllPronouns()) {
+            allPronouns.add(set.getName().toLowerCase());
+        }
 
         if (arg.contains("/") && !allPronouns.contains(arg)) {
-        	List<String> pronounsSoFar = Arrays.asList(arg.split("/"));
-        	String soFarJoined = String.join("/", pronounsSoFar);
-			for (PronounSet set : pl.getPronounHandler().getAllPronouns()) {
-				if (!pronounsSoFar.contains(set.subjective))
-						allPronouns.add(soFarJoined + "/" + set.subjective);
-			}
-			allPronouns.add(soFarJoined);
-		}
+            List<String> pronounsSoFar = Arrays.asList(arg.split("/"));
+            String soFarJoined = String.join("/", pronounsSoFar);
+            for (PronounSet set : pl.getPronounHandler().getAllPronouns()) {
+                if (!pronounsSoFar.contains(set.subjective))
+                    allPronouns.add(soFarJoined + "/" + set.subjective);
+            }
+            allPronouns.add(soFarJoined);
+        }
 
         return allPronouns;
     }

@@ -32,6 +32,7 @@ import java.util.List;
 
 public class GetPronounsSubcommand implements Subcommand {
     private final ProNouns pl;
+
     public GetPronounsSubcommand(ProNouns plugin) {
         pl = plugin;
     }
@@ -46,41 +47,49 @@ public class GetPronounsSubcommand implements Subcommand {
     }
 
     public String getUsage() {
-        return "/pronouns show [username]";
+        return "show [username]";
     }
 
     @Override
-    public String getPermission() { return null; }
+    public String getPermission() {
+        return null;
+    }
 
     @Override
     public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
         Player commandTarget;
         ConfigHandler cfg = pl.getConfigHandler();
         if (!(sender instanceof Player) && args.length == 0) {
-            sender.sendMessage(cfg.getPrefix() + "Please specify a username.");
+            sender.sendMessage(cfg.getPrefix() + cfg.formatMain("Please specify a username."));
             return true;
         }
 
         if (args.length > 0) {
             commandTarget = Bukkit.getPlayer(args[0]);
-        } else commandTarget = (Player)sender;
+        } else commandTarget = (Player) sender;
 
         if (commandTarget == null) {
-            sender.sendMessage(cfg.getPrefix() + "Player '" + args[0] + cfg.getMainColour() + "' could not be found.");
+            sender.sendMessage(cfg.getPrefix()
+                    + cfg.formatMain("Player '")
+                    + cfg.formatAccent(args[0])
+                    + cfg.formatMain("' could not be found."));
             return true;
         }
 
-        sender.sendMessage(cfg.getPrefix() + commandTarget.getDisplayName() + cfg.getMainColour() +
-                "'s pronouns are " + cfg.getAccentColour() +
-                PronounSet.friendlyPrintSet(pl.getPronounHandler().getUserPronouns(commandTarget.getUniqueId())));
+        sender.sendMessage(cfg.getPrefix()
+                + cfg.formatMain(commandTarget.getDisplayName() + "'s pronouns are ")
+                + cfg.formatAccent(
+                PronounSet.friendlyPrintSet(
+                        pl.getPronounHandler().getUserPronouns(commandTarget.getUniqueId()))
+        ));
 
         return true;
     }
 
     @Override
-    public List<String> tabComplete() {
+    public List<String> tabComplete(String[] args) {
         List<String> names = new ArrayList<>();
-        for (Player player :Bukkit.getOnlinePlayers()) names.add(player.getName());
+        for (Player player : Bukkit.getOnlinePlayers()) if (args[0].startsWith(player.getName())) names.add(player.getName());
         return names;
     }
 }

@@ -44,7 +44,7 @@ public class PreviewSubcommand implements Subcommand {
 
     @Override
     public String getUsage() {
-        return "/pronouns preview";
+        return "preview";
     }
 
     @Override
@@ -61,7 +61,8 @@ public class PreviewSubcommand implements Subcommand {
 
         Collection<PronounSet> sets = pl.getPronounHandler().getUserPronouns(player.getUniqueId());
         if (sets.size() == 0) {
-            sender.sendMessage(pl.getConfigHandler().getPrefix() + "You haven't set any pronouns yet!");
+            sender.sendMessage(pl.getConfigHandler().getPrefix()
+                    + pl.getConfigHandler().formatMain("You haven't set any pronouns yet!"));
             return true;
         }
 

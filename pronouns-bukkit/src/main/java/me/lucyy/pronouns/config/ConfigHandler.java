@@ -19,6 +19,7 @@
 package me.lucyy.pronouns.config;
 
 import me.lucyy.common.command.FormatProvider;
+import me.lucyy.common.format.TextFormatter;
 import me.lucyy.pronouns.ProNouns;
 import org.bukkit.ChatColor;
 
@@ -34,7 +35,6 @@ public class ConfigHandler implements FormatProvider {
         pl.getConfig().options().copyDefaults(true);
 
         pl.getConfig().addDefault("checkForUpdates", "true");
-        pl.getConfig().addDefault("prefix", "&f[&dPronouns&f] ");
         pl.getConfig().addDefault("accent", "&d");
         pl.getConfig().addDefault("main", "&f");
 
@@ -69,9 +69,17 @@ public class ConfigHandler implements FormatProvider {
     	return pl.getConfig().getStringList("predefinedSets");
 	}
 
+    private String applyFormatter(String formatter, String content, String overrides) {
+        if (formatter.contains("%s")) return TextFormatter.format(String.format(formatter, content), overrides);
+        StringBuilder formatters = new StringBuilder();
+        if (overrides != null) {
+            for (char character : overrides.toCharArray()) formatters.append("&").append(character);
+        }
+        return ChatColor.translateAlternateColorCodes('&', formatter + formatters.toString()) + content;
+    }
+
     public String getPrefix() {
-        return ChatColor.translateAlternateColorCodes('&',
-                pl.getConfig().getString("prefix") + getMainColour());
+        return TextFormatter.format(getString("prefix", formatAccent("Pronouns") + ChatColor.GRAY + " >> "));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -80,10 +88,20 @@ public class ConfigHandler implements FormatProvider {
                 getString("accent", "&d"));
     }
 
+    @Override
+    public String formatAccent(String s, String formatters) {
+        return applyFormatter(getAccentColour(), s, formatters);
+    }
+
     @SuppressWarnings("ConstantConditions")
     public String getMainColour() {
         return ChatColor.translateAlternateColorCodes('&',
                 getString("main", "&f"));
+    }
+
+    @Override
+    public String formatMain(String s, String formatters) {
+        return applyFormatter(getMainColour(), s, formatters);
     }
 
     public ConnectionType getConnectionType() {
@@ -101,6 +119,6 @@ public class ConfigHandler implements FormatProvider {
     }
 
     public Boolean checkForUpdates() {
-        return !Objects.equals(pl.getConfig().getString("checkForUpdates"), "false");
+        return !"false".equals(pl.getConfig().getString("checkForUpdates"));
     }
 }

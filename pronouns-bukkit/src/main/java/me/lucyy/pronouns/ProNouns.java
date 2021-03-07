@@ -21,6 +21,7 @@ package me.lucyy.pronouns;
 import lombok.Getter;
 import me.lucyy.common.command.Command;
 import me.lucyy.common.command.HelpSubcommand;
+import me.lucyy.common.command.VersionSubcommand;
 import me.lucyy.common.update.UpdateChecker;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.command.*;
@@ -84,8 +85,9 @@ public final class ProNouns extends JavaPlugin implements Listener {
 		cmd.register(new PreviewSubcommand(this));
 		cmd.register(new ReloadSubcommand(this));
 		cmd.register(new SudoSubcommand(cmd, this));
+		cmd.register(new VersionSubcommand(configHandler, this));
 
-		HelpSubcommand defaultSub = new HelpSubcommand(cmd, configHandler, this);
+		HelpSubcommand defaultSub = new HelpSubcommand(cmd, configHandler, this, "pronouns");
 		cmd.register(defaultSub);
 		cmd.setDefaultSubcommand(defaultSub);
 
@@ -100,8 +102,8 @@ public final class ProNouns extends JavaPlugin implements Listener {
 			new UpdateChecker(this,
 					"https://api.spigotmc.org/legacy/update.php?resource=86199",
 					getConfigHandler().getPrefix() +
-							"A new version of ProNouns is available!\nFind it at "
-							+ getConfigHandler().getAccentColour() + "https://lucyy.me/pronouns",
+							configHandler.formatMain("A new version of ProNouns is available!\nFind it at ")
+							+ configHandler.formatAccent("https://lucyy.me/pronouns"),
 					"pronouns.admin"
 			);
 		} else {

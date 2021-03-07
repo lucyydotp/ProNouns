@@ -4,11 +4,9 @@
 # NOTE: if you're using predefined sets with MySQL, make sure they match on
 # all servers!
 
-prefix: "&f[&dPronouns&f] "
 accent: '&d'
 main: '&f'
 checkForUpdates: true
-updateUrl: "https://lucyy.me/pronouns/version.json" # don't touch this one
 
 # this setting chooses how pronouns are stored, possible values:
 # yml (default) - creates 'datastore.yml' in plugin folder
