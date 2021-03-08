@@ -75,7 +75,7 @@ public class ConfigHandler implements FormatProvider {
         if (overrides != null) {
             for (char character : overrides.toCharArray()) formatters.append("&").append(character);
         }
-        return ChatColor.translateAlternateColorCodes('&', formatter + formatters.toString()) + content;
+        return TextFormatter.format(formatter + formatters.toString() + content);
     }
 
     public String getPrefix() {
