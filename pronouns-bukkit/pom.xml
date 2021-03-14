@@ -4,17 +4,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>me.lucyy</groupId>
-    <artifactId>pronouns</artifactId>
-    <version>1.0.6</version>
+    <parent>
+        <groupId>me.lucyy</groupId>
+        <artifactId>pronouns</artifactId>
+        <version>1.0.7-SNAPSHOT</version>
+    </parent>
+    <artifactId>pronouns-bukkit</artifactId>
 
-    <name>ProNouns</name>
-    <description>Putting the "pro" in "pronouns".</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <url>https://lucyy.me</url>
 
     <build>
         <plugins>
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>me.lucyy</groupId>
             <artifactId>LucyCommonLib</artifactId>
-            <version>1.2.3</version>
+            <version>1.2.6</version>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
