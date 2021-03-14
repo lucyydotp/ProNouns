@@ -27,8 +27,6 @@ jobs:
     - name: Github release
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-        pronouns-bukkit/target/pronouns-bukkit-*.jar
-        pronouns-api/target/pronouns-api-*.jar
+        files: pronouns-bukkit/target/pronouns-bukkit-*.jar\npronouns-api/target/pronouns-api-*.jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
