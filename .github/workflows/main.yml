@@ -7,9 +7,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 1.8
@@ -17,8 +15,6 @@ jobs:
       continue-on-error: true
       with:
         java-version: 1.8
-        server-id: lucy # Value of the distributionManagement/repository/id field of the pom.xml
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
 
     - name: action-maven-publish
       uses: samuelmeuli/action-maven-publish@v1.4.0
@@ -26,10 +22,13 @@ jobs:
         nexus_username: ${{ secrets.REPO_USERNAME }}
         nexus_password: ${{ secrets.REPO_PASSWORD }}
         server_id: lucy
+        settings-path: ${{ github.workspace }} # location for the settings.xml file
       continue-on-error: true
     - name: Github release
       uses: softprops/action-gh-release@v1
       with:
-        files: pronouns-bukkit/target/pronouns-bukkit-*.jar\npronouns-api/target/pronouns-api-*.jar
+        files: |
+          pronouns-bukkit/target/pronouns-bukkit-*.jar
+          pronouns-api/target/pronouns-api-*.jar
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
