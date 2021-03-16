@@ -26,7 +26,7 @@ jobs:
         nexus_username: ${{ secrets.REPO_USERNAME }}
         nexus_password: ${{ secrets.REPO_PASSWORD }}
         server_id: lucy
-    continue-on-error:true
+        continue-on-error:true
     - name: Github release
       uses: softprops/action-gh-release@v1
       with:
