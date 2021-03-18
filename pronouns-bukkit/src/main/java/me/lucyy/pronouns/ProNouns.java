@@ -101,9 +101,7 @@ public final class ProNouns extends JavaPlugin implements Listener {
 		if (getConfigHandler().checkForUpdates()) {
 			new UpdateChecker(this,
 					"https://api.spigotmc.org/legacy/update.php?resource=86199",
-					getConfigHandler().getPrefix() +
-							configHandler.formatMain("A new version of ProNouns is available!\nFind it at ")
-							+ configHandler.formatAccent("https://lucyy.me/pronouns"),
+					"A new version of ProNouns is available!\nFind it at https://lucyy.me/pronouns",
 					"pronouns.admin"
 			);
 		} else {
