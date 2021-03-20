@@ -19,11 +19,25 @@ jobs:
     - name: action-maven-publish
       uses: samuelmeuli/action-maven-publish@v1.4.0
       with:
+        maven_goals_phases: "clean javadoc:javadoc package deploy"
         nexus_username: ${{ secrets.REPO_USERNAME }}
         nexus_password: ${{ secrets.REPO_PASSWORD }}
         server_id: lucy
-        settings-path: ${{ github.workspace }} # location for the settings.xml file
       continue-on-error: true
+                server_id: lucy
+        
+
+    - name: Set Release version env variable
+      run: echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pronouns-api/pom.xml)" >> $GITHUB_ENV
+
+    - name: Deploy javadocs
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        deploy_key: ${{ secrets.JAVADOC_DEPLOY_KEY }}
+        external_repository: lucyy-mc/javadocs
+        publish_dir: ./pronouns-api/target/site/apidocs
+        destination_dir: pronouns/${{ env.RELEASE_VERSION }}
+
     - name: Github release
       uses: softprops/action-gh-release@v1
       with:
