@@ -24,7 +24,6 @@ import me.lucyy.pronouns.ProNouns;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -59,7 +58,7 @@ public class SudoSubcommand implements Subcommand {
 	}
 
 	@Override
-	public boolean execute(@NotNull final CommandSender sender, @NotNull final CommandSender target, @NotNull final String[] args) {
+	public boolean execute(final CommandSender sender, final CommandSender target, final String[] args) {
 		if (args.length < 2) return false;
 		if (args[1].equals("admin")) {
 			sender.sendMessage( plugin.getConfigHandler().getPrefix() + "no recursion pls kthxbai");

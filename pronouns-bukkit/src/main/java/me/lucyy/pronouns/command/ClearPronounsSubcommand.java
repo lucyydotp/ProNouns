@@ -22,7 +22,6 @@ import me.lucyy.common.command.Subcommand;
 import me.lucyy.pronouns.ProNouns;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class ClearPronounsSubcommand implements Subcommand {
     private final ProNouns pl;
@@ -50,7 +49,7 @@ public class ClearPronounsSubcommand implements Subcommand {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
+    public boolean execute(CommandSender sender, CommandSender target, String[] args) {
         if (!(target instanceof Player)) {
             sender.sendMessage(pl.getConfigHandler().getPrefix() + "This command can only be run by a player.");
             return true;

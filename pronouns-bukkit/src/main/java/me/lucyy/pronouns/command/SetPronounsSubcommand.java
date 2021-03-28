@@ -24,7 +24,6 @@ import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +56,7 @@ public class SetPronounsSubcommand implements Subcommand {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
+    public boolean execute(CommandSender sender, CommandSender target, String[] args) {
         final ConfigHandler cfg = pl.getConfigHandler();
         if (!(target instanceof Player)) {
             sender.sendMessage(cfg.getPrefix() + cfg.formatMain("This command can only be run by a player."));

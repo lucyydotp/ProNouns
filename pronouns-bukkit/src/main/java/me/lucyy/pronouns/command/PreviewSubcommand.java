@@ -23,7 +23,6 @@ import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -51,7 +50,7 @@ public class PreviewSubcommand implements Subcommand {
     public String getPermission() { return null; }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
+    public boolean execute(CommandSender sender, CommandSender target, String[] args) {
         if (!(sender instanceof Player)) {
             sender.sendMessage("This command can only be run by a player");
             return true;

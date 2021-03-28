@@ -95,9 +95,6 @@ public final class ProNouns extends JavaPlugin implements Listener {
 		getCommand("pronouns").setExecutor(cmd);
 		getCommand("pronouns").setTabCompleter(cmd);
 
-		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null)
-			new PronounsPapiExpansion(this).register();
-
 		if (getConfigHandler().checkForUpdates()) {
 			new UpdateChecker(this,
 					"https://api.spigotmc.org/legacy/update.php?resource=86199",
