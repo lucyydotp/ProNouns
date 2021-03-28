@@ -35,7 +35,12 @@ public class ProNounsPapi extends PlaceholderExpansion {
 
     @Override
     public boolean canRegister() {
-        //if (Bukkit.getServer().getPluginManager().getPlugin(getRequiredPlugin()) == null) return false;
+        try {
+            Class.forName("me.lucyy.pronouns.api.PronounHandler");
+        } catch (ClassNotFoundException ignored) {
+            return false;
+        }
+
         RegisteredServiceProvider<PronounHandler> rsp = Bukkit.getServer().getServicesManager().getRegistration(PronounHandler.class);
         if (rsp == null) return false;
         handler = rsp.getProvider();
