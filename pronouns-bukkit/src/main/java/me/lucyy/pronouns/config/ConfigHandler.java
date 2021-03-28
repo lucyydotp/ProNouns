@@ -45,7 +45,7 @@ public class ConfigHandler implements FormatProvider {
         pl.getConfig().addDefault("mysql.username", "pronouns");
         pl.getConfig().addDefault("mysql.password", "password");
 
-		pl.getConfig().addDefault("predefinedSets", new ArrayList<String>());
+        pl.getConfig().addDefault("predefinedSets", new ArrayList<String>());
         pl.saveConfig();
     }
 
@@ -65,27 +65,16 @@ public class ConfigHandler implements FormatProvider {
         return value;
     }
 
-    public List<String> getPredefinedSets() {
-    	return pl.getConfig().getStringList("predefinedSets");
-	}
-
     private String applyFormatter(String formatter, String content, String overrides) {
-        if (formatter.contains("%s")) return TextFormatter.format(String.format(formatter, content), overrides);
-        StringBuilder formatters = new StringBuilder();
-        if (overrides != null) {
-            for (char character : overrides.toCharArray()) formatters.append("&").append(character);
-        }
-        return TextFormatter.format(formatter + formatters.toString() + content);
-    }
+        if (formatter.contains("%s")) return TextFormatter.format(String.format(formatter, content), overrides, true);
 
-    public String getPrefix() {
-        return TextFormatter.format(getString("prefix", formatAccent("Pronouns") + ChatColor.GRAY + " >> "));
+        return TextFormatter.format(formatter + content, overrides, true);
     }
 
     @SuppressWarnings("ConstantConditions")
     public String getAccentColour() {
         return ChatColor.translateAlternateColorCodes('&',
-                getString("accent", "&d"));
+                getString("accent", "&3"));
     }
 
     @Override
@@ -102,6 +91,17 @@ public class ConfigHandler implements FormatProvider {
     @Override
     public String formatMain(String s, String formatters) {
         return applyFormatter(getMainColour(), s, formatters);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public String getPrefix() {
+        String prefix = getString("format.prefix", "");
+        if (prefix.equals("")) return formatAccent("Pronouns") + ChatColor.GRAY + " >> ";
+        return TextFormatter.format(getString("format.prefix"));
+    }
+
+    public List<String> getPredefinedSets() {
+        return pl.getConfig().getStringList("predefinedSets");
     }
 
     public ConnectionType getConnectionType() {

@@ -21,7 +21,6 @@ package me.lucyy.pronouns.command.admin;
 import me.lucyy.common.command.Subcommand;
 import me.lucyy.pronouns.ProNouns;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 public class ReloadSubcommand implements Subcommand {
 
@@ -52,7 +51,7 @@ public class ReloadSubcommand implements Subcommand {
     }
 
     @Override
-    public boolean execute(@NotNull final CommandSender sender, @NotNull final CommandSender target, @NotNull final String[] args) {
+    public boolean execute(final CommandSender sender, final CommandSender target, final String[] args) {
         pl.reloadConfig();
         sender.sendMessage(pl.getConfigHandler().getPrefix() + "Reloaded");
         return true;

@@ -6,12 +6,27 @@
 
     <groupId>me.lucyy</groupId>
     <artifactId>pronouns</artifactId>
-    <version>1.0.7</version>
+    <version>1.1.0</version>
 
     <name>ProNouns</name>
     <description>Putting the "pro" in "pronouns".</description>
     <url>https://lucyy.me</url>
     <packaging>pom</packaging>
+
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+    <repositories>
+        <repository>
+            <id>lucy</id>
+            <url>https://repo.lucyy.me/repository/public/</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
@@ -31,5 +46,6 @@
     <modules>
         <module>pronouns-api</module>
         <module>pronouns-bukkit</module>
+        <module>pronouns-papi</module>
     </modules>
 </project>

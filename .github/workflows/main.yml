@@ -24,6 +24,7 @@ jobs:
         nexus_password: ${{ secrets.REPO_PASSWORD }}
         server_id: lucy
       continue-on-error: true
+
     - name: Set Release version env variable
       run: echo "RELEASE_VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pronouns-api/pom.xml)" >> $GITHUB_ENV
 

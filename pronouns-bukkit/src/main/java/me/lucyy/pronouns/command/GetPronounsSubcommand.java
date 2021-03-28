@@ -25,7 +25,6 @@ import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +56,7 @@ public class GetPronounsSubcommand implements Subcommand {
     }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
+    public boolean execute(CommandSender sender, CommandSender target, String[] args) {
         Player commandTarget;
         ConfigHandler cfg = pl.getConfigHandler();
         if (!(sender instanceof Player) && args.length == 0) {

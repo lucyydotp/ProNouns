@@ -24,7 +24,6 @@ import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.config.ConfigHandler;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 
 public class ListPronounsSubcommand implements Subcommand {
@@ -50,7 +49,7 @@ public class ListPronounsSubcommand implements Subcommand {
     public String getPermission() { return null; }
 
     @Override
-    public boolean execute(@NotNull CommandSender sender, @NotNull CommandSender target, @NotNull String[] args) {
+    public boolean execute( CommandSender sender, CommandSender target, String[] args) {
         final ConfigHandler cfg = pl.getConfigHandler();
         StringBuilder out = new StringBuilder();
         sender.sendMessage(TextFormatter.formatTitle("All Predefined Pronoun Sets:", cfg));

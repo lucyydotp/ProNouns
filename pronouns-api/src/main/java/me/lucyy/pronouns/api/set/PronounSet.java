@@ -76,14 +76,15 @@ public class PronounSet {
      * @return The formatted sets as a string
      */
     public static String friendlyPrintSet(Collection<PronounSet> pronounSets) {
+        if (pronounSets.size() == 1) return pronounSets.iterator().next().getName();
         StringBuilder out = new StringBuilder();
         for (PronounSet set : pronounSets) {
-            out.append(set.getName());
-            out.append(", ");
+            out.append(capitalise(set.subjective));
+            out.append("/");
         }
         String msg = out.toString();
         try {
-            return msg.substring(0, msg.length() - 2);
+            return msg.substring(0, msg.length() - 1);
         } catch (StringIndexOutOfBoundsException e) {
             return "Unset";
         }
