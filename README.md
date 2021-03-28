@@ -1,3 +1,11 @@
 # ProNouns
-https://www.spigotmc.org/resources/pronouns.86199/
-TODO make this more substantial
+https://lucyy.me/pronouns
+
+## Docs
+https://docs.lucyy.me/pronouns
+
+## Discord server
+https://support.lucyy.me
+
+## API javadocs
+https://javadoc.lucyy.me
