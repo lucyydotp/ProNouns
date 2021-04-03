@@ -59,7 +59,7 @@ public class SetPronounsSubcommand implements Subcommand {
     public boolean execute(CommandSender sender, CommandSender target, String[] args) {
         final ConfigHandler cfg = pl.getConfigHandler();
         if (!(target instanceof Player)) {
-            sender.sendMessage(cfg.getPrefix() + cfg.formatMain("This command can only be run by a player."));
+            sender.sendMessage(cfg.getPrefix().append(cfg.formatMain("This command can only be run by a player.")));
             return true;
         }
 
@@ -89,16 +89,17 @@ public class SetPronounsSubcommand implements Subcommand {
                 }
             } catch (IllegalArgumentException e) {
                 sender.sendMessage(cfg.getPrefix()
-                        + cfg.formatMain("The pronoun '")
-                        + cfg.formatAccent(e.getMessage())
-                        + cfg.formatMain("' is unrecognised.\n"
-                        + "To use it, just write it out like it's shown in /pronouns list."));
+                        .append(cfg.formatMain("The pronoun '"))
+                        .append(cfg.formatAccent(e.getMessage()))
+                        .append(cfg.formatMain("' is unrecognised.\n"
+                        + "To use it, just write it out like it's shown in /pronouns list.")));
                 return true;
             }
         }
         pl.getPronounHandler().setUserPronouns(((Player) target).getUniqueId(), set);
-        sender.sendMessage(cfg.getPrefix() + cfg.formatMain("Set pronouns to ")
-                + cfg.formatAccent(PronounSet.friendlyPrintSet(set)));
+        sender.sendMessage(cfg.getPrefix()
+                .append(cfg.formatMain("Set pronouns to "))
+                .append(cfg.formatAccent(PronounSet.friendlyPrintSet(set))));
         return true;
     }
 

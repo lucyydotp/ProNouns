@@ -58,7 +58,8 @@ public class ClearPronounsSubcommand implements Subcommand {
 
         pl.getPronounHandler().clearUserPronouns(((Player) target).getUniqueId());
         sender.sendMessage(pl.getConfigHandler().getPrefix()
-                + pl.getConfigHandler().formatMain("Cleared pronouns"));
+                .append(pl.getConfigHandler().formatMain("Cleared pronouns"))
+        );
         return true;
     }
 }
