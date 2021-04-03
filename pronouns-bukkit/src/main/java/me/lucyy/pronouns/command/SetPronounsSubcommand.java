@@ -19,9 +19,10 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.common.command.Subcommand;
-import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
+import me.lucyy.pronouns.config.ConfigHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -55,6 +56,30 @@ public class SetPronounsSubcommand implements Subcommand {
         return null;
     }
 
+    private void warnAdmins(String player, String content) {
+        final ConfigHandler cfg = pl.getConfigHandler();
+        Bukkit.broadcast(cfg.getPrefix().append(cfg.formatMain("Player "))
+                        .append(cfg.formatAccent(player))
+                        .append(cfg.formatMain(" tried to use prohibited pronoun set "))
+                        .append(cfg.formatAccent(content)),
+                "pronouns.admin");
+    }
+
+    private boolean checkInput(String arg, CommandSender sender) {
+        final ConfigHandler cfg = pl.getConfigHandler();
+        if (!cfg.filterEnabled()) return true;
+        if (!sender.hasPermission("pronouns.bypass"))
+            for (String pattern : cfg.getFilterPatterns()) {
+                if (arg.toLowerCase().matches(".*" + pattern + ".*")) {
+                    sender.sendMessage(cfg.getPrefix()
+                            .append(cfg.formatMain("You can't use that set.")));
+                    warnAdmins(sender.getName(), arg);
+                    return false;
+                }
+            }
+        return true;
+    }
+
     @Override
     public boolean execute(CommandSender sender, CommandSender target, String[] args) {
         final ConfigHandler cfg = pl.getConfigHandler();
@@ -67,6 +92,7 @@ public class SetPronounsSubcommand implements Subcommand {
 
         ArrayList<PronounSet> set = new ArrayList<>();
         for (String arg : args) {
+            if (!checkInput(arg, sender)) return true;
             try {
                 String[] splitArg = arg.split("/");
                 if (splitArg.length == 6) {
@@ -92,7 +118,7 @@ public class SetPronounsSubcommand implements Subcommand {
                         .append(cfg.formatMain("The pronoun '"))
                         .append(cfg.formatAccent(e.getMessage()))
                         .append(cfg.formatMain("' is unrecognised.\n"
-                        + "To use it, just write it out like it's shown in /pronouns list.")));
+                                + "To use it, just write it out like it's shown in /pronouns list.")));
                 return true;
             }
         }

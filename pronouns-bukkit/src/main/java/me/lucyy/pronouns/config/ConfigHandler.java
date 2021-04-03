@@ -25,6 +25,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -37,20 +38,31 @@ public class ConfigHandler implements FormatProvider {
 
     public ConfigHandler(ProNouns plugin) {
         pl = plugin;
-        pl.getConfig().options().copyDefaults(true);
+        FileConfiguration cfg = pl.getConfig();
+        cfg.options().header("ProNouns Config File\n" +
+                "Make changes here and update them by either using /pronouns reload\n" +
+                "or by restarting the server\n" +
+                "NOTE: if you're using predefined sets with MySQL, make sure they match on\n" +
+                "all servers!\n" +
+                "Documentation at https://docs.lucyy.me/pronouns\n" +
+                "Support discord at https://support.lucyy.me");
 
-        pl.getConfig().addDefault("checkForUpdates", "true");
-        pl.getConfig().addDefault("accent", "&d");
-        pl.getConfig().addDefault("main", "&f");
+        cfg.addDefault("checkForUpdates", "true");
+        cfg.addDefault("accent", "&d");
+        cfg.addDefault("main", "&f");
 
-        pl.getConfig().addDefault("connection", "yml");
-        pl.getConfig().addDefault("mysql.host", "127.0.0.1");
-        pl.getConfig().addDefault("mysql.port", 3306);
-        pl.getConfig().addDefault("mysql.database", "pronouns");
-        pl.getConfig().addDefault("mysql.username", "pronouns");
-        pl.getConfig().addDefault("mysql.password", "password");
+        cfg.addDefault("connection", "yml");
+        cfg.addDefault("mysql.host", "127.0.0.1");
+        cfg.addDefault("mysql.port", 3306);
+        cfg.addDefault("mysql.database", "pronouns");
+        cfg.addDefault("mysql.username", "pronouns");
+        cfg.addDefault("mysql.password", "password");
 
-        pl.getConfig().addDefault("predefinedSets", new ArrayList<String>());
+        cfg.addDefault("predefinedSets", new ArrayList<String>());
+
+        cfg.addDefault("filter.enabled", "true");
+        cfg.addDefault("filter.patterns", new String[]{"apache+", "hel+icop+ter"});
+
         pl.saveConfig();
 
         decoStrings.put(TextDecoration.OBFUSCATED, 'k');
@@ -121,6 +133,14 @@ public class ConfigHandler implements FormatProvider {
 
     public List<String> getPredefinedSets() {
         return pl.getConfig().getStringList("predefinedSets");
+    }
+
+    public List<String> getFilterPatterns() {
+        return pl.getConfig().getStringList("filter.patterns");
+    }
+
+    public Boolean filterEnabled() {
+        return !"false".equals(pl.getConfig().getString("filter.enabled"));
     }
 
     public ConnectionType getConnectionType() {
