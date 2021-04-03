@@ -21,32 +21,55 @@ package me.lucyy.pronouns.config;
 import me.lucyy.common.command.FormatProvider;
 import me.lucyy.common.format.TextFormatter;
 import me.lucyy.pronouns.ProNouns;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 public class ConfigHandler implements FormatProvider {
     private final ProNouns pl;
+    private final HashMap<TextDecoration, Character> decoStrings = new HashMap<>();
 
     public ConfigHandler(ProNouns plugin) {
         pl = plugin;
-        pl.getConfig().options().copyDefaults(true);
+        FileConfiguration cfg = pl.getConfig();
+        cfg.options().header("ProNouns Config File\n" +
+                "Make changes here and update them by either using /pronouns reload\n" +
+                "or by restarting the server\n" +
+                "NOTE: if you're using predefined sets with MySQL, make sure they match on\n" +
+                "all servers!\n" +
+                "Documentation at https://docs.lucyy.me/pronouns\n" +
+                "Support discord at https://support.lucyy.me");
 
-        pl.getConfig().addDefault("checkForUpdates", "true");
-        pl.getConfig().addDefault("accent", "&d");
-        pl.getConfig().addDefault("main", "&f");
+        cfg.addDefault("checkForUpdates", "true");
+        cfg.addDefault("accent", "&d");
+        cfg.addDefault("main", "&f");
 
-        pl.getConfig().addDefault("connection", "yml");
-        pl.getConfig().addDefault("mysql.host", "127.0.0.1");
-        pl.getConfig().addDefault("mysql.port", 3306);
-        pl.getConfig().addDefault("mysql.database", "pronouns");
-        pl.getConfig().addDefault("mysql.username", "pronouns");
-        pl.getConfig().addDefault("mysql.password", "password");
+        cfg.addDefault("connection", "yml");
+        cfg.addDefault("mysql.host", "127.0.0.1");
+        cfg.addDefault("mysql.port", 3306);
+        cfg.addDefault("mysql.database", "pronouns");
+        cfg.addDefault("mysql.username", "pronouns");
+        cfg.addDefault("mysql.password", "password");
 
-        pl.getConfig().addDefault("predefinedSets", new ArrayList<String>());
+        cfg.addDefault("predefinedSets", new ArrayList<String>());
+
+        cfg.addDefault("filter.enabled", "true");
+        cfg.addDefault("filter.patterns", new String[]{"apache+", "hel+icop+ter"});
+
         pl.saveConfig();
+
+        decoStrings.put(TextDecoration.OBFUSCATED, 'k');
+        decoStrings.put(TextDecoration.BOLD, 'l');
+        decoStrings.put(TextDecoration.STRIKETHROUGH, 'm');
+        decoStrings.put(TextDecoration.UNDERLINED, 'n');
+        decoStrings.put(TextDecoration.ITALIC, 'o');
     }
 
     private String getString(String key) {
@@ -65,10 +88,17 @@ public class ConfigHandler implements FormatProvider {
         return value;
     }
 
-    private String applyFormatter(String formatter, String content, String overrides) {
-        if (formatter.contains("%s")) return TextFormatter.format(String.format(formatter, content), overrides, true);
+    private String serialiseFormatters(TextDecoration... formatters) {
+        if (formatters == null) return null;
+        StringBuilder out = new StringBuilder();
+        for (TextDecoration deco : formatters) out.append(decoStrings.get(deco));
+        return out.toString();
+    }
 
-        return TextFormatter.format(formatter + content, overrides, true);
+    private Component applyFormatter(String formatter, String content, String formatters) {
+        return formatter.contains("%s") ?
+                TextFormatter.format(String.format(formatter, content), formatters, true) :
+                TextFormatter.format(formatter + content, formatters, true);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -78,8 +108,8 @@ public class ConfigHandler implements FormatProvider {
     }
 
     @Override
-    public String formatAccent(String s, String formatters) {
-        return applyFormatter(getAccentColour(), s, formatters);
+    public Component formatAccent(@NotNull String s, TextDecoration[] formatters) {
+        return applyFormatter(getAccentColour(), s, serialiseFormatters(formatters));
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -89,19 +119,28 @@ public class ConfigHandler implements FormatProvider {
     }
 
     @Override
-    public String formatMain(String s, String formatters) {
-        return applyFormatter(getMainColour(), s, formatters);
+    public Component formatMain(@NotNull String s, TextDecoration[] formatters) {
+        return applyFormatter(getMainColour(), s, serialiseFormatters(formatters));
     }
 
     @SuppressWarnings("ConstantConditions")
-    public String getPrefix() {
+    public Component getPrefix() {
         String prefix = getString("format.prefix", "");
-        if (prefix.equals("")) return formatAccent("Pronouns") + ChatColor.GRAY + " >> ";
+        if (prefix.equals("")) return formatAccent("Pronouns")
+                .append(Component.text(" >> ").color(NamedTextColor.GRAY));
         return TextFormatter.format(getString("format.prefix"));
     }
 
     public List<String> getPredefinedSets() {
         return pl.getConfig().getStringList("predefinedSets");
+    }
+
+    public List<String> getFilterPatterns() {
+        return pl.getConfig().getStringList("filter.patterns");
+    }
+
+    public Boolean filterEnabled() {
+        return !"false".equals(pl.getConfig().getString("filter.enabled"));
     }
 
     public ConnectionType getConnectionType() {

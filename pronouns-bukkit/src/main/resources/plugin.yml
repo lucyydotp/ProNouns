@@ -12,6 +12,9 @@ commands:
     usage: 'Usage: /pronouns'
 
 permissions:
+  pronouns.bypass:
+    description: "Bypass the filter for setting pronouns"
+    default: op
   pronouns.admin:
     description: "Access to admin commands - run commands as other users"
     default: op

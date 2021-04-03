@@ -19,6 +19,7 @@
 package me.lucyy.pronouns;
 
 import lombok.Getter;
+import me.lucyy.common.DependencyChecker;
 import me.lucyy.common.command.Command;
 import me.lucyy.common.command.HelpSubcommand;
 import me.lucyy.common.command.VersionSubcommand;
@@ -48,6 +49,10 @@ public final class ProNouns extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
+		if (!DependencyChecker.adventurePresent(this)) {
+			getPluginLoader().disablePlugin(this);
+			return;
+		}
 		Metrics metrics = new Metrics(this, 9519);
 		configHandler = new ConfigHandler(this);
 		metrics.addCustomChart(new Metrics.SimplePie("storage_backend", () -> configHandler.getConnectionType().name()));

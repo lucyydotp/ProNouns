@@ -28,7 +28,6 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class GetPronounsSubcommand implements Subcommand {
     private final ProNouns pl;
@@ -60,7 +59,7 @@ public class GetPronounsSubcommand implements Subcommand {
         Player commandTarget;
         ConfigHandler cfg = pl.getConfigHandler();
         if (!(sender instanceof Player) && args.length == 0) {
-            sender.sendMessage(cfg.getPrefix() + cfg.formatMain("Please specify a username."));
+            sender.sendMessage(cfg.getPrefix().append(cfg.formatMain("Please specify a username.")));
             return true;
         }
 
@@ -70,17 +69,18 @@ public class GetPronounsSubcommand implements Subcommand {
 
         if (commandTarget == null) {
             sender.sendMessage(cfg.getPrefix()
-                    + cfg.formatMain("Player '")
-                    + cfg.formatAccent(args[0])
-                    + cfg.formatMain("' could not be found."));
+                    .append(cfg.formatMain("Player '"))
+                    .append(cfg.formatAccent(args[0]))
+                    .append(cfg.formatMain("' could not be found.")));
             return true;
         }
 
         sender.sendMessage(cfg.getPrefix()
-                + cfg.formatMain(commandTarget.getDisplayName() + "'s pronouns are ")
-                + cfg.formatAccent(
+                .append(cfg.formatMain(commandTarget.getDisplayName() + "'s pronouns are "))
+                .append(cfg.formatAccent(
                 PronounSet.friendlyPrintSet(
                         pl.getPronounHandler().getUserPronouns(commandTarget.getUniqueId()))
+                )
         ));
 
         return true;
