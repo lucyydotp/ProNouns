@@ -65,15 +65,13 @@ public class YamlFileStorage implements Storage {
     }
 
     @Override
-    public List<String> getPronouns(UUID uuid) {
-        Object list = config.get("players." + uuid.toString());
-        if (list == null) return new ArrayList<>();
-        if (list instanceof List) return (List<String>)list;
-        return Arrays.asList((String[])list);
+    public Set<String> getPronouns(UUID uuid) {
+        List<String> list = config.getStringList("players." + uuid.toString());
+		return new HashSet<>(list); // TODO test this
     }
 
     @Override
-    public void setPronouns(UUID uuid, List<PronounSet> sets) {
+    public void setPronouns(UUID uuid, Set<PronounSet> sets) {
         ArrayList<String> setString = new ArrayList<>();
         for (PronounSet set : sets)  {
             try {

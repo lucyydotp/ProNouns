@@ -26,130 +26,109 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class SetPronounsSubcommand implements Subcommand {
-    private final ProNouns pl;
+	private final ProNouns pl;
 
-    public SetPronounsSubcommand(ProNouns plugin) {
-        pl = plugin;
-    }
+	public SetPronounsSubcommand(ProNouns plugin) {
+		pl = plugin;
+	}
 
-    @Override
-    public String getName() {
-        return "set";
-    }
+	@Override
+	public String getName() {
+		return "set";
+	}
 
-    public String getDescription() {
-        return "Set your pronouns.";
-    }
+	public String getDescription() {
+		return "Set your pronouns.";
+	}
 
-    public String getUsage() {
-        return "set <pronoun> [pronoun] ...\nExample: /pronouns set she/they";
-    }
+	public String getUsage() {
+		return "set <pronoun> [pronoun] ...\nExample: /pronouns set she/they";
+	}
 
-    @Override
-    public String getPermission() {
-        return null;
-    }
+	@Override
+	public String getPermission() {
+		return null;
+	}
 
-    private void warnAdmins(String player, String content) {
-        final ConfigHandler cfg = pl.getConfigHandler();
-        Bukkit.broadcast(cfg.getPrefix().append(cfg.formatMain("Player "))
-                        .append(cfg.formatAccent(player))
-                        .append(cfg.formatMain(" tried to use prohibited pronoun set "))
-                        .append(cfg.formatAccent(content)),
-                "pronouns.admin");
-    }
+	private void warnAdmins(String player, String content) {
+		final ConfigHandler cfg = pl.getConfigHandler();
+		Bukkit.broadcast(cfg.getPrefix().append(cfg.formatMain("Player "))
+						.append(cfg.formatAccent(player))
+						.append(cfg.formatMain(" tried to use prohibited pronoun set "))
+						.append(cfg.formatAccent(content)),
+				"pronouns.admin");
+	}
 
-    private boolean checkInput(String arg, CommandSender sender) {
-        final ConfigHandler cfg = pl.getConfigHandler();
-        if (!cfg.filterEnabled()) return true;
-        if (!sender.hasPermission("pronouns.bypass"))
-            for (String pattern : cfg.getFilterPatterns()) {
-                if (arg.toLowerCase().matches(".*" + pattern + ".*")) {
-                    sender.sendMessage(cfg.getPrefix()
-                            .append(cfg.formatMain("You can't use that set.")));
-                    warnAdmins(sender.getName(), arg);
-                    return false;
-                }
-            }
-        return true;
-    }
+	private boolean checkInput(String arg, CommandSender sender) {
+		final ConfigHandler cfg = pl.getConfigHandler();
+		if (!cfg.filterEnabled()) return true;
+		if (!sender.hasPermission("pronouns.bypass"))
+			for (String pattern : cfg.getFilterPatterns()) {
+				if (arg.toLowerCase().matches(".*" + pattern + ".*")) {
+					sender.sendMessage(cfg.getPrefix()
+							.append(cfg.formatMain("You can't use that set.")));
+					warnAdmins(sender.getName(), arg);
+					return false;
+				}
+			}
+		return true;
+	}
 
-    @Override
-    public boolean execute(CommandSender sender, CommandSender target, String[] args) {
-        final ConfigHandler cfg = pl.getConfigHandler();
-        if (!(target instanceof Player)) {
-            sender.sendMessage(cfg.getPrefix().append(cfg.formatMain("This command can only be run by a player.")));
-            return true;
-        }
+	@Override
+	public boolean execute(CommandSender sender, CommandSender target, String[] args) {
+		final ConfigHandler cfg = pl.getConfigHandler();
+		if (!(target instanceof Player)) {
+			sender.sendMessage(cfg.getPrefix().append(cfg.formatMain("This command can only be run by a player.")));
+			return true;
+		}
 
-        if (args.length < 1) return false;
+		if (args.length < 1) return false;
 
-        ArrayList<PronounSet> set = new ArrayList<>();
-        for (String arg : args) {
-            if (!checkInput(arg, sender)) return true;
-            try {
-                String[] splitArg = arg.split("/");
-                if (splitArg.length == 6) {
-                    PronounSet parsed = pl.getPronounHandler().fromString(arg);
-                    if (!set.contains(parsed)) set.add(parsed);
-                } else {
-                    for (String _splitArg : splitArg) {
-                        // check for objective
-                        boolean cont = true;
-                        for (PronounSet _set : set) {
-                            if (_set.objective.toUpperCase(Locale.ROOT).equals(_splitArg.toUpperCase())) {
-                                cont = false;
-                                break;
-                            }
-                        }
-                        if (!cont) continue;
-                        PronounSet parsed = pl.getPronounHandler().fromString(_splitArg);
-                        if (!set.contains(parsed)) set.add(parsed);
-                    }
-                }
-            } catch (IllegalArgumentException e) {
-                sender.sendMessage(cfg.getPrefix()
-                        .append(cfg.formatMain("The pronoun '"))
-                        .append(cfg.formatAccent(e.getMessage()))
-                        .append(cfg.formatMain("' is unrecognised.\n"
-                                + "To use it, just write it out like it's shown in /pronouns list.")));
-                return true;
-            }
-        }
-        pl.getPronounHandler().setUserPronouns(((Player) target).getUniqueId(), set);
-        sender.sendMessage(cfg.getPrefix()
-                .append(cfg.formatMain("Set pronouns to "))
-                .append(cfg.formatAccent(PronounSet.friendlyPrintSet(set))));
-        return true;
-    }
+		for (String arg : args) {
+			if (!checkInput(arg, sender)) return true;
+		}
+		Set<PronounSet> set;
+		try {
+			 set = pl.getPronounHandler().parseSets(args);
+		} catch (IllegalArgumentException e) {
+			sender.sendMessage(cfg.getPrefix()
+					.append(cfg.formatMain("The pronoun '"))
+					.append(cfg.formatAccent(e.getMessage()))
+					.append(cfg.formatMain("' is unrecognised.\n"
+							+ "To use it, just write it out like it's shown in /pronouns list.")));
+			return true;
+		}
+		pl.getPronounHandler().setUserPronouns(((Player) target).getUniqueId(), set);
+		sender.sendMessage(cfg.getPrefix()
+				.append(cfg.formatMain("Set pronouns to "))
+				.append(cfg.formatAccent(PronounSet.friendlyPrintSet(set))));
+		return true;
+	}
 
-    @Override
-    public List<String> tabComplete(String[] args) {
-        String arg = args[args.length - 1];
-        List<String> allPronouns = new ArrayList<>();
+	@Override
+	public List<String> tabComplete(String[] args) {
+		String arg = args[args.length - 1];
+		List<String> allPronouns = new ArrayList<>();
 
-        allPronouns.add("<custom>");
+		allPronouns.add("<custom>");
 
-        for (PronounSet set : pl.getPronounHandler().getAllPronouns()) {
-            allPronouns.add(set.getName().toLowerCase());
-        }
+		for (PronounSet set : pl.getPronounHandler().getAllPronouns()) {
+			allPronouns.add(set.getName().toLowerCase());
+		}
 
-        if (arg.contains("/") && !allPronouns.contains(arg)) {
-            List<String> pronounsSoFar = Arrays.asList(arg.split("/"));
-            String soFarJoined = String.join("/", pronounsSoFar);
-            for (PronounSet set : pl.getPronounHandler().getAllPronouns()) {
-                if (!pronounsSoFar.contains(set.subjective))
-                    allPronouns.add(soFarJoined + "/" + set.subjective);
-            }
-            allPronouns.add(soFarJoined);
-        }
+		if (arg.contains("/") && !allPronouns.contains(arg)) {
+			List<String> pronounsSoFar = Arrays.asList(arg.split("/"));
+			String soFarJoined = String.join("/", pronounsSoFar);
+			for (PronounSet set : pl.getPronounHandler().getAllPronouns()) {
+				if (!pronounsSoFar.contains(set.subjective))
+					allPronouns.add(soFarJoined + "/" + set.subjective);
+			}
+			allPronouns.add(soFarJoined);
+		}
 
-        return allPronouns;
-    }
+		return allPronouns;
+	}
 }

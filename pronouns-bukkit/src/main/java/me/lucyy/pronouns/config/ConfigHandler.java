@@ -63,6 +63,9 @@ public class ConfigHandler implements FormatProvider {
         cfg.addDefault("filter.enabled", "true");
         cfg.addDefault("filter.patterns", new String[]{"apache+", "hel+icop+ter"});
 
+        cfg.addDefault("discord.enabled", "false");
+        cfg.addDefault("discord.cmdPrefix", "?pronouns");
+
         pl.saveConfig();
 
         decoStrings.put(TextDecoration.OBFUSCATED, 'k');
@@ -139,7 +142,7 @@ public class ConfigHandler implements FormatProvider {
         return pl.getConfig().getStringList("filter.patterns");
     }
 
-    public Boolean filterEnabled() {
+    public boolean filterEnabled() {
         return !"false".equals(pl.getConfig().getString("filter.enabled"));
     }
 
@@ -157,7 +160,15 @@ public class ConfigHandler implements FormatProvider {
         return info;
     }
 
-    public Boolean checkForUpdates() {
+    public boolean checkForUpdates() {
         return !"false".equals(pl.getConfig().getString("checkForUpdates"));
     }
+
+	public boolean discordEnabled() {
+		return !"false".equals(pl.getConfig().getString("discord.enabled"));
+	}
+
+	public String getDiscordCmd() {
+    	 return pl.getConfig().getString("discord.cmdPrefix");
+	}
 }

@@ -21,7 +21,7 @@ package me.lucyy.pronouns.api;
 import me.lucyy.pronouns.api.set.PronounSet;
 
 import java.util.Collection;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -33,19 +33,19 @@ public interface PronounHandler {
      * @param uuid the player to set pronouns for
      * @param set the pronouns to set
      */
-    void setUserPronouns(UUID uuid, List<PronounSet> set);
+    void setUserPronouns(UUID uuid, Set<PronounSet> set);
 
     /**
      * Gets a list of all current pronoun sets in use by players.
      * @return a list of all current pronoun sets in use by players
      */
-    Collection<PronounSet> getAllPronouns();
+    Set<PronounSet> getAllPronouns();
 
     /**
      * Gets a user's pronouns, or an {@link me.lucyy.pronouns.api.set.UnsetPronounSet} if they haven't specified any.
      * @return the user's pronouns
      */
-    Collection<PronounSet> getUserPronouns(UUID uuid);
+	Set<PronounSet> getUserPronouns(UUID uuid);
 
     /**
      * Clears a user's pronouns.
@@ -58,7 +58,7 @@ public interface PronounHandler {
      * @param input the string to parse. Can be formatted in a number of ways:
      * <ul>
      *              <li>full format as provided by {@link PronounSet#toString()}</li>
-     *              <li>if the set is a registered default (currently he/she/they as of RC1), the
+     *              <li>if the set is a registered default (currently he/she/they/any), the
      *              {@link PronounSet#subjective} pronoun. Note that input is sanitised to ignore all content after a
      *              slash, making this method suitable for command processing</li>
      * </ul>
@@ -67,4 +67,11 @@ public interface PronounHandler {
      * valid set
      */
     PronounSet fromString(String input);
+
+	/**
+	 * Parses a string into a collection of pronoun sets. Appropriate for use in commands.
+	 * @return the parsed sets
+	 * @throws IllegalArgumentException if a set can't be parsed due to either being unknown or censored
+	 */
+	Set<PronounSet> parseSets(String... input);
 }
