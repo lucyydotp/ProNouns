@@ -108,7 +108,7 @@ public class ConfigHandler implements FormatProvider {
     }
 
     @Override
-    public Component formatAccent(@NotNull String s, TextDecoration[] formatters) {
+    public Component formatAccent(@NotNull String s, TextDecoration... formatters) {
         return applyFormatter(getAccentColour(), s, serialiseFormatters(formatters));
     }
 
@@ -119,7 +119,7 @@ public class ConfigHandler implements FormatProvider {
     }
 
     @Override
-    public Component formatMain(@NotNull String s, TextDecoration[] formatters) {
+    public Component formatMain(@NotNull String s, TextDecoration... formatters) {
         return applyFormatter(getMainColour(), s, serialiseFormatters(formatters));
     }
 

@@ -23,7 +23,7 @@ import me.lucyy.common.DependencyChecker;
 import me.lucyy.common.command.Command;
 import me.lucyy.common.command.HelpSubcommand;
 import me.lucyy.common.command.VersionSubcommand;
-import me.lucyy.common.update.UpdateChecker;
+import me.lucyy.common.update.PolymartUpdateChecker;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.command.*;
 import me.lucyy.pronouns.command.admin.ReloadSubcommand;
@@ -33,7 +33,8 @@ import me.lucyy.pronouns.listener.JoinLeaveListener;
 import me.lucyy.pronouns.storage.MysqlConnectionException;
 import me.lucyy.pronouns.storage.MysqlFileStorage;
 import me.lucyy.pronouns.storage.YamlFileStorage;
-import org.bukkit.Bukkit;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -101,11 +102,13 @@ public final class ProNouns extends JavaPlugin implements Listener {
 		getCommand("pronouns").setTabCompleter(cmd);
 
 		if (getConfigHandler().checkForUpdates()) {
-			new UpdateChecker(this,
-					"https://api.spigotmc.org/legacy/update.php?resource=86199",
-					"A new version of ProNouns is available!\nFind it at https://lucyy.me/pronouns",
-					"pronouns.admin"
-			);
+			new PolymartUpdateChecker(this,
+					0, // TODO
+					configHandler.getPrefix()
+							.append(configHandler.formatMain("A new version of ProNouns is available!\nFind it at "))
+							.append(configHandler.formatAccent("https://lucyy.me/pronouns", TextDecoration.UNDERLINED)
+									.clickEvent(ClickEvent.openUrl("https://lucyy.me/pronouns"))),
+					"pronouns.admin");
 		} else {
 			getLogger().warning("Update checking is disabled. You might be running an old version!");
 		}

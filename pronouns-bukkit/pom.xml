@@ -7,7 +7,7 @@
     <parent>
         <groupId>me.lucyy</groupId>
         <artifactId>pronouns</artifactId>
-        <version>1.1.1</version>
+        <version>1.2.0-SNAPSHOT</version>
     </parent>
     <artifactId>pronouns-bukkit</artifactId>
 
@@ -66,12 +66,21 @@
 
     <repositories>
         <repository>
+            <id>lucy</id>
+            <url>https://repo.lucyy.me/repository/public</url>
+        </repository>
+        <repository>
             <id>paper</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>scarsz</id>
+            <url>https://nexus.scarsz.me/content/groups/public/</url>
         </repository>
     </repositories>
 
     <dependencies>
+        <!-- Core dependencies - Paper, lombok, api, LucyCommonLib -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
@@ -87,18 +96,26 @@
         <dependency>
             <groupId>me.lucyy</groupId>
             <artifactId>pronouns-api</artifactId>
-            <version>1.1</version>
+            <version>1.2-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>me.lucyy</groupId>
             <artifactId>LucyCommonLib</artifactId>
-            <version>1.4.1</version>
+            <version>1.5.0</version>
         </dependency>
+
+        <!-- Hikari and DiscordSRV -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>4.0.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.discordsrv</groupId>
+            <artifactId>discordsrv</artifactId>
+            <version>1.21.1</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

@@ -20,7 +20,6 @@ package me.lucyy.pronouns.command.admin;
 
 import me.lucyy.common.command.Subcommand;
 import me.lucyy.pronouns.ProNouns;
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 
 public class ReloadSubcommand implements Subcommand {
