@@ -1,0 +1,8 @@
+name: ProNouns Discord Expansion
+version: ${project.version}
+main: me.lucyy.pronounsdiscord.PronounsDiscord
+api-version: 1.16
+depend: [ ProNouns ]
+authors: [ __lucyy ]
+description: Hooks ProNouns into DiscordSRV
+website: https://lucyy.me
