@@ -67,22 +67,22 @@ public class YamlFileStorage implements Storage {
     @Override
     public Set<String> getPronouns(UUID uuid) {
         List<String> list = config.getStringList("players." + uuid.toString());
-		return new HashSet<>(list); // TODO test this
+		return new HashSet<>(list);
     }
 
     @Override
     public void setPronouns(UUID uuid, Set<PronounSet> sets) {
-        ArrayList<String> setString = new ArrayList<>();
+        ArrayList<String> setStrings = new ArrayList<>();
         for (PronounSet set : sets)  {
             try {
                 PronounSet parsed = pl.getPronounHandler().fromString(set.subjective);
-                if (parsed.equals(set)) setString.add(set.subjective);
-                else setString.add(set.toString());
+                if (parsed.equals(set)) setStrings.add(set.subjective);
+                else setStrings.add(set.toString());
             } catch (IllegalArgumentException e) {
-                setString.add(set.toString());
+                setStrings.add(set.toString());
             }
         }
-        config.set("players." + uuid.toString(), setString.toArray(new String[0]));
+        config.set("players." + uuid.toString(), setStrings);
         save();
     }
 

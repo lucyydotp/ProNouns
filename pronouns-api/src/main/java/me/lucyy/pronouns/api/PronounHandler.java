@@ -20,7 +20,6 @@ package me.lucyy.pronouns.api;
 
 import me.lucyy.pronouns.api.set.PronounSet;
 
-import java.util.Collection;
 import java.util.Set;
 import java.util.UUID;
 

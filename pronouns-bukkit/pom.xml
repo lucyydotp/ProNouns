@@ -35,13 +35,14 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>me.lucyy.pronouns</shadedPattern>
+                            <shadedPattern>me.lucyy.pronouns.bstats</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>me.lucyy.common</pattern>
                             <shadedPattern>me.lucyy.pronouns.commonlib</shadedPattern>
                         </relocation>
                     </relocations>
+                    <minimizeJar>true</minimizeJar>
                 </configuration>
                 <executions>
                     <execution>
@@ -69,14 +70,6 @@
             <id>lucy</id>
             <url>https://repo.lucyy.me/repository/public</url>
         </repository>
-        <repository>
-            <id>paper</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>scarsz</id>
-            <url>https://nexus.scarsz.me/content/groups/public/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -90,7 +83,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.16</version>
+            <version>1.18.20</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -103,19 +96,22 @@
             <groupId>me.lucyy</groupId>
             <artifactId>LucyCommonLib</artifactId>
             <version>1.5.0</version>
+            <scope>compile</scope>
         </dependency>
 
-        <!-- Hikari and DiscordSRV (+ shaded JDA) -->
+        <!-- Hikari and bStats -->
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>4.0.2</version>
+            <scope>compile</scope>
         </dependency>
+
         <dependency>
-            <groupId>com.discordsrv</groupId>
-            <artifactId>discordsrv</artifactId>
-            <version>1.21.1</version>
-            <scope>provided</scope>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>2.2.1</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

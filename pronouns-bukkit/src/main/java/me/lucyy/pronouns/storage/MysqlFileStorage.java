@@ -31,7 +31,7 @@ public class MysqlFileStorage implements Storage {
 
     private final HikariDataSource ds = new HikariDataSource();
     private final ProNouns plugin;
-    private final HashMap<UUID, List<String>> cache = new HashMap<>();
+    private final HashMap<UUID, Set<String>> cache = new HashMap<>();
 
     public MysqlFileStorage(ProNouns plugin) throws MysqlConnectionException {
         this.plugin = plugin;
@@ -67,17 +67,17 @@ public class MysqlFileStorage implements Storage {
     }
 
     @Override
-    public List<String> getPronouns(UUID uuid) {
+    public Set<String> getPronouns(UUID uuid) {
         return getPronouns(uuid, true);
     }
 
-    public List<String> getPronouns(UUID uuid, boolean useCache) {
+    public Set<String> getPronouns(UUID uuid, boolean useCache) {
         if (useCache && cache.containsKey(uuid)) return cache.get(uuid);
         try (Connection connection = ds.getConnection()) {
             PreparedStatement stmt = connection.prepareStatement("SELECT pronouns FROM pronouns_players WHERE playerUUID=?");
             stmt.setString(1, uuid.toString());
             ResultSet set = stmt.executeQuery();
-            List<String> results = new ArrayList<>();
+			Set<String> results = new HashSet<>();
             while (set.next()) {
                 results.add(set.getString("pronouns"));
             }
@@ -92,8 +92,8 @@ public class MysqlFileStorage implements Storage {
     }
 
     @Override
-    public void setPronouns(UUID uuid, List<PronounSet> sets) {
-        List<String> stringEquivalent = new ArrayList<>();
+    public void setPronouns(UUID uuid, Set<PronounSet> sets) {
+		Set<String> stringEquivalent = new HashSet<>();
         for (PronounSet set : sets) stringEquivalent.add(set.toString());
         cache.put(uuid, stringEquivalent);
         new BukkitRunnable() {

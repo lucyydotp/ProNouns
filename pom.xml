@@ -26,6 +26,10 @@
             <id>lucy</id>
             <url>https://repo.lucyy.me/repository/public/</url>
         </repository>
+        <repository>
+            <id>paper</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <build>
@@ -33,6 +37,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
+                <version>2.7</version>
                 <executions>
                     <execution>
                         <id>default-deploy</id>

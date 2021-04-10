@@ -24,7 +24,6 @@ import me.lucyy.pronouns.ProNouns;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,13 +38,14 @@ public class ConfigHandler implements FormatProvider {
     public ConfigHandler(ProNouns plugin) {
         pl = plugin;
         FileConfiguration cfg = pl.getConfig();
+		cfg.options().copyDefaults(true);
         cfg.options().header("ProNouns Config File\n" +
                 "Make changes here and update them by either using /pronouns reload\n" +
                 "or by restarting the server\n" +
                 "NOTE: if you're using predefined sets with MySQL, make sure they match on\n" +
                 "all servers!\n" +
                 "Documentation at https://docs.lucyy.me/pronouns\n" +
-                "Support discord at https://support.lucyy.me");
+                "Support me.lucyy.pronouns.discord at https://support.lucyy.me");
 
         cfg.addDefault("checkForUpdates", "true");
         cfg.addDefault("accent", "&d");
@@ -63,10 +63,7 @@ public class ConfigHandler implements FormatProvider {
         cfg.addDefault("filter.enabled", "true");
         cfg.addDefault("filter.patterns", new String[]{"apache+", "hel+icop+ter"});
 
-        cfg.addDefault("discord.enabled", "false");
-        cfg.addDefault("discord.cmdPrefix", "?pronouns");
-
-        pl.saveConfig();
+		pl.saveConfig();
 
         decoStrings.put(TextDecoration.OBFUSCATED, 'k');
         decoStrings.put(TextDecoration.BOLD, 'l');
@@ -104,10 +101,8 @@ public class ConfigHandler implements FormatProvider {
                 TextFormatter.format(formatter + content, formatters, true);
     }
 
-    @SuppressWarnings("ConstantConditions")
     public String getAccentColour() {
-        return ChatColor.translateAlternateColorCodes('&',
-                getString("accent", "&3"));
+        return getString("accent", "&3");
     }
 
     @Override
@@ -115,10 +110,8 @@ public class ConfigHandler implements FormatProvider {
         return applyFormatter(getAccentColour(), s, serialiseFormatters(formatters));
     }
 
-    @SuppressWarnings("ConstantConditions")
     public String getMainColour() {
-        return ChatColor.translateAlternateColorCodes('&',
-                getString("main", "&f"));
+        return getString("main", "&f");
     }
 
     @Override
@@ -163,12 +156,4 @@ public class ConfigHandler implements FormatProvider {
     public boolean checkForUpdates() {
         return !"false".equals(pl.getConfig().getString("checkForUpdates"));
     }
-
-	public boolean discordEnabled() {
-		return !"false".equals(pl.getConfig().getString("discord.enabled"));
-	}
-
-	public String getDiscordCmd() {
-    	 return pl.getConfig().getString("discord.cmdPrefix");
-	}
 }

@@ -35,12 +35,13 @@ import me.lucyy.pronouns.storage.MysqlFileStorage;
 import me.lucyy.pronouns.storage.YamlFileStorage;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
-import org.bukkit.event.Listener;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("ConstantConditions")
-public final class ProNouns extends JavaPlugin implements Listener {
+public final class ProNouns extends JavaPlugin {
 
 	@Getter
 	private PronounHandlerImpl pronounHandler;
@@ -56,15 +57,15 @@ public final class ProNouns extends JavaPlugin implements Listener {
 		}
 		Metrics metrics = new Metrics(this, 9519);
 		configHandler = new ConfigHandler(this);
-		metrics.addCustomChart(new Metrics.SimplePie("storage_backend", () -> configHandler.getConnectionType().name()));
+		metrics.addCustomChart(new SimplePie("storage_backend", () -> configHandler.getConnectionType().name()));
 
 		switch (configHandler.getConnectionType()) {
 			case YML:
-				pronounHandler = new PronounHandlerImpl(new YamlFileStorage(this));
+				pronounHandler = new PronounHandlerImpl(this, new YamlFileStorage(this));
 				break;
 			case MYSQL:
 				try {
-					pronounHandler = new PronounHandlerImpl(new MysqlFileStorage(this));
+					pronounHandler = new PronounHandlerImpl(this, new MysqlFileStorage(this));
 					break;
 				} catch (MysqlConnectionException e) {
 					getPluginLoader().disablePlugin(this);
@@ -103,7 +104,7 @@ public final class ProNouns extends JavaPlugin implements Listener {
 
 		if (getConfigHandler().checkForUpdates()) {
 			new PolymartUpdateChecker(this,
-					0, // TODO
+					921,
 					configHandler.getPrefix()
 							.append(configHandler.formatMain("A new version of ProNouns is available!\nFind it at "))
 							.append(configHandler.formatAccent("https://lucyy.me/pronouns", TextDecoration.UNDERLINED)

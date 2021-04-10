@@ -25,6 +25,8 @@ import me.lucyy.pronouns.api.set.AnyPronounSet;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.storage.Storage;
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
+
 import java.util.*;
 
 public class PronounHandlerImpl implements PronounHandler {
@@ -48,8 +50,13 @@ public class PronounHandlerImpl implements PronounHandler {
 	}
 
 	public void setUserPronouns(UUID uuid, Set<PronounSet> set) {
+		new BukkitRunnable () {
+			@Override
+			public void run() {
+				Bukkit.getServer().getPluginManager().callEvent(new PronounsSetEvent(uuid, set));
+			}
+		}.runTask(pl);
 		storage.setPronouns(uuid, set);
-		Bukkit.getServer().getPluginManager().callEvent(new PronounsSetEvent(uuid, set));
 	}
 
 	public Set<PronounSet> getAllPronouns() {
@@ -57,7 +64,7 @@ public class PronounHandlerImpl implements PronounHandler {
 	}
 
 	public Set<PronounSet> getUserPronouns(UUID uuid) {
-		Set<PronounSet> pronounsList = new HashSet<>();
+		Set<PronounSet> pronounsList = new LinkedHashSet<>();
 		for (String pronoun : storage.getPronouns(uuid)) {
 			try {
 				pronounsList.add(fromString(pronoun));
@@ -93,7 +100,7 @@ public class PronounHandlerImpl implements PronounHandler {
 
 	@Override
 	public Set<PronounSet> parseSets(String... input) {
-		Set<PronounSet> out = new HashSet<>();
+		Set<PronounSet> out = new LinkedHashSet<>();
 		for (String arg : input) {
 			String[] splitArg = arg.split("/");
 			if (splitArg.length == 6) {

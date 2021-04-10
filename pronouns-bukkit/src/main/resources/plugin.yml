@@ -2,11 +2,10 @@ name: ProNouns
 version: ${project.version}
 main: me.lucyy.pronouns.ProNouns
 api-version: 1.16
-softdepend: [ PlaceholderAPI, DiscordSRV ]
 authors: [ __lucyy ]
 description: Putting the "pro" in "pronouns".
 website: https://lucyy.me
-
+loadbefore: [ PlaceholderAPI ]
 commands:
   pronouns:
     usage: 'Usage: /pronouns'
