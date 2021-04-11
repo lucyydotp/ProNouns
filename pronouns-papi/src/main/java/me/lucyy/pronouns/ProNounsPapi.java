@@ -25,10 +25,12 @@ import me.lucyy.pronouns.api.set.UnsetPronounSet;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.NoSuchElementException;
+import java.util.Set;
 
+@SuppressWarnings("unused")
 public class ProNounsPapi extends PlaceholderExpansion {
     private final String VERSION = getClass().getPackage().getImplementationVersion();
     private PronounHandler handler;
@@ -54,26 +56,26 @@ public class ProNounsPapi extends PlaceholderExpansion {
     }
 
     @Override
-    public String getAuthor() {
+    public @NotNull String getAuthor() {
         return "__lucyy";
     }
 
     @Override
-    public String getIdentifier() {
+    public @NotNull String getIdentifier() {
         return "pronouns";
     }
 
     @Override
-    public String getVersion() {
+    public @NotNull String getVersion() {
         return VERSION;
     }
 
     @Override
-    public String onPlaceholderRequest(Player player, String identifier) {
+    public String onPlaceholderRequest(Player player, @NotNull String identifier) {
 
         if (player == null) return "";
 
-        Collection<PronounSet> allSets = handler.getUserPronouns(player.getUniqueId());
+        Set<PronounSet> allSets = handler.getPronouns(player.getUniqueId());
         PronounSet mainPronouns;
         try {
             mainPronouns = allSets.iterator().next();

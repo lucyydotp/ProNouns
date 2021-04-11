@@ -3,18 +3,20 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>me.lucyy</groupId>
         <artifactId>pronouns</artifactId>
         <version>1.2.0</version>
     </parent>
-    <artifactId>pronouns-bukkit</artifactId>
+    <artifactId>pronouns-discord</artifactId>
+    <version>1.2.0-r0</version>
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+    <url>https://lucyy.me</url>
 
     <build>
         <plugins>
@@ -34,8 +36,8 @@
                 <configuration>
                     <relocations>
                         <relocation>
-                            <pattern>org.bstats</pattern>
-                            <shadedPattern>me.lucyy.pronouns.bstats</shadedPattern>
+                            <pattern>net.dv8tion.jda</pattern>
+                            <shadedPattern>github.scarsz.discordsrv.dependencies.jda</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>me.lucyy.common</pattern>
@@ -43,15 +45,6 @@
                         </relocation>
                     </relocations>
                     <minimizeJar>true</minimizeJar>
-                    <filters>
-                        <filter>
-                            <artifact>me.lucyy:pronouns-api</artifact>
-                            <excludeDefaults>false</excludeDefaults>
-                            <includes>
-                                <include>**</include>
-                            </includes>
-                        </filter>
-                    </filters>
                 </configuration>
                 <executions>
                     <execution>
@@ -76,17 +69,20 @@
 
     <repositories>
         <repository>
-            <id>lucy</id>
-            <url>https://repo.lucyy.me/repository/public</url>
-        </repository>
-        <repository>
             <id>paper</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
+        <repository>
+            <id>scarsz</id>
+            <url>https://nexus.scarsz.me/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>lucy</id>
+            <url>https://repo.lucyy.me/repository/public</url>
         </repository>
     </repositories>
 
     <dependencies>
-        <!-- Core dependencies - Paper, lombok, api, LucyCommonLib -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
@@ -94,37 +90,22 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
+            <groupId>com.discordsrv</groupId>
+            <artifactId>discordsrv</artifactId>
+            <version>1.21.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.lucyy</groupId>
-            <artifactId>pronouns-api</artifactId>
-            <version>1.2</version>
-            <scope>compile</scope>
+            <artifactId>pronouns-bukkit</artifactId>
+            <version>1.2.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>me.lucyy</groupId>
             <artifactId>LucyCommonLib</artifactId>
             <version>1.6.1</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <!-- Hikari and bStats -->
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>4.0.2</version>
-            <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.bstats</groupId>
-            <artifactId>bstats-bukkit</artifactId>
-            <version>2.2.1</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

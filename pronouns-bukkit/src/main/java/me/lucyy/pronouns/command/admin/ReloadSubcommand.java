@@ -19,8 +19,8 @@
 package me.lucyy.pronouns.command.admin;
 
 import me.lucyy.common.command.Subcommand;
+import me.lucyy.common.format.Platform;
 import me.lucyy.pronouns.ProNouns;
-import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 
 public class ReloadSubcommand implements Subcommand {
@@ -54,7 +54,7 @@ public class ReloadSubcommand implements Subcommand {
     @Override
     public boolean execute(final CommandSender sender, final CommandSender target, final String[] args) {
         pl.reloadConfig();
-        sender.sendMessage(pl.getConfigHandler().getPrefix()
+		Platform.send(sender, pl.getConfigHandler().getPrefix()
                 .append(pl.getConfigHandler().formatMain("Reloaded"))
         );
         return true;

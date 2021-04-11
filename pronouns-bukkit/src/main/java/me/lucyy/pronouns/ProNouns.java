@@ -19,11 +19,11 @@
 package me.lucyy.pronouns;
 
 import lombok.Getter;
-import me.lucyy.common.DependencyChecker;
 import me.lucyy.common.command.Command;
 import me.lucyy.common.command.HelpSubcommand;
 import me.lucyy.common.command.VersionSubcommand;
-import me.lucyy.common.update.UpdateChecker;
+import me.lucyy.common.format.Platform;
+import me.lucyy.common.update.PolymartUpdateChecker;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.command.*;
 import me.lucyy.pronouns.command.admin.ReloadSubcommand;
@@ -33,13 +33,15 @@ import me.lucyy.pronouns.listener.JoinLeaveListener;
 import me.lucyy.pronouns.storage.MysqlConnectionException;
 import me.lucyy.pronouns.storage.MysqlFileStorage;
 import me.lucyy.pronouns.storage.YamlFileStorage;
-import org.bukkit.Bukkit;
-import org.bukkit.event.Listener;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.TextDecoration;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
 @SuppressWarnings("ConstantConditions")
-public final class ProNouns extends JavaPlugin implements Listener {
+public final class ProNouns extends JavaPlugin {
 
 	@Getter
 	private PronounHandlerImpl pronounHandler;
@@ -49,21 +51,23 @@ public final class ProNouns extends JavaPlugin implements Listener {
 
 	@Override
 	public void onEnable() {
-		if (!DependencyChecker.adventurePresent(this)) {
+		try {
+			new Platform(this);
+		} catch (ClassNotFoundException e) {
 			getPluginLoader().disablePlugin(this);
 			return;
 		}
 		Metrics metrics = new Metrics(this, 9519);
 		configHandler = new ConfigHandler(this);
-		metrics.addCustomChart(new Metrics.SimplePie("storage_backend", () -> configHandler.getConnectionType().name()));
+		metrics.addCustomChart(new SimplePie("storage_backend", () -> configHandler.getConnectionType().name()));
 
 		switch (configHandler.getConnectionType()) {
 			case YML:
-				pronounHandler = new PronounHandlerImpl(new YamlFileStorage(this));
+				pronounHandler = new PronounHandlerImpl(this, new YamlFileStorage(this));
 				break;
 			case MYSQL:
 				try {
-					pronounHandler = new PronounHandlerImpl(new MysqlFileStorage(this));
+					pronounHandler = new PronounHandlerImpl(this, new MysqlFileStorage(this));
 					break;
 				} catch (MysqlConnectionException e) {
 					getPluginLoader().disablePlugin(this);
@@ -101,11 +105,13 @@ public final class ProNouns extends JavaPlugin implements Listener {
 		getCommand("pronouns").setTabCompleter(cmd);
 
 		if (getConfigHandler().checkForUpdates()) {
-			new UpdateChecker(this,
-					"https://api.spigotmc.org/legacy/update.php?resource=86199",
-					"A new version of ProNouns is available!\nFind it at https://lucyy.me/pronouns",
-					"pronouns.admin"
-			);
+			new PolymartUpdateChecker(this,
+					921,
+					configHandler.getPrefix()
+							.append(configHandler.formatMain("A new version of ProNouns is available!\nFind it at "))
+							.append(configHandler.formatAccent("https://lucyy.me/pronouns", TextDecoration.UNDERLINED)
+									.clickEvent(ClickEvent.openUrl("https://lucyy.me/pronouns"))),
+					"pronouns.admin");
 		} else {
 			getLogger().warning("Update checking is disabled. You might be running an old version!");
 		}

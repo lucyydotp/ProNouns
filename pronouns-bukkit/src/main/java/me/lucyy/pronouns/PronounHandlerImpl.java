@@ -20,73 +20,119 @@ package me.lucyy.pronouns;
 
 import lombok.Getter;
 import me.lucyy.pronouns.api.PronounHandler;
+import me.lucyy.pronouns.api.event.PronounsSetEvent;
 import me.lucyy.pronouns.api.set.AnyPronounSet;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.storage.Storage;
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PronounHandlerImpl implements PronounHandler {
+	@Getter
+	private final Storage storage;
+	private final ProNouns pl;
+	private final HashMap<String, PronounSet> setIndex = new HashMap<>();
 
-    @Getter
-    private final Storage storage;
+	public void addToIndex(PronounSet set) {
+		set.isPredefined = true;
+		setIndex.put(set.subjective, set);
+	}
 
-    private final HashMap<String, PronounSet> setIndex = new HashMap<>();
+	public PronounHandlerImpl(ProNouns pl, Storage storage) {
+		this.pl = pl;
+		this.storage = storage;
+		addToIndex(fromString("he/him/he's/his/his/himself"));
+		addToIndex(fromString("she/her/she's/her/hers/herself"));
+		addToIndex(fromString("they/them/they're/their/theirs/themself"));
+		setIndex.put("any", new AnyPronounSet(fromString("they")));
+	}
 
-    public void addToIndex(PronounSet set) {
-        set.isPredefined = true;
-        setIndex.put(set.subjective, set);
-    }
+	public void setUserPronouns(UUID uuid, Set<PronounSet> set) {
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				Bukkit.getServer().getPluginManager().callEvent(new PronounsSetEvent(uuid, set));
+			}
+		}.runTask(pl);
+		storage.setPronouns(uuid, set);
+	}
 
-    public PronounHandlerImpl(Storage storage) {
-        this.storage = storage;
-        addToIndex(fromString("he/him/he's/his/his/himself"));
-        addToIndex(fromString("she/her/she's/her/hers/herself"));
-        addToIndex(fromString("they/them/they're/their/theirs/themself"));
-        setIndex.put("any", new AnyPronounSet(fromString("they")));
-    }
+	public Set<PronounSet> getAllPronouns() {
+		return new HashSet<>(setIndex.values());
+	}
 
-    public void setUserPronouns(UUID uuid, List<PronounSet> set) {
-        storage.setPronouns(uuid, set);
-    }
-
-    public Collection<PronounSet> getAllPronouns() {
-        return setIndex.values();
-    }
-
-    public Collection<PronounSet> getUserPronouns(UUID uuid) {
-        List<PronounSet> pronounsList = new ArrayList<>();
-        for (String pronoun : storage.getPronouns(uuid)) {
-        	try {
-        		pronounsList.add(fromString(pronoun));
-        	} catch (IllegalArgumentException e) {
+	public Set<PronounSet> getPronouns(UUID uuid) {
+		Set<PronounSet> pronounsList = new LinkedHashSet<>();
+		for (String pronoun : storage.getPronouns(uuid)) {
+			try {
+				pronounsList.add(fromString(pronoun));
+			} catch (IllegalArgumentException e) {
 				Bukkit.getLogger().warning("No definition for the pronoun set '" + pronoun + "' could be found!");
 				Bukkit.getLogger().warning("If you're using MySQL, make sure predefinedSets matches on all servers!");
 			}
-        }
-        return pronounsList;
-    }
+		}
+		return pronounsList;
+	}
 
-    public void clearUserPronouns(UUID uuid) {
-        storage.clearPronouns(uuid);
-    }
+	public void clearUserPronouns(UUID uuid) {
+		storage.clearPronouns(uuid);
+	}
 
-    public PronounSet fromString(String set) throws IllegalArgumentException {
-        String[] pronouns = set.split("/");
-        if (pronouns.length > 6) throw new IllegalArgumentException(set);
+	public PronounSet fromString(String set) throws IllegalArgumentException {
+		String[] pronouns = set.split("/");
+		if (pronouns.length > 6) throw new IllegalArgumentException(set);
 
-        PronounSet retrieved = setIndex.getOrDefault(pronouns[0].toLowerCase(), null);
+		PronounSet retrieved = setIndex.getOrDefault(pronouns[0].toLowerCase(), null);
 
-        if (retrieved != null) return retrieved;
+		if (retrieved != null) return retrieved;
 
-        if (pronouns.length != 6) throw new IllegalArgumentException(set);
+		if (pronouns.length != 6) throw new IllegalArgumentException(set);
 
-        return new PronounSet(pronouns[0].replace(" ", ""),
-                pronouns[1].replace(" ", ""),
-                pronouns[2].replace(" ", ""),
-                pronouns[3].replace(" ", ""),
-                pronouns[4].replace(" ", ""),
-                pronouns[5].replace(" ", ""));
-    }
+		return new PronounSet(pronouns[0].replace(" ", ""),
+				pronouns[1].replace(" ", ""),
+				pronouns[2].replace(" ", ""),
+				pronouns[3].replace(" ", ""),
+				pronouns[4].replace(" ", ""),
+				pronouns[5].replace(" ", ""));
+	}
+
+	@Override
+	public Set<PronounSet> parseSets(String... input) {
+		Set<PronounSet> out = new LinkedHashSet<>();
+		for (String arg : input) {
+			String[] splitArg = arg.split("/");
+			if (splitArg.length == 6) {
+				PronounSet parsed = pl.getPronounHandler().fromString(arg);
+				out.add(parsed);
+			} else {
+				for (String _splitArg : splitArg) {
+					// check for objective
+					boolean cont = true;
+					for (PronounSet _set : out) {
+						if (_set.objective.toUpperCase(Locale.ROOT).equals(_splitArg.toUpperCase())) {
+							cont = false;
+							break;
+						}
+					}
+					if (!cont) continue;
+					PronounSet parsed = pl.getPronounHandler().fromString(_splitArg);
+					out.add(parsed);
+				}
+			}
+		}
+		return out;
+	}
+
+	@Override
+	public Map<UUID, Set<PronounSet>> getAllUserPronouns() {
+		return storage.getAllPronouns()
+				.entrySet()
+				.stream()
+				.collect(Collectors.toMap(Map.Entry::getKey,
+						e -> parseSets(e.getValue().toArray(new String[0])))
+				);
+	}
 }

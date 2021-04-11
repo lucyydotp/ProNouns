@@ -1,0 +1,13 @@
+name: ProNounsDiscord
+version: ${project.version}
+main: me.lucyy.pronouns.discord.PronounsDiscord
+api-version: 1.16
+depend: [ ProNouns, DiscordSRV ]
+authors: [ __lucyy ]
+description: Hooks ProNouns into DiscordSRV
+website: https://lucyy.me
+
+commands:
+  pronounsdiscord:
+    usage: 'Usage: /pronounsdiscord'
+    aliases: ['pronounsdc', 'pndiscord', 'pndc']
