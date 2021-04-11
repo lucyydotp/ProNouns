@@ -19,7 +19,9 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.common.command.Subcommand;
+import me.lucyy.common.format.Platform;
 import me.lucyy.pronouns.ProNouns;
+import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -51,13 +53,14 @@ public class ClearPronounsSubcommand implements Subcommand {
     @Override
     public boolean execute(CommandSender sender, CommandSender target, String[] args) {
         if (!(target instanceof Player)) {
-            sender.sendMessage(pl.getConfigHandler().getPrefix() + "This command can only be run by a player.");
+			Platform.send(sender, pl.getConfigHandler().getPrefix()
+					.append(Component.text("This command can only be run by a player.")));
             return true;
         }
 
 
         pl.getPronounHandler().clearUserPronouns(((Player) target).getUniqueId());
-        sender.sendMessage(pl.getConfigHandler().getPrefix()
+        Platform.send(sender, pl.getConfigHandler().getPrefix()
                 .append(pl.getConfigHandler().formatMain("Cleared pronouns"))
         );
         return true;

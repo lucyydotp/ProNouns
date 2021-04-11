@@ -19,10 +19,10 @@
 package me.lucyy.pronouns;
 
 import lombok.Getter;
-import me.lucyy.common.DependencyChecker;
 import me.lucyy.common.command.Command;
 import me.lucyy.common.command.HelpSubcommand;
 import me.lucyy.common.command.VersionSubcommand;
+import me.lucyy.common.format.Platform;
 import me.lucyy.common.update.PolymartUpdateChecker;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.command.*;
@@ -51,7 +51,9 @@ public final class ProNouns extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		if (!DependencyChecker.adventurePresent(this)) {
+		try {
+			new Platform(this);
+		} catch (ClassNotFoundException e) {
 			getPluginLoader().disablePlugin(this);
 			return;
 		}

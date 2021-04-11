@@ -19,6 +19,7 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.common.command.Subcommand;
+import me.lucyy.common.format.Platform;
 import me.lucyy.common.format.TextFormatter;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
@@ -52,10 +53,10 @@ public class ListPronounsSubcommand implements Subcommand {
     public boolean execute( CommandSender sender, CommandSender target, String[] args) {
         final ConfigHandler cfg = pl.getConfigHandler();
         StringBuilder out = new StringBuilder();
-        sender.sendMessage(TextFormatter.formatTitle("All Predefined Pronoun Sets:", cfg));
+		Platform.send(sender, TextFormatter.formatTitle("All Predefined Pronoun Sets:", cfg));
         for (PronounSet set : pl.getPronounHandler().getAllPronouns()) out.append(set.toString()).append("\n");
-        sender.sendMessage(cfg.formatMain(out.toString()));
-        sender.sendMessage(TextFormatter.formatTitle("*", cfg));
+		Platform.send(sender, cfg.formatMain(out.toString()));
+		Platform.send(sender, TextFormatter.formatTitle("*", cfg));
         return true;
     }
 }

@@ -19,6 +19,7 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.common.command.Subcommand;
+import me.lucyy.common.format.Platform;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.command.CommandSender;
@@ -60,7 +61,7 @@ public class PreviewSubcommand implements Subcommand {
 
         Collection<PronounSet> sets = pl.getPronounHandler().getUserPronouns(player.getUniqueId());
         if (sets.size() == 0) {
-            sender.sendMessage(pl.getConfigHandler().getPrefix()
+			Platform.send(sender, pl.getConfigHandler().getPrefix()
                     .append(pl.getConfigHandler().formatMain("You haven't set any pronouns yet!")));
             return true;
         }

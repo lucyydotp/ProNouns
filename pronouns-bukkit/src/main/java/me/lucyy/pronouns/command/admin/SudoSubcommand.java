@@ -20,6 +20,7 @@ package me.lucyy.pronouns.command.admin;
 
 import me.lucyy.common.command.Command;
 import me.lucyy.common.command.Subcommand;
+import me.lucyy.common.format.Platform;
 import me.lucyy.pronouns.ProNouns;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -61,7 +62,7 @@ public class SudoSubcommand implements Subcommand {
 	public boolean execute(final CommandSender sender, final CommandSender target, final String[] args) {
 		if (args.length < 2) return false;
 		if (args[1].equals("admin")) {
-			sender.sendMessage( plugin.getConfigHandler().getPrefix().append(
+			Platform.send(sender, plugin.getConfigHandler().getPrefix().append(
 					plugin.getConfigHandler().formatMain("plsno recursion"))
 			);
 			return true;
@@ -69,13 +70,13 @@ public class SudoSubcommand implements Subcommand {
 		Player cmdTarget = Bukkit.getPlayer(args[0]);
 
 		if (cmdTarget == null) {
-			sender.sendMessage(plugin.getConfigHandler().getPrefix()
+			Platform.send(sender, plugin.getConfigHandler().getPrefix()
 					.append(plugin.getConfigHandler().formatMain("Player '" + args[0] + "' couldn't be found"))
 			);
 			return true;
 		}
 
-		sender.sendMessage(plugin.getConfigHandler().getPrefix()
+		Platform.send(sender, plugin.getConfigHandler().getPrefix()
 				.append(plugin.getConfigHandler().formatMain("Running command as " + cmdTarget.getDisplayName())));
 		command.onCommand(sender, cmdTarget, "pronouns", Arrays.copyOfRange(args, 1, args.length));
 		return true;

@@ -19,6 +19,7 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.common.command.Subcommand;
+import me.lucyy.common.format.Platform;
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
@@ -59,7 +60,7 @@ public class GetPronounsSubcommand implements Subcommand {
         Player commandTarget;
         ConfigHandler cfg = pl.getConfigHandler();
         if (!(sender instanceof Player) && args.length == 0) {
-            sender.sendMessage(cfg.getPrefix().append(cfg.formatMain("Please specify a username.")));
+			Platform.send(sender, cfg.getPrefix().append(cfg.formatMain("Please specify a username.")));
             return true;
         }
 
@@ -68,14 +69,14 @@ public class GetPronounsSubcommand implements Subcommand {
         } else commandTarget = (Player) sender;
 
         if (commandTarget == null) {
-            sender.sendMessage(cfg.getPrefix()
+			Platform.send(sender, cfg.getPrefix()
                     .append(cfg.formatMain("Player '"))
                     .append(cfg.formatAccent(args[0]))
                     .append(cfg.formatMain("' could not be found.")));
             return true;
         }
 
-        sender.sendMessage(cfg.getPrefix()
+		Platform.send(sender, cfg.getPrefix()
                 .append(cfg.formatMain(commandTarget.getDisplayName() + "'s pronouns are "))
                 .append(cfg.formatAccent(
                 PronounSet.friendlyPrintSet(

@@ -19,6 +19,7 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.common.command.Subcommand;
+import me.lucyy.common.format.Platform;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.config.ConfigHandler;
@@ -68,7 +69,7 @@ public class SetPronounsSubcommand implements Subcommand {
 		if (!sender.hasPermission("pronouns.bypass"))
 			for (String pattern : cfg.getFilterPatterns()) {
 				if (arg.toLowerCase().matches(".*" + pattern + ".*")) {
-					sender.sendMessage(cfg.getPrefix()
+					Platform.send(sender, cfg.getPrefix()
 							.append(cfg.formatMain("You can't use that set.")));
 					warnAdmins(sender.getName(), arg);
 					return false;
@@ -81,7 +82,7 @@ public class SetPronounsSubcommand implements Subcommand {
 	public boolean execute(CommandSender sender, CommandSender target, String[] args) {
 		final ConfigHandler cfg = pl.getConfigHandler();
 		if (!(target instanceof Player)) {
-			sender.sendMessage(cfg.getPrefix().append(cfg.formatMain("This command can only be run by a player.")));
+			Platform.send(sender, cfg.getPrefix().append(cfg.formatMain("This command can only be run by a player.")));
 			return true;
 		}
 
@@ -94,7 +95,7 @@ public class SetPronounsSubcommand implements Subcommand {
 		try {
 			 set = pl.getPronounHandler().parseSets(args);
 		} catch (IllegalArgumentException e) {
-			sender.sendMessage(cfg.getPrefix()
+			Platform.send(sender, cfg.getPrefix()
 					.append(cfg.formatMain("The pronoun '"))
 					.append(cfg.formatAccent(e.getMessage()))
 					.append(cfg.formatMain("' is unrecognised.\n"
@@ -102,7 +103,7 @@ public class SetPronounsSubcommand implements Subcommand {
 			return true;
 		}
 		pl.getPronounHandler().setUserPronouns(((Player) target).getUniqueId(), set);
-		sender.sendMessage(cfg.getPrefix()
+		Platform.send(sender, cfg.getPrefix()
 				.append(cfg.formatMain("Set pronouns to "))
 				.append(cfg.formatAccent(PronounSet.friendlyPrintSet(set))));
 		return true;
