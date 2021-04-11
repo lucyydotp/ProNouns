@@ -18,6 +18,7 @@
 
 package me.lucyy.pronouns.storage;
 
+import me.lucyy.common.util.UuidUtils;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -91,4 +92,15 @@ public class YamlFileStorage implements Storage {
         config.set("players." + uuid.toString(), new String[0]);
         save();
     }
+
+	@Override
+	public Map<UUID, Set<String>> getAllPronouns() {
+    	HashMap<UUID, Set<String>> out = new HashMap<>();
+
+    	// if this is null then something is seriously wrong
+    	for (String uuid : Objects.requireNonNull(config.getConfigurationSection("players")).getKeys(false)) {
+    		out.put(UuidUtils.fromString(uuid), new HashSet<>(config.getStringList("players." + uuid)));
+		}
+		return out;
+	}
 }

@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class DiscordPronounSetListener implements Listener {
+public class DiscordRoleManager implements Listener {
 	private final PronounsDiscord pl;
 	private final DiscordSRV discord;
 
-	public DiscordPronounSetListener(PronounsDiscord pl, DiscordSRV discord) {
+	public DiscordRoleManager(PronounsDiscord pl, DiscordSRV discord) {
 		this.pl = pl;
 		this.discord = discord;
 	}
@@ -39,7 +39,7 @@ public class DiscordPronounSetListener implements Listener {
 		if (discordId == null) return;
 
 		final Guild guild = discord.getMainGuild();
-		final String roleName = PronounSet.friendlyPrintSet(pronouns);
+		final String roleName = "Pronouns " +  PronounSet.friendlyPrintSet(pronouns);
 		Role target = null;
 		final List<Role> preeexistingRoles = guild.getRolesByName(roleName, true);
 
@@ -56,7 +56,7 @@ public class DiscordPronounSetListener implements Listener {
 
 		if (target == null) {
 			guild.createRole().queue(role -> role.getManager()
-					.setName("Pronouns " + roleName)
+					.setName(roleName)
 					.setPermissions(0)
 					.queue((ignored) -> applyRole(discordId, role)));
 			return;

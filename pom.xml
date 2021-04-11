@@ -20,18 +20,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-
-    <repositories>
-        <repository>
-            <id>lucy</id>
-            <url>https://repo.lucyy.me/repository/public/</url>
-        </repository>
-        <repository>
-            <id>paper</id>
-            <url>https://papermc.io/repo/repository/maven-public/</url>
-        </repository>
-    </repositories>
-
     <build>
         <plugins>
             <plugin>
@@ -52,5 +40,6 @@
         <module>pronouns-api</module>
         <module>pronouns-bukkit</module>
         <module>pronouns-papi</module>
+        <module>pronouns-discord</module>
     </modules>
 </project>

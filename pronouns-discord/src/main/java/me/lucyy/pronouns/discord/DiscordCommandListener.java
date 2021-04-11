@@ -3,7 +3,6 @@ package me.lucyy.pronouns.discord;
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.api.Subscribe;
 import github.scarsz.discordsrv.api.events.DiscordGuildMessagePreProcessEvent;
-import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.api.set.PronounSet;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,12 +23,15 @@ public class DiscordCommandListener {
 	@Subscribe
 	@SuppressWarnings("unused")
 	public void on(@NotNull DiscordGuildMessagePreProcessEvent event) {
+		//noinspection ConstantConditions - default set elsewhere
 		if (!event.getMessage().getContentStripped().startsWith(pl.getConfig().getString("command"))) return;
 		UUID uuid = discord.getAccountLinkManager().getUuid(event.getAuthor().getId());
-		final boolean isDiscordUuid = uuid == null;
-		if (isDiscordUuid) {
-			uuid = DiscordHandler.uuidFromDiscord(event.getAuthor().getId());
+
+		if (uuid == null) {
+			event.getMessage().reply("You need to link link your Minecraft account. to use this command." +
+					"Use /me.lucyy.pronouns.discord link ingame.").queue();
 		}
+
 		String[] args = event.getMessage().getContentStripped().split(" ");
 		args = Arrays.copyOfRange(args, 1, args.length);
 		Set<PronounSet> set;
@@ -42,9 +44,7 @@ public class DiscordCommandListener {
 		}
 
 		pl.getHandler().setUserPronouns(uuid, set);
-		event.getMessage().reply("Set pronouns to " + PronounSet.friendlyPrintSet(set) + "."
-				+ (isDiscordUuid ? "\nThis command works better if you link your Minecraft account. " +
-				"Use /me.lucyy.pronouns.discord link ingame." : "")).queue();
+		event.getMessage().reply("Set pronouns to " + PronounSet.friendlyPrintSet(set) + ".").queue();
 		event.setCancelled(true);
 	}
 }

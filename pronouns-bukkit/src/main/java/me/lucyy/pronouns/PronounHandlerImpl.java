@@ -28,6 +28,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PronounHandlerImpl implements PronounHandler {
 	@Getter
@@ -50,7 +51,7 @@ public class PronounHandlerImpl implements PronounHandler {
 	}
 
 	public void setUserPronouns(UUID uuid, Set<PronounSet> set) {
-		new BukkitRunnable () {
+		new BukkitRunnable() {
 			@Override
 			public void run() {
 				Bukkit.getServer().getPluginManager().callEvent(new PronounsSetEvent(uuid, set));
@@ -63,7 +64,7 @@ public class PronounHandlerImpl implements PronounHandler {
 		return new HashSet<>(setIndex.values());
 	}
 
-	public Set<PronounSet> getUserPronouns(UUID uuid) {
+	public Set<PronounSet> getPronouns(UUID uuid) {
 		Set<PronounSet> pronounsList = new LinkedHashSet<>();
 		for (String pronoun : storage.getPronouns(uuid)) {
 			try {
@@ -123,5 +124,15 @@ public class PronounHandlerImpl implements PronounHandler {
 			}
 		}
 		return out;
+	}
+
+	@Override
+	public Map<UUID, Set<PronounSet>> getAllUserPronouns() {
+		return storage.getAllPronouns()
+				.entrySet()
+				.stream()
+				.collect(Collectors.toMap(Map.Entry::getKey,
+						e -> parseSets(e.getValue().toArray(new String[0])))
+				);
 	}
 }

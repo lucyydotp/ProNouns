@@ -70,6 +70,10 @@
             <id>lucy</id>
             <url>https://repo.lucyy.me/repository/public</url>
         </repository>
+        <repository>
+            <id>paper</id>
+            <url>https://papermc.io/repo/repository/maven-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>
