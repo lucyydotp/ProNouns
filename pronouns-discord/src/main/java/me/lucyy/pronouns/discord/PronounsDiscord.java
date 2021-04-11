@@ -11,6 +11,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 public final class PronounsDiscord extends JavaPlugin {
 
 	private PronounHandler handler;
@@ -21,22 +23,27 @@ public final class PronounsDiscord extends JavaPlugin {
 		getConfig().addDefault("command", "?pronouns");
 		saveConfig();
 
+		// bukkit won't load it if pronouns isnt present
+		ProNouns pronouns = Objects.requireNonNull((ProNouns)Bukkit.getPluginManager().getPlugin("ProNouns"));
+		if (!pronouns.isEnabled()) {
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+
 		RegisteredServiceProvider<PronounHandler> rsp = getServer().getServicesManager().getRegistration(PronounHandler.class);
 		assert rsp != null;
 		handler = rsp.getProvider();
 		DiscordSRV plugin = DiscordSRV.getPlugin();
 		DiscordRoleManager roleManager = new DiscordRoleManager(this, plugin);
 
-		DiscordSRV.api.subscribe(new DiscordCommandListener(this, plugin));
+		DiscordSRV.api.subscribe(new DiscordCommandListener(this, plugin, roleManager));
 		getServer().getPluginManager().registerEvents(roleManager, this);
 
-		//noinspection ConstantConditions - bukkit won't load if pronouns isnt present
 		@SuppressWarnings("RedundantCast") // it wont compile without that cast, idk why
-		FormatProvider provider = (FormatProvider)
-				((ProNouns)Bukkit.getPluginManager().getPlugin("ProNouns")).getConfigHandler();
+		FormatProvider provider = (FormatProvider) pronouns.getConfigHandler();
 
 		Command cmd = new Command(provider);
-		HelpSubcommand help = new HelpSubcommand(cmd, provider, this, "/pndc");
+		HelpSubcommand help = new HelpSubcommand(cmd, provider, this, "pndc");
 		cmd.register(help);
 		cmd.setDefaultSubcommand(help);
 

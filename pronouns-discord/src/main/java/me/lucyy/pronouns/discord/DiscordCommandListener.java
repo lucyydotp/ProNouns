@@ -2,6 +2,7 @@ package me.lucyy.pronouns.discord;
 
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.api.Subscribe;
+import github.scarsz.discordsrv.api.events.AccountLinkedEvent;
 import github.scarsz.discordsrv.api.events.DiscordGuildMessagePreProcessEvent;
 import me.lucyy.pronouns.api.set.PronounSet;
 
@@ -14,10 +15,12 @@ import java.util.UUID;
 public class DiscordCommandListener {
 	private final PronounsDiscord pl;
 	private final DiscordSRV discord;
+	private final DiscordRoleManager roleManager;
 
-	public DiscordCommandListener(PronounsDiscord pl, DiscordSRV discord) {
+	public DiscordCommandListener(PronounsDiscord pl, DiscordSRV discord, DiscordRoleManager roleManager) {
 		this.pl = pl;
 		this.discord = discord;
+		this.roleManager = roleManager;
 	}
 
 	@Subscribe
@@ -46,5 +49,11 @@ public class DiscordCommandListener {
 		pl.getHandler().setUserPronouns(uuid, set);
 		event.getMessage().reply("Set pronouns to " + PronounSet.friendlyPrintSet(set) + ".").queue();
 		event.setCancelled(true);
+	}
+
+	@Subscribe
+	@SuppressWarnings("unused")
+	public void on(AccountLinkedEvent event) {
+		roleManager.syncRole(event.getPlayer().getUniqueId(), pl.getHandler().getPronouns(event.getPlayer().getUniqueId()));
 	}
 }

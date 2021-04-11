@@ -43,6 +43,15 @@
                         </relocation>
                     </relocations>
                     <minimizeJar>true</minimizeJar>
+                    <filters>
+                        <filter>
+                            <artifact>me.lucyy:pronouns-api</artifact>
+                            <excludeDefaults>false</excludeDefaults>
+                            <includes>
+                                <include>**</include>
+                            </includes>
+                        </filter>
+                    </filters>
                 </configuration>
                 <executions>
                     <execution>
@@ -99,7 +108,7 @@
         <dependency>
             <groupId>me.lucyy</groupId>
             <artifactId>LucyCommonLib</artifactId>
-            <version>1.6.0</version>
+            <version>1.6.1</version>
             <scope>compile</scope>
         </dependency>
 

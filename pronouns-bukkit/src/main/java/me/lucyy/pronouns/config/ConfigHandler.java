@@ -48,7 +48,7 @@ public class ConfigHandler implements FormatProvider {
                 "Support me.lucyy.pronouns.discord at https://support.lucyy.me");
 
         cfg.addDefault("checkForUpdates", "true");
-        cfg.addDefault("accent", "&d");
+        cfg.addDefault("accent", "{#fa9efa>}%s{#9dacfa<}");
         cfg.addDefault("main", "&f");
 
         cfg.addDefault("connection", "yml");
