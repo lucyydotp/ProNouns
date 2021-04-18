@@ -18,6 +18,7 @@
 
 package me.lucyy.pronouns.storage;
 
+import com.google.common.collect.Multimap;
 import me.lucyy.pronouns.api.set.PronounSet;
 
 import java.util.Map;
@@ -28,5 +29,5 @@ public interface Storage {
     Set<String> getPronouns(UUID uuid);
     void setPronouns(UUID uuid, Set<PronounSet> set);
     void clearPronouns(UUID uuid);
-    Map<UUID, Set<String>> getAllPronouns();
+    Multimap<UUID, String> getAllPronouns();
 }

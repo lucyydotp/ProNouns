@@ -29,6 +29,7 @@ import org.bukkit.command.CommandSender;
 
 public class ListPronounsSubcommand implements Subcommand {
     private final ProNouns pl;
+
     public ListPronounsSubcommand(ProNouns plugin) {
         pl = plugin;
     }
@@ -47,16 +48,18 @@ public class ListPronounsSubcommand implements Subcommand {
     }
 
     @Override
-    public String getPermission() { return null; }
+    public String getPermission() {
+        return null;
+    }
 
     @Override
-    public boolean execute( CommandSender sender, CommandSender target, String[] args) {
+    public boolean execute(CommandSender sender, CommandSender target, String[] args) {
         final ConfigHandler cfg = pl.getConfigHandler();
         StringBuilder out = new StringBuilder();
-		Platform.send(sender, TextFormatter.formatTitle("All Predefined Pronoun Sets:", cfg));
+        Platform.send(sender, TextFormatter.formatTitle("All Predefined Pronoun Sets:", cfg));
         for (PronounSet set : pl.getPronounHandler().getAllPronouns()) out.append(set.toString()).append("\n");
-		Platform.send(sender, cfg.formatMain(out.toString()));
-		Platform.send(sender, TextFormatter.formatTitle("*", cfg));
+        Platform.send(sender, cfg.formatMain(out.toString()));
+        Platform.send(sender, TextFormatter.formatTitle("*", cfg));
         return true;
     }
 }

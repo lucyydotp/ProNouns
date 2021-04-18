@@ -18,10 +18,13 @@
 
 package me.lucyy.pronouns.config;
 
+import lombok.Data;
+
+@Data
 public class SqlInfoContainer {
-    public String host;
-    public int port;
-    public String database;
-    public String username;
-    public String password;
+    private final String host;
+    private final int port;
+    private final String database;
+    private final String username;
+    private final String password;
 }

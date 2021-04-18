@@ -54,7 +54,7 @@ public class ReloadSubcommand implements Subcommand {
     @Override
     public boolean execute(final CommandSender sender, final CommandSender target, final String[] args) {
         pl.reloadConfig();
-		Platform.send(sender, pl.getConfigHandler().getPrefix()
+        Platform.send(sender, pl.getConfigHandler().getPrefix()
                 .append(pl.getConfigHandler().formatMain("Reloaded"))
         );
         return true;

@@ -18,6 +18,8 @@
 
 package me.lucyy.pronouns.storage;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import me.lucyy.common.util.UuidUtils;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
@@ -73,7 +75,7 @@ public class YamlFileStorage implements Storage {
 
     @Override
     public void setPronouns(UUID uuid, Set<PronounSet> sets) {
-        ArrayList<String> setStrings = new ArrayList<>();
+        List<String> setStrings = new ArrayList<>();
         for (PronounSet set : sets)  {
             try {
                 PronounSet parsed = pl.getPronounHandler().fromString(set.getSubjective());
@@ -94,12 +96,12 @@ public class YamlFileStorage implements Storage {
     }
 
 	@Override
-	public Map<UUID, Set<String>> getAllPronouns() {
-    	HashMap<UUID, Set<String>> out = new HashMap<>();
+	public Multimap<UUID, String> getAllPronouns() {
+        Multimap<UUID, String> out = MultimapBuilder.hashKeys().linkedHashSetValues().build();
 
     	// if this is null then something is seriously wrong
     	for (String uuid : Objects.requireNonNull(config.getConfigurationSection("players")).getKeys(false)) {
-    		out.put(UuidUtils.fromString(uuid), new HashSet<>(config.getStringList("players." + uuid)));
+    		out.putAll(UuidUtils.fromString(uuid), config.getStringList("players." + uuid));
 		}
 		return out;
 	}

@@ -29,56 +29,56 @@ import org.bukkit.entity.Player;
 import java.util.Arrays;
 
 public class SudoSubcommand implements Subcommand {
-	
-	private final Command command;
-	private final ProNouns plugin;
 
-	public SudoSubcommand(Command command, ProNouns plugin) {
-		this.command = command;
-		this.plugin = plugin;
-	}
+    private final Command command;
+    private final ProNouns plugin;
 
-	@Override
-	public String getName() {
-		return "sudo";
-	}
+    public SudoSubcommand(Command command, ProNouns plugin) {
+        this.command = command;
+        this.plugin = plugin;
+    }
 
-	@Override
-	public String getDescription() {
-		return "ADMIN - run as another user";
-	}
+    @Override
+    public String getName() {
+        return "sudo";
+    }
 
-	@Override
-	public String getUsage() {
-		return "/pronouns sudo <user> <subcommand> [args]";
-	}
+    @Override
+    public String getDescription() {
+        return "ADMIN - run as another user";
+    }
 
-	@Override
-	public String getPermission() {
-		return "pronouns.admin";
-	}
+    @Override
+    public String getUsage() {
+        return "/pronouns sudo <user> <subcommand> [args]";
+    }
 
-	@Override
-	public boolean execute(final CommandSender sender, final CommandSender target, final String[] args) {
-		if (args.length < 2) return false;
-		if (args[1].equals("admin")) {
-			Platform.send(sender, plugin.getConfigHandler().getPrefix().append(
-					plugin.getConfigHandler().formatMain("plsno recursion"))
-			);
-			return true;
-		}
-		Player cmdTarget = Bukkit.getPlayer(args[0]);
+    @Override
+    public String getPermission() {
+        return "pronouns.admin";
+    }
 
-		if (cmdTarget == null) {
-			Platform.send(sender, plugin.getConfigHandler().getPrefix()
-					.append(plugin.getConfigHandler().formatMain("Player '" + args[0] + "' couldn't be found"))
-			);
-			return true;
-		}
+    @Override
+    public boolean execute(final CommandSender sender, final CommandSender target, final String[] args) {
+        if (args.length < 2) return false;
+        if (args[1].equals("admin")) {
+            Platform.send(sender, plugin.getConfigHandler().getPrefix().append(
+                    plugin.getConfigHandler().formatMain("plsno recursion"))
+            );
+            return true;
+        }
+        Player cmdTarget = Bukkit.getPlayer(args[0]);
 
-		Platform.send(sender, plugin.getConfigHandler().getPrefix()
-				.append(plugin.getConfigHandler().formatMain("Running command as " + cmdTarget.getDisplayName())));
-		command.onCommand(sender, cmdTarget, "pronouns", Arrays.copyOfRange(args, 1, args.length));
-		return true;
-	}
+        if (cmdTarget == null) {
+            Platform.send(sender, plugin.getConfigHandler().getPrefix()
+                    .append(plugin.getConfigHandler().formatMain("Player '" + args[0] + "' couldn't be found"))
+            );
+            return true;
+        }
+
+        Platform.send(sender, plugin.getConfigHandler().getPrefix()
+                .append(plugin.getConfigHandler().formatMain("Running command as " + cmdTarget.getDisplayName())));
+        command.onCommand(sender, cmdTarget, "pronouns", Arrays.copyOfRange(args, 1, args.length));
+        return true;
+    }
 }

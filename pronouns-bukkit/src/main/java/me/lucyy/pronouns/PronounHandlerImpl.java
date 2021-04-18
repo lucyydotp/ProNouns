@@ -34,7 +34,7 @@ public class PronounHandlerImpl implements PronounHandler {
 	@Getter
 	private final Storage storage;
 	private final ProNouns pl;
-	private final HashMap<String, PronounSet> setIndex = new HashMap<>();
+	private final Map<String, PronounSet> setIndex = new HashMap<>();
 
 	public void addToIndex(PronounSet set) {
 		setIndex.put(set.getSubjective(), set);
@@ -128,10 +128,10 @@ public class PronounHandlerImpl implements PronounHandler {
 	@Override
 	public Map<UUID, Set<PronounSet>> getAllUserPronouns() {
 		return storage.getAllPronouns()
-				.entrySet()
+				.entries()
 				.stream()
 				.collect(Collectors.toMap(Map.Entry::getKey,
-						e -> parseSets(e.getValue().toArray(new String[0])))
+						e -> parseSets(e.getValue()))
 				);
 	}
 }

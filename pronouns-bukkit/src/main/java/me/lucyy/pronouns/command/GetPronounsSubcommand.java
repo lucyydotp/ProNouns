@@ -60,7 +60,7 @@ public class GetPronounsSubcommand implements Subcommand {
         Player commandTarget;
         ConfigHandler cfg = pl.getConfigHandler();
         if (!(sender instanceof Player) && args.length == 0) {
-			Platform.send(sender, cfg.getPrefix().append(cfg.formatMain("Please specify a username.")));
+            Platform.send(sender, cfg.getPrefix().append(cfg.formatMain("Please specify a username.")));
             return true;
         }
 
@@ -69,20 +69,20 @@ public class GetPronounsSubcommand implements Subcommand {
         } else commandTarget = (Player) sender;
 
         if (commandTarget == null) {
-			Platform.send(sender, cfg.getPrefix()
+            Platform.send(sender, cfg.getPrefix()
                     .append(cfg.formatMain("Player '"))
                     .append(cfg.formatAccent(args[0]))
                     .append(cfg.formatMain("' could not be found.")));
             return true;
         }
 
-		Platform.send(sender, cfg.getPrefix()
+        Platform.send(sender, cfg.getPrefix()
                 .append(cfg.formatMain(commandTarget.getDisplayName() + "'s pronouns are "))
                 .append(cfg.formatAccent(
-                PronounSet.friendlyPrintSet(
-                        pl.getPronounHandler().getPronouns(commandTarget.getUniqueId()))
-                )
-        ));
+                        PronounSet.friendlyPrintSet(
+                                pl.getPronounHandler().getPronouns(commandTarget.getUniqueId()))
+                        )
+                ));
 
         return true;
     }

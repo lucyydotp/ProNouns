@@ -112,6 +112,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Guava for multimaps -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>30.1.1-jre</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Hikari and bStats -->
         <dependency>
             <groupId>com.zaxxer</groupId>

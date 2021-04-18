@@ -29,9 +29,11 @@ import java.util.Collection;
 
 public class PreviewSubcommand implements Subcommand {
     private final ProNouns pl;
+
     public PreviewSubcommand(ProNouns plugin) {
         pl = plugin;
     }
+
     @Override
     public String getName() {
         return "preview";
@@ -48,7 +50,9 @@ public class PreviewSubcommand implements Subcommand {
     }
 
     @Override
-    public String getPermission() { return null; }
+    public String getPermission() {
+        return null;
+    }
 
     @Override
     public boolean execute(CommandSender sender, CommandSender target, String[] args) {
@@ -57,11 +61,11 @@ public class PreviewSubcommand implements Subcommand {
             return true;
         }
 
-        Player player = (Player)target;
+        Player player = (Player) target;
 
         Collection<PronounSet> sets = pl.getPronounHandler().getPronouns(player.getUniqueId());
         if (sets.size() == 0) {
-			Platform.send(sender, pl.getConfigHandler().getPrefix()
+            Platform.send(sender, pl.getConfigHandler().getPrefix()
                     .append(pl.getConfigHandler().formatMain("You haven't set any pronouns yet!")));
             return true;
         }

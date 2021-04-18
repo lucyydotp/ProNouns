@@ -53,8 +53,8 @@ public class ClearPronounsSubcommand implements Subcommand {
     @Override
     public boolean execute(CommandSender sender, CommandSender target, String[] args) {
         if (!(target instanceof Player)) {
-			Platform.send(sender, pl.getConfigHandler().getPrefix()
-					.append(Component.text("This command can only be run by a player.")));
+            Platform.send(sender, pl.getConfigHandler().getPrefix()
+                    .append(Component.text("This command can only be run by a player.")));
             return true;
         }
 

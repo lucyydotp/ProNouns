@@ -38,14 +38,14 @@ public class ConfigHandler implements FormatProvider {
     public ConfigHandler(ProNouns plugin) {
         pl = plugin;
         FileConfiguration cfg = pl.getConfig();
-		cfg.options().copyDefaults(true);
+        cfg.options().copyDefaults(true);
         cfg.options().header("ProNouns Config File\n" +
                 "Make changes here and update them by either using /pronouns reload\n" +
                 "or by restarting the server\n" +
                 "NOTE: if you're using predefined sets with MySQL, make sure they match on\n" +
                 "all servers!\n" +
                 "Documentation at https://docs.lucyy.me/pronouns\n" +
-                "Support me.lucyy.pronouns.discord at https://support.lucyy.me");
+                "Support discord at https://support.lucyy.me");
 
         cfg.addDefault("checkForUpdates", "true");
         cfg.addDefault("accent", "{#fa9efa>}%s{#9dacfa<}");
@@ -63,7 +63,7 @@ public class ConfigHandler implements FormatProvider {
         cfg.addDefault("filter.enabled", "true");
         cfg.addDefault("filter.patterns", new String[]{"apache+", "hel+icop+ter"});
 
-		pl.saveConfig();
+        pl.saveConfig();
 
         decoStrings.put(TextDecoration.OBFUSCATED, 'k');
         decoStrings.put(TextDecoration.BOLD, 'l');
@@ -80,7 +80,7 @@ public class ConfigHandler implements FormatProvider {
         String value = pl.getConfig().getString(key);
         if (value == null) {
             if (defaultVal == null) {
-                pl.getLogger().severe("Your config file is broken! Unable to read key '" + key);
+                pl.getLogger().severe("Your config file is broken! Unable to read key '" + key + "'");
                 return null;
             }
             return defaultVal;
@@ -144,13 +144,13 @@ public class ConfigHandler implements FormatProvider {
     }
 
     public SqlInfoContainer getSqlConnectionData() {
-        SqlInfoContainer info = new SqlInfoContainer();
-        info.host = getString("mysql.host");
-        info.port = pl.getConfig().getInt("mysql.port", 3306);
-        info.database = getString("mysql.database");
-        info.username = getString("mysql.username");
-        info.password = getString("mysql.password");
-        return info;
+        return new SqlInfoContainer(
+                getString("mysql.host"),
+                pl.getConfig().getInt("mysql.port", 3306),
+                getString("mysql.database"),
+                getString("mysql.username"),
+                getString("mysql.password")
+        );
     }
 
     public boolean checkForUpdates() {

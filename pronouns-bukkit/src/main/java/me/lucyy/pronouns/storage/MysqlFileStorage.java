@@ -18,6 +18,8 @@
 
 package me.lucyy.pronouns.storage;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.zaxxer.hikari.HikariDataSource;
 import me.lucyy.common.util.UuidUtils;
 import me.lucyy.pronouns.ProNouns;
@@ -32,7 +34,7 @@ public class MysqlFileStorage implements Storage {
 
 	private final HikariDataSource ds = new HikariDataSource();
 	private final ProNouns plugin;
-	private final HashMap<UUID, Set<String>> cache = new HashMap<>();
+	private final Multimap<UUID, String> cache = MultimapBuilder.hashKeys().linkedHashSetValues().build();
 
 	public MysqlFileStorage(ProNouns plugin) throws MysqlConnectionException {
 		this.plugin = plugin;
@@ -44,10 +46,10 @@ public class MysqlFileStorage implements Storage {
 		}
 		SqlInfoContainer sqlData = plugin.getConfigHandler().getSqlConnectionData();
 
-		ds.setJdbcUrl("jdbc:mysql://" + sqlData.host + ":" + sqlData.port + "/"
-				+ sqlData.database + "?useSSL=false");
-		ds.setUsername(sqlData.username);
-		ds.setPassword(sqlData.password);
+		ds.setJdbcUrl("jdbc:mysql://" + sqlData.getHost() + ":" + sqlData.getPort() + "/"
+				+ sqlData.getDatabase() + "?useSSL=false");
+		ds.setUsername(sqlData.getUsername());
+		ds.setPassword(sqlData.getPassword());
 		ds.addDataSourceProperty("cachePrepStmts", "true");
 		ds.addDataSourceProperty("prepStmtCacheSize", "250");
 		ds.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
@@ -64,7 +66,7 @@ public class MysqlFileStorage implements Storage {
 	}
 
 	public void onPlayerDisconnect(UUID uuid) {
-		cache.remove(uuid);
+		cache.removeAll(uuid);
 	}
 
 	@Override
@@ -73,19 +75,17 @@ public class MysqlFileStorage implements Storage {
 	}
 
 	public Set<String> getPronouns(UUID uuid, boolean useCache) {
-		if (useCache && cache.containsKey(uuid)) return cache.get(uuid);
+		if (useCache && cache.containsKey(uuid)) return new HashSet<>(cache.get(uuid));
 		try (Connection connection = ds.getConnection()) {
 			PreparedStatement stmt = connection.prepareStatement("SELECT pronouns FROM pronouns_players WHERE playerUUID=?");
 			stmt.setString(1, uuid.toString());
 			ResultSet set = stmt.executeQuery();
-			Set<String> results = new HashSet<>();
 			while (set.next()) {
-				results.add(set.getString("pronouns"));
+				cache.put(uuid, set.getString("pronouns"));
 			}
-			cache.put(uuid, results);
 			stmt.close();
 			set.close();
-			return results;
+			return new HashSet<>(cache.get(uuid)); // fixme - move to Set.of() when MC 1.17
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -94,9 +94,9 @@ public class MysqlFileStorage implements Storage {
 
 	@Override
 	public void setPronouns(UUID uuid, Set<PronounSet> sets) {
-		Set<String> stringEquivalent = new HashSet<>();
-		for (PronounSet set : sets) stringEquivalent.add(set.toString());
-		cache.put(uuid, stringEquivalent);
+		for (PronounSet set : sets) {
+			cache.put(uuid, set.toString());
+		}
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -146,15 +146,14 @@ public class MysqlFileStorage implements Storage {
 	}
 
 	@Override
-	public Map<UUID, Set<String>> getAllPronouns() {
+	public Multimap<UUID, String> getAllPronouns() {
 		try (Connection connection = ds.getConnection()) {
 			PreparedStatement stmt = connection.prepareStatement("SELECT pronouns FROM pronouns_players");
 			ResultSet set = stmt.executeQuery();
-			Map<UUID, Set<String>> results = new HashMap<>();
+			Multimap<UUID, String> results = MultimapBuilder.hashKeys().hashSetValues().build();
 			while (set.next()) {
 				UUID uuid = UuidUtils.fromString(set.getString("playerUuid"));
-				if (!results.containsKey(uuid)) results.put(uuid, new HashSet<>());
-				results.get(uuid).add(set.getString("pronouns"));
+				results.put(uuid, set.getString("pronouns"));
 			}
 			stmt.close();
 			set.close();

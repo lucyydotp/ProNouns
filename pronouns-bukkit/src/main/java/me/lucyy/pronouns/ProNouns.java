@@ -32,6 +32,7 @@ import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.listener.JoinLeaveListener;
 import me.lucyy.pronouns.storage.MysqlConnectionException;
 import me.lucyy.pronouns.storage.MysqlFileStorage;
+import me.lucyy.pronouns.storage.Storage;
 import me.lucyy.pronouns.storage.YamlFileStorage;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -43,79 +44,81 @@ import org.bukkit.plugin.java.JavaPlugin;
 @SuppressWarnings("ConstantConditions")
 public final class ProNouns extends JavaPlugin {
 
-	@Getter
-	private PronounHandlerImpl pronounHandler;
+    @Getter
+    private PronounHandlerImpl pronounHandler;
 
-	@Getter
-	private ConfigHandler configHandler;
+    @Getter
+    private ConfigHandler configHandler;
 
-	@Override
-	public void onEnable() {
-		try {
-			new Platform(this);
-		} catch (ClassNotFoundException e) {
-			getPluginLoader().disablePlugin(this);
-			return;
-		}
-		Metrics metrics = new Metrics(this, 9519);
-		configHandler = new ConfigHandler(this);
-		metrics.addCustomChart(new SimplePie("storage_backend", () -> configHandler.getConnectionType().name()));
+    @Override
+    public void onEnable() {
+        try {
+            new Platform(this);
+        } catch (ClassNotFoundException e) {
+            getPluginLoader().disablePlugin(this);
+            return;
+        }
+        Metrics metrics = new Metrics(this, 9519);
+        configHandler = new ConfigHandler(this);
+        metrics.addCustomChart(new SimplePie("storage_backend", () -> configHandler.getConnectionType().name()));
 
-		switch (configHandler.getConnectionType()) {
-			case YML:
-				pronounHandler = new PronounHandlerImpl(this, new YamlFileStorage(this));
-				break;
-			case MYSQL:
-				try {
-					pronounHandler = new PronounHandlerImpl(this, new MysqlFileStorage(this));
-					break;
-				} catch (MysqlConnectionException e) {
-					getPluginLoader().disablePlugin(this);
-					return;
-				}
-		}
+        Storage storage = null;
+        switch (configHandler.getConnectionType()) {
+            case YML:
+                storage = new YamlFileStorage(this);
+                break;
+            case MYSQL:
+                try {
+                    storage = new MysqlFileStorage(this);
+                    break;
+                } catch (MysqlConnectionException e) {
+                    getPluginLoader().disablePlugin(this);
+                    return;
+                }
+        }
+        pronounHandler = new PronounHandlerImpl(this, storage);
 
-		for (String set : configHandler.getPredefinedSets()) {
-			try {
-				pronounHandler.addToIndex(pronounHandler.fromString(set));
-			} catch (IllegalArgumentException e) {
-				getLogger().warning("'" + set + "' is an invalid set, ignoring");
-			}
-		}
+        for (String set : configHandler.getPredefinedSets()) {
+            try {
+                pronounHandler.addToIndex(pronounHandler.fromString(set));
+            } catch (IllegalArgumentException e) {
+                getLogger().warning("'" + set + "' is an invalid set, ignoring");
+            }
+        }
 
-		this.getServer().getServicesManager().register(PronounHandler.class, pronounHandler, this, ServicePriority.Normal);
+        this.getServer().getServicesManager().register(PronounHandler.class, pronounHandler, this, ServicePriority.Normal);
 
-		Command cmd = new Command(configHandler);
+        Command cmd = new Command(configHandler);
 
-		cmd.register(new GetPronounsSubcommand(this));
-		cmd.register(new SetPronounsSubcommand(this));
-		cmd.register(new ClearPronounsSubcommand(this));
-		cmd.register(new ListPronounsSubcommand(this));
-		cmd.register(new PreviewSubcommand(this));
-		cmd.register(new ReloadSubcommand(this));
-		cmd.register(new SudoSubcommand(cmd, this));
-		cmd.register(new VersionSubcommand(configHandler, this));
+        cmd.register(new GetPronounsSubcommand(this));
+        cmd.register(new SetPronounsSubcommand(this));
+        cmd.register(new ClearPronounsSubcommand(this));
+        cmd.register(new ListPronounsSubcommand(this));
+        cmd.register(new PreviewSubcommand(this));
+        cmd.register(new ReloadSubcommand(this));
+        cmd.register(new SudoSubcommand(cmd, this));
+        cmd.register(new VersionSubcommand(configHandler, this));
 
-		HelpSubcommand defaultSub = new HelpSubcommand(cmd, configHandler, this, "pronouns");
-		cmd.register(defaultSub);
-		cmd.setDefaultSubcommand(defaultSub);
+        HelpSubcommand defaultSub = new HelpSubcommand(cmd, configHandler, this, "pronouns");
+        cmd.register(defaultSub);
+        cmd.setDefaultSubcommand(defaultSub);
 
-		//noinspection ConstantConditions
-		getCommand("pronouns").setExecutor(cmd);
-		getCommand("pronouns").setTabCompleter(cmd);
+        //noinspection ConstantConditions
+        getCommand("pronouns").setExecutor(cmd);
+        getCommand("pronouns").setTabCompleter(cmd);
 
-		if (getConfigHandler().checkForUpdates()) {
-			new PolymartUpdateChecker(this,
-					921,
-					configHandler.getPrefix()
-							.append(configHandler.formatMain("A new version of ProNouns is available!\nFind it at "))
-							.append(configHandler.formatAccent("https://lucyy.me/pronouns", TextDecoration.UNDERLINED)
-									.clickEvent(ClickEvent.openUrl("https://lucyy.me/pronouns"))),
-					"pronouns.admin");
-		} else {
-			getLogger().warning("Update checking is disabled. You might be running an old version!");
-		}
+        if (getConfigHandler().checkForUpdates()) {
+            new PolymartUpdateChecker(this,
+                    921,
+                    configHandler.getPrefix()
+                            .append(configHandler.formatMain("A new version of ProNouns is available!\nFind it at "))
+                            .append(configHandler.formatAccent("https://lucyy.me/pronouns", TextDecoration.UNDERLINED)
+                                    .clickEvent(ClickEvent.openUrl("https://lucyy.me/pronouns"))),
+                    "pronouns.admin");
+        } else {
+            getLogger().warning("Update checking is disabled. You might be running an old version!");
+        }
 
-		getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
-	}
+        getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
+    }
 }
