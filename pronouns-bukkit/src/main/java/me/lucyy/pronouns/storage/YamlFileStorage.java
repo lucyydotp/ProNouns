@@ -54,6 +54,9 @@ public class YamlFileStorage implements Storage {
             configFile = new File(pl.getDataFolder(), "datastore.yml");
             if (configFile.createNewFile()) {
                 InputStream defaultCfg = pl.getResource("datastore.yml");
+                // the resource should always be provided by the plugin,
+                // if people are screwing with it then that's their problem
+                assert defaultCfg != null;
                 byte[] buffer = new byte[defaultCfg.available()];
                 defaultCfg.read(buffer);
                 FileOutputStream out = new FileOutputStream(configFile);
