@@ -104,6 +104,7 @@ public class MysqlFileStorage implements Storage {
 					PreparedStatement stmt = connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
 					stmt.setString(1, uuid.toString());
 					stmt.execute();
+					stmt.close();
 
 					PreparedStatement insStmt = connection.prepareStatement("INSERT INTO pronouns_players VALUES (?,?)");
 					for (PronounSet set : sets) {
@@ -119,6 +120,7 @@ public class MysqlFileStorage implements Storage {
 						insStmt.addBatch();
 					}
 					insStmt.executeBatch();
+					insStmt.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
@@ -135,6 +137,7 @@ public class MysqlFileStorage implements Storage {
 					PreparedStatement stmt = connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
 					stmt.setString(1, uuid.toString());
 					stmt.execute();
+					stmt.close();
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
