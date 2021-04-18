@@ -76,8 +76,8 @@ public class YamlFileStorage implements Storage {
         ArrayList<String> setStrings = new ArrayList<>();
         for (PronounSet set : sets)  {
             try {
-                PronounSet parsed = pl.getPronounHandler().fromString(set.subjective);
-                if (parsed.equals(set)) setStrings.add(set.subjective);
+                PronounSet parsed = pl.getPronounHandler().fromString(set.getSubjective());
+                if (parsed.equals(set)) setStrings.add(set.getSubjective());
                 else setStrings.add(set.toString());
             } catch (IllegalArgumentException e) {
                 setStrings.add(set.toString());

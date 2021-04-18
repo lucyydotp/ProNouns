@@ -69,7 +69,7 @@ public interface PronounHandler {
 	 *              <ul>
 	 *                           <li>full format as provided by {@link PronounSet#toString()}</li>
 	 *                           <li>if the set is a registered default (currently he/she/they/any), the
-	 *                           {@link PronounSet#subjective} pronoun. Note that input is sanitised to ignore all content after a
+	 *                           subjective pronoun. Note that input is sanitised to ignore all content after a
 	 *                           slash, making this method suitable for command processing</li>
 	 *              </ul>
 	 * @return the parsed set

@@ -110,8 +110,8 @@ public class MysqlFileStorage implements Storage {
 						insStmt.setString(1, uuid.toString());
 
 						try {
-							PronounSet parsed = plugin.getPronounHandler().fromString(set.subjective);
-							if (parsed.equals(set)) insStmt.setString(2, set.subjective);
+							PronounSet parsed = plugin.getPronounHandler().fromString(set.getSubjective());
+							if (parsed.equals(set)) insStmt.setString(2, set.getSubjective());
 							else insStmt.setString(2, set.toString());
 						} catch (IllegalArgumentException e) {
 							insStmt.setString(2, set.toString());

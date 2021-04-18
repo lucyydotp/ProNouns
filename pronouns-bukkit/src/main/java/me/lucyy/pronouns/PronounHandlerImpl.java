@@ -37,8 +37,7 @@ public class PronounHandlerImpl implements PronounHandler {
 	private final HashMap<String, PronounSet> setIndex = new HashMap<>();
 
 	public void addToIndex(PronounSet set) {
-		set.isPredefined = true;
-		setIndex.put(set.subjective, set);
+		setIndex.put(set.getSubjective(), set);
 	}
 
 	public PronounHandlerImpl(ProNouns pl, Storage storage) {
@@ -112,7 +111,7 @@ public class PronounHandlerImpl implements PronounHandler {
 					// check for objective
 					boolean cont = true;
 					for (PronounSet _set : out) {
-						if (_set.objective.toUpperCase(Locale.ROOT).equals(_splitArg.toUpperCase())) {
+						if (_set.getObjective().toUpperCase(Locale.ROOT).equals(_splitArg.toUpperCase())) {
 							cont = false;
 							break;
 						}

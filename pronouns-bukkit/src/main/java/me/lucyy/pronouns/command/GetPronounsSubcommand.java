@@ -80,7 +80,7 @@ public class GetPronounsSubcommand implements Subcommand {
                 .append(cfg.formatMain(commandTarget.getDisplayName() + "'s pronouns are "))
                 .append(cfg.formatAccent(
                 PronounSet.friendlyPrintSet(
-                        pl.getPronounHandler().getUserPronouns(commandTarget.getUniqueId()))
+                        pl.getPronounHandler().getPronouns(commandTarget.getUniqueId()))
                 )
         ));
 

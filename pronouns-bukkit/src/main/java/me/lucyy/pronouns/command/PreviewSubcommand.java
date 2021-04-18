@@ -59,7 +59,7 @@ public class PreviewSubcommand implements Subcommand {
 
         Player player = (Player)target;
 
-        Collection<PronounSet> sets = pl.getPronounHandler().getUserPronouns(player.getUniqueId());
+        Collection<PronounSet> sets = pl.getPronounHandler().getPronouns(player.getUniqueId());
         if (sets.size() == 0) {
 			Platform.send(sender, pl.getConfigHandler().getPrefix()
                     .append(pl.getConfigHandler().formatMain("You haven't set any pronouns yet!")));
@@ -68,9 +68,9 @@ public class PreviewSubcommand implements Subcommand {
 
         PronounSet set = sets.iterator().next();
 
-        sender.sendMessage(player.getDisplayName() + " is testing " + set.possessiveAdjective +
-                " pronoun selection. If this sentence seems right, then " + set.subjective +
-                " will be pleased with " + set.possessiveAdjective + " choices.");
+        sender.sendMessage(player.getDisplayName() + " is testing " + set.getPossessiveAdjective() +
+                " pronoun selection. If this sentence seems right, then " + set.getSubjective() +
+                " will be pleased with " + set.getPossessiveAdjective() + " choices.");
         return true;
     }
 }

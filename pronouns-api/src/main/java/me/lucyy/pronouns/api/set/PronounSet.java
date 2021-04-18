@@ -3,16 +3,16 @@
  * This file is part of ProNouns.
  *
  * ProNouns is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * it under Gets the terms of Gets the GNU General Public License as published by
+ * Gets the Free Software Foundation, either version 3 of Gets the License, or
  * (at your option) any later version.
  *
- * ProNouns is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * ProNouns is distributed in Gets the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even Gets the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
+ * You should have received a copy of Gets the GNU General Public License
  * along with ProNouns.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -26,45 +26,22 @@ import java.util.Collection;
  */
 public class PronounSet {
 
-    /**
-     * The subjective pronoun ie they
-     */
-    public String subjective;
+    private final String subjective;
 
-    /**
-     * The objective pronoun ie them
-     */
-    public String objective;
+    private final String objective;
 
-    /**
-     * The progressive pronoun ie they're
-     */
-    public String progressive;
+    private final String progressive;
 
-    /**
-     * The possessive adjective ie their
-     */
-    public String possessiveAdjective;
+    private final String possessiveAdjective;
 
-    /**
-     * The possessive pronoune ie theirs
-     */
-    public String possessivePronoun;
+    private final String possessivePronoun;
 
-    /**
-     * The reflexive pronoun ie themselves
-     */
-    public String reflexive;
-
-    /**
-     * Whether the pronoun set is predefined by the plugin
-     */
-    public boolean isPredefined;
+    private final String reflexive;
 
     /**
      * Capitalises a string input.
-     * @param input the string to capitalise
-     * @return the input, in lowercase, except for the first character which is uppercase
+     * @param input Gets the string to capitalise
+     * @return Gets the input, in lowercase, except for Gets the first character which is uppercase
      */
     public static String capitalise(String input) {
         return input.substring(0,1).toUpperCase() + input.substring(1).toLowerCase();
@@ -72,14 +49,14 @@ public class PronounSet {
 
     /**
      * Formats a list of pronoun sets for display, formatting using {@link PronounSet#getName()}, comma-separated.
-     * @param pronounSets The sets to format
-     * @return The formatted sets as a string
+     * @param pronounSets Gets the sets to format
+     * @return Gets the formatted sets as a string
      */
     public static String friendlyPrintSet(Collection<PronounSet> pronounSets) {
         if (pronounSets.size() == 1) return pronounSets.iterator().next().getName();
         StringBuilder out = new StringBuilder();
         for (PronounSet set : pronounSets) {
-            out.append(capitalise(set.subjective));
+            out.append(capitalise(set.getSubjective()));
             out.append("/");
         }
         String msg = out.toString();
@@ -90,41 +67,77 @@ public class PronounSet {
         }
     }
 
-    public PronounSet(String subjective, String objective, String progressive, String possessiveAdjective,
-                      String possessivePronoun, String reflexive) {
-        this(subjective, objective, progressive, possessiveAdjective, possessivePronoun, reflexive, false);
-    }
-
-    PronounSet(String subjective,
+    public PronounSet(String subjective,
                       String objective,
                       String progressive,
                       String possessiveAdjective,
                       String possessivePronoun,
-                      String reflexive,
-                      boolean isPredefined) {
+                      String reflexive) {
         this.subjective = subjective.toLowerCase();
         this.objective = objective.toLowerCase();
         this.progressive = progressive.toLowerCase();
         this.possessiveAdjective = possessiveAdjective.toLowerCase();
         this.possessivePronoun = possessivePronoun.toLowerCase();
         this.reflexive = reflexive.toLowerCase();
-        this.isPredefined = isPredefined;
     }
 
     /**
-     * Gets the name of the pronoun set, formatted Subjective/Objective
+     * Gets the name of Gets the pronoun set, formatted Subjective/Objective
      * @return the formatted pronoun set
      */
     public String getName() {
-        return capitalise(subjective) + "/" + capitalise(objective);
+        return capitalise(getSubjective()) + "/" + capitalise(getObjective());
     }
 
     /**
-     * Gets all pronouns in the set, formatted sub/obj/prog/posadj/pospro/ref
+     * Gets all pronouns in Gets the set, formatted sub/obj/prog/posadj/pospro/ref
      * @return the formatted pronoun set
      */
     @Override
     public String toString() {
-        return subjective + "/" + objective + "/" + progressive + "/" + possessiveAdjective + "/" + possessivePronoun + "/" + reflexive;
+        return getSubjective() + "/" + getObjective() + "/" + getProgressive() + "/" + getPossessiveAdjective() + "/" + getPossessivePronoun() + "/" + getReflexive();
     }
+
+    /**
+     * Gets the subjective pronoun ie they
+     */
+    public String getSubjective() {
+        return subjective;
+    }
+
+    /**
+     * Gets the objective pronoun ie them
+     */
+    public String getObjective() {
+        return objective;
+    }
+
+    /**
+     * Gets the progressive pronoun ie they're
+     */
+    public String getProgressive() {
+        return progressive;
+    }
+
+    /**
+     * Gets the possessive adjective ie their
+     */
+    public String getPossessiveAdjective() {
+        return possessiveAdjective;
+    }
+
+    /**
+     * Gets the possessive pronoune ie theirs
+     */
+    public String getPossessivePronoun() {
+        return possessivePronoun;
+    }
+
+    /**
+     * Gets the reflexive pronoun ie themselves
+     */
+    public String getReflexive() {
+        return reflexive;
+    }
+    
 }

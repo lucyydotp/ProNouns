@@ -3,6 +3,7 @@ package me.lucyy.pronouns.api.event;
 import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Set;
 import java.util.UUID;
@@ -26,7 +27,7 @@ public class PronounsSetEvent extends Event {
 	}
 
 	@Override
-	public HandlerList getHandlers() {
+	public @NotNull HandlerList getHandlers() {
 		return handlers;
 	}
 

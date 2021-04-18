@@ -124,8 +124,8 @@ public class SetPronounsSubcommand implements Subcommand {
 			List<String> pronounsSoFar = Arrays.asList(arg.split("/"));
 			String soFarJoined = String.join("/", pronounsSoFar);
 			for (PronounSet set : pl.getPronounHandler().getAllPronouns()) {
-				if (!pronounsSoFar.contains(set.subjective))
-					allPronouns.add(soFarJoined + "/" + set.subjective);
+				if (!pronounsSoFar.contains(set.getSubjective()))
+					allPronouns.add(soFarJoined + "/" + set.getSubjective());
 			}
 			allPronouns.add(soFarJoined);
 		}

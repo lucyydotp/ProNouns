@@ -100,22 +100,22 @@ public class ProNounsPapi extends PlaceholderExpansion {
                 feedback = mainPronouns.toString();
                 break;
             case "objective":
-                feedback = mainPronouns.objective;
+                feedback = mainPronouns.getObjective();
                 break;
             case "subjective":
-                feedback = mainPronouns.subjective;
+                feedback = mainPronouns.getSubjective();
                 break;
             case "progressive":
-                feedback = mainPronouns.progressive;
+                feedback = mainPronouns.getProgressive();
                 break;
             case "possessiveadj":
-                feedback = mainPronouns.possessiveAdjective;
+                feedback = mainPronouns.getPossessiveAdjective();
                 break;
             case "possessivepro":
-                feedback = mainPronouns.possessivePronoun;
+                feedback = mainPronouns.getPossessivePronoun();
                 break;
             case "reflexive":
-                feedback = mainPronouns.reflexive;
+                feedback = mainPronouns.getReflexive();
                 break;
             default:
                 return "";
