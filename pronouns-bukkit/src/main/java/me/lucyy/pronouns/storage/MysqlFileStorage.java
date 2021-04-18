@@ -59,7 +59,7 @@ public class MysqlFileStorage implements Storage {
 			connection.createStatement().execute("CREATE TABLE IF NOT EXISTS pronouns_players ( playerUuid VARCHAR(36), pronouns TEXT )");
 			plugin.getLogger().info("Connected to MySQL.");
 		} catch (SQLException e) {
-			plugin.getLogger().severe("Failed to connect to MySQL!");
+			plugin.getLogger().severe("Failed to connect to MySQL! - " + e);
 			throw new MysqlConnectionException();
 		}
 
@@ -87,7 +87,7 @@ public class MysqlFileStorage implements Storage {
 			set.close();
 			return new HashSet<>(cache.get(uuid)); // fixme - move to Set.of() when MC 1.17
 		} catch (SQLException e) {
-			e.printStackTrace();
+			plugin.getLogger().severe("Error getting player pronouns from MySQL - " + e);
 			return null;
 		}
 	}
@@ -122,7 +122,7 @@ public class MysqlFileStorage implements Storage {
 					insStmt.executeBatch();
 					insStmt.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					plugin.getLogger().severe("Error settings player pronouns through MySQL - " + e);
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -139,7 +139,7 @@ public class MysqlFileStorage implements Storage {
 					stmt.execute();
 					stmt.close();
 				} catch (SQLException e) {
-					e.printStackTrace();
+					plugin.getLogger().severe("Error clearing player pronouns through MySQL - " + e);
 				}
 			}
 		}.runTaskAsynchronously(plugin);
@@ -159,8 +159,8 @@ public class MysqlFileStorage implements Storage {
 			set.close();
 			return results;
 		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
+			e.printStackTrace();plugin.getLogger().severe("Error getting pronouns from MySQL - " + e);
+			return MultimapBuilder.hashKeys().hashSetValues().build();
 		}
 	}
 }
