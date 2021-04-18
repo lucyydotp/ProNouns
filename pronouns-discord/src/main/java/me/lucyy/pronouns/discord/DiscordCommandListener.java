@@ -32,7 +32,7 @@ public class DiscordCommandListener {
 
 		if (uuid == null) {
 			event.getMessage().reply("You need to link link your Minecraft account. to use this command." +
-					"Use /me.lucyy.pronouns.discord link ingame.").queue();
+					"Use /discord link ingame.").queue();
 		}
 
 		String[] args = event.getMessage().getContentStripped().split(" ");

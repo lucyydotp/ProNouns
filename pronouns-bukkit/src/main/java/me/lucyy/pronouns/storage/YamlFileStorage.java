@@ -71,7 +71,7 @@ public class YamlFileStorage implements Storage {
     @Override
     public Set<String> getPronouns(UUID uuid) {
         List<String> list = config.getStringList("players." + uuid.toString());
-		return new HashSet<>(list);
+		return new LinkedHashSet<>(list);
     }
 
     @Override
