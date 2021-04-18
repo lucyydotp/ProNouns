@@ -42,7 +42,7 @@ public class YamlFileStorage implements Storage {
         try {
             config.save(configFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            pl.getLogger().severe("Failed to save data - " + e);
         }
     }
 
@@ -63,7 +63,8 @@ public class YamlFileStorage implements Storage {
             }
             config = YamlConfiguration.loadConfiguration(configFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            pl.getLogger().severe("Error while loading data store file - " + e);
+            pl.getPluginLoader().disablePlugin(pl);
         }
     }
 
