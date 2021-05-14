@@ -40,6 +40,5 @@
         <module>pronouns-api</module>
         <module>pronouns-bukkit</module>
         <module>pronouns-papi</module>
-        <module>pronouns-discord</module>
     </modules>
 </project>
