@@ -38,8 +38,8 @@
                             <shadedPattern>me.lucyy.pronouns.bstats</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>me.lucyy.common</pattern>
-                            <shadedPattern>me.lucyy.pronouns.commonlib</shadedPattern>
+                            <pattern>me.lucyy.squirtgun</pattern>
+                            <shadedPattern>me.lucyy.pronouns.squirtgun</shadedPattern>
                         </relocation>
                     </relocations>
                     <minimizeJar>true</minimizeJar>
@@ -107,8 +107,8 @@
         </dependency>
         <dependency>
             <groupId>me.lucyy</groupId>
-            <artifactId>LucyCommonLib</artifactId>
-            <version>1.6.1</version>
+            <artifactId>squirtgun-api</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
