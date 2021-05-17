@@ -19,106 +19,114 @@
 package me.lucyy.pronouns;
 
 import lombok.Getter;
-import me.lucyy.common.command.Command;
-import me.lucyy.common.command.HelpSubcommand;
-import me.lucyy.common.command.VersionSubcommand;
-import me.lucyy.common.format.Platform;
-import me.lucyy.common.update.PolymartUpdateChecker;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.command.*;
-import me.lucyy.pronouns.command.admin.ReloadSubcommand;
-import me.lucyy.pronouns.command.admin.SudoSubcommand;
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.listener.JoinLeaveListener;
 import me.lucyy.pronouns.storage.MysqlConnectionException;
 import me.lucyy.pronouns.storage.MysqlFileStorage;
 import me.lucyy.pronouns.storage.Storage;
 import me.lucyy.pronouns.storage.YamlFileStorage;
+import me.lucyy.squirtgun.bukkit.BukkitNodeExecutor;
+import me.lucyy.squirtgun.bukkit.BukkitPlatform;
+import me.lucyy.squirtgun.command.node.CommandNode;
+import me.lucyy.squirtgun.command.node.NodeBuilder;
+import me.lucyy.squirtgun.command.node.SubcommandNode;
+import me.lucyy.squirtgun.platform.PermissionHolder;
+import me.lucyy.squirtgun.platform.Platform;
+import me.lucyy.squirtgun.update.PolymartUpdateChecker;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+import java.util.Objects;
 
-@SuppressWarnings("ConstantConditions")
 public final class ProNouns extends JavaPlugin {
 
-    @Getter
-    private PronounHandlerImpl pronounHandler;
+	@Getter
+	private PronounHandlerImpl pronounHandler;
 
-    @Getter
-    private ConfigHandler configHandler;
+	@Getter
+	private ConfigHandler configHandler;
 
-    @Override
-    public void onEnable() {
-        try {
-            new Platform(this);
-        } catch (ClassNotFoundException e) {
-            getPluginLoader().disablePlugin(this);
-            return;
-        }
-        Metrics metrics = new Metrics(this, 9519);
-        configHandler = new ConfigHandler(this);
-        metrics.addCustomChart(new SimplePie("storage_backend", () -> configHandler.getConnectionType().name()));
+	@Override
+	public void onEnable() {
+		Metrics metrics = new Metrics(this, 9519);
+		configHandler = new ConfigHandler(this);
 
-        Storage storage = null;
-        switch (configHandler.getConnectionType()) {
-            case YML:
-                storage = new YamlFileStorage(this);
-                break;
-            case MYSQL:
-                try {
-                    storage = new MysqlFileStorage(this);
-                    break;
-                } catch (MysqlConnectionException e) {
-                    getPluginLoader().disablePlugin(this);
-                    return;
-                }
-        }
-        pronounHandler = new PronounHandlerImpl(this, storage);
+		metrics.addCustomChart(new SimplePie("storage_backend", () -> configHandler.getConnectionType().name()));
 
-        for (String set : configHandler.getPredefinedSets()) {
-            try {
-                pronounHandler.addToIndex(pronounHandler.fromString(set));
-            } catch (IllegalArgumentException e) {
-                getLogger().warning("'" + set + "' is an invalid set, ignoring");
-            }
-        }
+		Storage storage = null;
+		switch (configHandler.getConnectionType()) {
+			case YML:
+				storage = new YamlFileStorage(this);
+				break;
+			case MYSQL:
+				try {
+					storage = new MysqlFileStorage(this);
+					break;
+				} catch (MysqlConnectionException e) {
+					getPluginLoader().disablePlugin(this);
+					return;
+				}
+		}
+		pronounHandler = new PronounHandlerImpl(this, storage);
 
-        this.getServer().getServicesManager().register(PronounHandler.class, pronounHandler, this, ServicePriority.Normal);
+		for (String set : configHandler.getPredefinedSets()) {
+			try {
+				pronounHandler.addToIndex(pronounHandler.fromString(set));
+			} catch (IllegalArgumentException e) {
+				getLogger().warning("'" + set + "' is an invalid set, ignoring");
+			}
+		}
 
-        Command cmd = new Command(configHandler);
+		this.getServer().getServicesManager().register(PronounHandler.class, pronounHandler, this, ServicePriority.Normal);
 
-        cmd.register(new GetPronounsSubcommand(this));
-        cmd.register(new SetPronounsSubcommand(this));
-        cmd.register(new ClearPronounsSubcommand(this));
-        cmd.register(new ListPronounsSubcommand(this));
-        cmd.register(new PreviewSubcommand(this));
-        cmd.register(new ReloadSubcommand(this));
-        cmd.register(new SudoSubcommand(cmd, this));
-        cmd.register(new VersionSubcommand(configHandler, this));
+		Platform platform = new BukkitPlatform(this);
 
-        HelpSubcommand defaultSub = new HelpSubcommand(cmd, configHandler, this, "pronouns");
-        cmd.register(defaultSub);
-        cmd.setDefaultSubcommand(defaultSub);
+		final CommandNode<PermissionHolder> rootNode = new SubcommandNode<>("pronouns",
+				null,
+				true,
+				new SetPronounsNode(this),
+				new ShowPronounsNode(platform, getPronounHandler()),
+				new PreviewNode(this),
+				new ClearPronounsNode(pronounHandler),
+				new ListPronounsNode(pronounHandler),
+				new NodeBuilder<>()
+						.name("reload")
+						.description("Reloads the plugin.")
+						.executes(x -> {
+							reloadConfig();
+							return x.getFormat().getPrefix()
+									.append(x.getFormat().formatMain("Reloaded"));
+						}).build()
+		);
 
-        //noinspection ConstantConditions
-        getCommand("pronouns").setExecutor(cmd);
-        getCommand("pronouns").setTabCompleter(cmd);
+		// cmd.register(new VersionSubcommand(configHandler, this));
 
-        if (getConfigHandler().checkForUpdates()) {
-            new PolymartUpdateChecker(this,
-                    921,
-                    configHandler.getPrefix()
-                            .append(configHandler.formatMain("A new version of ProNouns is available!\nFind it at "))
-                            .append(configHandler.formatAccent("https://lucyy.me/pronouns", TextDecoration.UNDERLINED)
-                                    .clickEvent(ClickEvent.openUrl("https://lucyy.me/pronouns"))),
-                    "pronouns.admin");
-        } else {
-            getLogger().warning("Update checking is disabled. You might be running an old version!");
-        }
+		final TabExecutor executor = new BukkitNodeExecutor(rootNode, getConfigHandler());
+		final PluginCommand cmd = getCommand("pronouns");
+		Objects.requireNonNull(cmd);
+		cmd.setExecutor(executor);
+		cmd.setTabCompleter(executor);
 
-        getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
-    }
+
+		if (getConfigHandler().checkForUpdates()) {
+			new PolymartUpdateChecker(platform,
+					921,
+					configHandler.getPrefix()
+							.append(configHandler.formatMain("A new version of ProNouns is available!\nFind it at "))
+							.append(configHandler.formatAccent("https://lucyy.me/pronouns", TextDecoration.UNDERLINED)
+									.clickEvent(ClickEvent.openUrl("https://lucyy.me/pronouns"))),
+					"pronouns.admin");
+		} else {
+			getLogger().warning("Update checking is disabled. You might be running an old version!");
+		}
+
+		getServer().getPluginManager().registerEvents(new JoinLeaveListener(this), this);
+	}
 }

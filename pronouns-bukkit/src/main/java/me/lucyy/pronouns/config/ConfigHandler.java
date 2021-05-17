@@ -18,9 +18,9 @@
 
 package me.lucyy.pronouns.config;
 
-import me.lucyy.common.command.FormatProvider;
-import me.lucyy.common.format.TextFormatter;
 import me.lucyy.pronouns.ProNouns;
+import me.lucyy.squirtgun.format.FormatProvider;
+import me.lucyy.squirtgun.format.TextFormatter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;

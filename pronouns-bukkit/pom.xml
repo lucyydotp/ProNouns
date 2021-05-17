@@ -86,7 +86,7 @@
     </repositories>
 
     <dependencies>
-        <!-- Core dependencies - Paper, lombok, api, LucyCommonLib -->
+        <!-- Core dependencies - Paper, lombok, api -->
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
@@ -105,9 +105,23 @@
             <version>1.2</version>
             <scope>compile</scope>
         </dependency>
+
+        <!-- Squirtgun -->
         <dependency>
             <groupId>me.lucyy</groupId>
             <artifactId>squirtgun-api</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.lucyy</groupId>
+            <artifactId>squirtgun-bukkit</artifactId>
+            <version>2.0.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.lucyy</groupId>
+            <artifactId>squirtgun-commands</artifactId>
             <version>2.0.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>

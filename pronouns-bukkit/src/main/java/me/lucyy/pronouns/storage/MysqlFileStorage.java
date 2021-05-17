@@ -21,10 +21,10 @@ package me.lucyy.pronouns.storage;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.zaxxer.hikari.HikariDataSource;
-import me.lucyy.common.util.UuidUtils;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.config.SqlInfoContainer;
 import me.lucyy.pronouns.api.set.PronounSet;
+import me.lucyy.squirtgun.util.UuidUtils;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.sql.*;

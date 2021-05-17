@@ -19,7 +19,6 @@
 package me.lucyy.pronouns.command;
 
 import com.google.common.collect.ImmutableList;
-import jdk.javadoc.internal.doclets.toolkit.taglets.UserTaglet;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.command.arguments.PronounSetArgument;
@@ -27,16 +26,17 @@ import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
-import me.lucyy.squirtgun.platform.Player;
+import me.lucyy.squirtgun.format.FormatProvider;
+import me.lucyy.squirtgun.platform.PermissionHolder;
+import me.lucyy.squirtgun.platform.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class SetPronounsNode implements CommandNode<CommandSender> {
+public class SetPronounsNode implements CommandNode<PermissionHolder> {
     private final ProNouns pl;
     private final PronounSetArgument sets;
 
@@ -49,6 +49,11 @@ public class SetPronounsNode implements CommandNode<CommandSender> {
     public @NotNull String getName() {
         return "set";
     }
+
+	@Override
+	public String getDescription() {
+		return "Set your pronouns";
+	}
 
 	@Override
 	public @Nullable String getPermission() {
@@ -69,13 +74,13 @@ public class SetPronounsNode implements CommandNode<CommandSender> {
                 "pronouns.admin");
     }
 
-    private boolean checkInput(String arg, CommandSender sender) {
+    private boolean checkInput(String arg, SquirtgunPlayer sender) {
         final ConfigHandler cfg = pl.getConfigHandler();
         if (!cfg.filterEnabled()) return true;
         if (!sender.hasPermission("pronouns.bypass"))
             for (String pattern : cfg.getFilterPatterns()) {
                 if (arg.toLowerCase().matches(".*" + pattern + ".*")) {
-                    warnAdmins(sender.getName(), arg);
+                    warnAdmins(sender.getUsername(), arg);
                     return false;
                 }
             }
@@ -83,23 +88,25 @@ public class SetPronounsNode implements CommandNode<CommandSender> {
     }
 
     @Override
-    public Component execute(CommandContext<CommandSender> context) {
-        final ConfigHandler cfg = pl.getConfigHandler();
-        if (!(context.getTarget() instanceof Player)) {
-            return cfg.getPrefix().append(cfg.formatMain("This command can only be run by a player."));
+    public Component execute(CommandContext<PermissionHolder> context) {
+        final FormatProvider fmt = context.getFormat();
+        if (!(context.getTarget() instanceof SquirtgunPlayer)) {
+            return fmt.getPrefix().append(fmt.formatMain("This command can only be run by a player."));
         }
 
-        if (!checkInput(context.getRaw(), context.getTarget()))  {
-	        return cfg.getPrefix().append(cfg.formatMain("You can't use that set."));
+        SquirtgunPlayer player = (SquirtgunPlayer) context.getTarget();
+
+        if (!checkInput(context.getRaw(), player))  {
+	        return fmt.getPrefix().append(fmt.formatMain("You can't use that set."));
         }
         Set<PronounSet> setList;
         try {
 	        setList = context.getArgumentValue(sets);
         } catch (IllegalArgumentException e) {
-            return cfg.getPrefix()
-                    .append(cfg.formatMain("The pronoun '"))
-                    .append(cfg.formatAccent(e.getMessage()))
-                    .append(cfg.formatMain("' is unrecognised.\n"
+            return fmt.getPrefix()
+                    .append(fmt.formatMain("The pronoun '"))
+                    .append(fmt.formatAccent(e.getMessage()))
+                    .append(fmt.formatMain("' is unrecognised.\n"
                             + "To use it, just write it out like it's shown in /pronouns list."));
         }
 
@@ -107,9 +114,9 @@ public class SetPronounsNode implements CommandNode<CommandSender> {
         	return Component.text("usage"); // TODO
         }
 
-        pl.getPronounHandler().setUserPronouns(((Player) context.getTarget()).getUuid(), setList);
-        return cfg.getPrefix()
-                .append(cfg.formatMain("Set pronouns to "))
-                .append(cfg.formatAccent(PronounSet.friendlyPrintSet(setList)));
+        pl.getPronounHandler().setUserPronouns(player.getUuid(), setList);
+        return fmt.getPrefix()
+                .append(fmt.formatMain("Set pronouns to "))
+                .append(fmt.formatAccent(PronounSet.friendlyPrintSet(setList)));
     }
 }

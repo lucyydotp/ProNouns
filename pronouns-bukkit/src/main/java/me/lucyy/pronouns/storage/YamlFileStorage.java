@@ -20,9 +20,9 @@ package me.lucyy.pronouns.storage;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import me.lucyy.common.util.UuidUtils;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
+import me.lucyy.squirtgun.util.UuidUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
