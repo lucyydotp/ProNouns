@@ -40,7 +40,7 @@ public class ClearPronounsNode implements CommandNode<PermissionHolder> {
 	}
 
 	public String getDescription() {
-		return "Clear your pronouns.";
+		return "Clears your pronouns.";
 	}
 
 	@Override

@@ -27,7 +27,8 @@ public class PronounSetArgument implements CommandArgument<Set<PronounSet>> {
 	@Override
 	public Set<PronounSet> getValue(Queue<String> args) {
 		try {
-			return handler.parseSets(args.toArray(new String[0]));
+			Set<PronounSet> out =  handler.parseSets(args.toArray(new String[0]));
+			return out == null || out.size() == 0 ? null : out;
 		} catch (IllegalArgumentException e) {
 			return null;
 		}
@@ -61,6 +62,11 @@ public class PronounSetArgument implements CommandArgument<Set<PronounSet>> {
 
 	@Override
 	public boolean isOptional() {
-		return true;
+		return false;
+	}
+
+	@Override
+	public String toString() {
+		return "<pronouns> [pronouns]...";
 	}
 }

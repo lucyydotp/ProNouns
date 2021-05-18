@@ -42,7 +42,7 @@ public class ListPronounsNode implements CommandNode<PermissionHolder> {
 	}
 
 	public String getDescription() {
-		return "Show all predefined pronoun sets.";
+		return "Shows all predefined pronoun sets.";
 	}
 
 	@Override

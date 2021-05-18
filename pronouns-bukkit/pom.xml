@@ -37,10 +37,10 @@
                             <pattern>org.bstats</pattern>
                             <shadedPattern>me.lucyy.pronouns.bstats</shadedPattern>
                         </relocation>
-                        <relocation>
+                        <!--relocation>
                             <pattern>me.lucyy.squirtgun</pattern>
                             <shadedPattern>me.lucyy.pronouns.squirtgun</shadedPattern>
-                        </relocation>
+                        </relocation-->
                     </relocations>
                     <minimizeJar>true</minimizeJar>
                     <filters>

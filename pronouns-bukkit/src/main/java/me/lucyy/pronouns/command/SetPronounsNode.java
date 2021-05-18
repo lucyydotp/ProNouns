@@ -52,7 +52,7 @@ public class SetPronounsNode implements CommandNode<PermissionHolder> {
 
 	@Override
 	public String getDescription() {
-		return "Set your pronouns";
+		return "Sets your pronouns.";
 	}
 
 	@Override
@@ -108,10 +108,6 @@ public class SetPronounsNode implements CommandNode<PermissionHolder> {
                     .append(fmt.formatAccent(e.getMessage()))
                     .append(fmt.formatMain("' is unrecognised.\n"
                             + "To use it, just write it out like it's shown in /pronouns list."));
-        }
-
-        if (setList == null || setList.size() == 0) {
-        	return Component.text("usage"); // TODO
         }
 
         pl.getPronounHandler().setUserPronouns(player.getUuid(), setList);

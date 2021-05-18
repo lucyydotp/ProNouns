@@ -84,12 +84,12 @@ public class PreviewNode implements CommandNode<PermissionHolder> {
 
 		// yes, this is messy, but java compiles it to a stringbuilder so its all good
 		String builder = player.getUsername() + " is testing " + set.getPossessiveAdjective() +
-				"their pronoun section.\n" +
+				" pronoun selection.\n" +
 				"Have you seen " + player.getUsername() + "? " +
 				capitalise(set.getSubjective()) + " asked me to help with " +
 				set.getObjective() + " build.\n" +
-				player.getUsername() + "has been spending all " + set.getPossessiveAdjective() +
-				" their time on this Minecraft server recently.";
+				player.getUsername() + " has been spending all " + set.getPossessiveAdjective() +
+				" time on this server. I hope " + set.getProgressive() + " doing okay.";
 		return Component.text(builder);
 	}
 }
