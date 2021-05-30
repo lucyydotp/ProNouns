@@ -14,7 +14,7 @@ dependencies {
     compileOnly(project(":pronouns-api"))
     compileOnly("me.clip:placeholderapi:2.10.9")
     compileOnly("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
-    compileOnly("org.jetbrains:annotations:RELEASE")
+    compileOnly("org.jetbrains:annotations:21.0.1")
 }
 
 description = "pronouns-papi"
