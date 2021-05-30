@@ -18,10 +18,10 @@
 
 package me.lucyy.pronouns;
 
-import lombok.Getter;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.api.event.PronounsSetEvent;
 import me.lucyy.pronouns.api.set.AnyPronounSet;
+import me.lucyy.pronouns.api.set.AskPronounSet;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.storage.Storage;
 import org.bukkit.Bukkit;
@@ -31,8 +31,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class PronounHandlerImpl implements PronounHandler {
-	@Getter
 	private final Storage storage;
+
+	public Storage getStorage() {
+		return storage;
+	}
+
 	private final ProNouns pl;
 	private final Map<String, PronounSet> setIndex = new HashMap<>();
 
@@ -43,10 +47,13 @@ public class PronounHandlerImpl implements PronounHandler {
 	public PronounHandlerImpl(ProNouns pl, Storage storage) {
 		this.pl = pl;
 		this.storage = storage;
+
+		PronounSet theySet = fromString("they/them/they're/their/theirs/themself");
 		addToIndex(fromString("he/him/he's/his/his/himself"));
 		addToIndex(fromString("she/her/she's/her/hers/herself"));
-		addToIndex(fromString("they/them/they're/their/theirs/themself"));
-		setIndex.put("any", new AnyPronounSet(fromString("they")));
+		addToIndex(theySet);
+		setIndex.put("any", new AnyPronounSet(theySet));
+		setIndex.put("ask", new AskPronounSet(theySet));
 	}
 
 	public void setUserPronouns(UUID uuid, Set<PronounSet> set) {

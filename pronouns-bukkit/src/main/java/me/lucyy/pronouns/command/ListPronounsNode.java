@@ -54,12 +54,16 @@ public class ListPronounsNode implements CommandNode<PermissionHolder> {
 	public Component execute(CommandContext<PermissionHolder> context) {
 		final FormatProvider fmt = context.getFormat();
 
-		Component out = TextFormatter.formatTitle("All Predefined Pronoun Sets:", fmt);
+		Component out = Component.empty()
+				.append(TextFormatter.formatTitle("All Predefined Pronoun Sets:", fmt))
+				.append(Component.newline());
 
 		StringBuilder listBuilder = new StringBuilder();
 		for (PronounSet set : pronounHandler.getAllPronouns()) {
 			listBuilder.append(set.toString()).append("\n");
 		}
+
+		listBuilder.append("\n");
 
 		out = out.append(Component.text(listBuilder.toString()))
 				.append(TextFormatter.formatTitle("*", fmt));

@@ -18,7 +18,6 @@
 
 package me.lucyy.pronouns;
 
-import lombok.Getter;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.command.*;
 import me.lucyy.pronouns.config.ConfigHandler;
@@ -31,6 +30,7 @@ import me.lucyy.squirtgun.bukkit.BukkitNodeExecutor;
 import me.lucyy.squirtgun.bukkit.BukkitPlatform;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.command.node.NodeBuilder;
+import me.lucyy.squirtgun.command.node.PluginInfoNode;
 import me.lucyy.squirtgun.command.node.SubcommandNode;
 import me.lucyy.squirtgun.platform.PermissionHolder;
 import me.lucyy.squirtgun.platform.Platform;
@@ -47,11 +47,17 @@ import java.util.Objects;
 
 public final class ProNouns extends JavaPlugin {
 
-	@Getter
 	private PronounHandlerImpl pronounHandler;
 
-	@Getter
+	public PronounHandlerImpl getPronounHandler() {
+		return pronounHandler;
+	}
+
 	private ConfigHandler configHandler;
+
+	public ConfigHandler getConfigHandler() {
+		return configHandler;
+	}
 
 	@Override
 	public void onEnable() {
@@ -96,6 +102,7 @@ public final class ProNouns extends JavaPlugin {
 				new PreviewNode(this),
 				new ClearPronounsNode(pronounHandler),
 				new ListPronounsNode(pronounHandler),
+				new PluginInfoNode<>("version", platform),
 				new NodeBuilder<>()
 						.name("reload")
 						.description("Reloads the plugin.")
@@ -105,8 +112,6 @@ public final class ProNouns extends JavaPlugin {
 									.append(x.getFormat().formatMain("Reloaded"));
 						}).build()
 		);
-
-		// cmd.register(new VersionSubcommand(configHandler, this));
 
 		final TabExecutor executor = new BukkitNodeExecutor(rootNode, getConfigHandler());
 		final PluginCommand cmd = getCommand("pronouns");

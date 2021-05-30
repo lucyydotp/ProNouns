@@ -1,6 +1,6 @@
 Copyright (C) 2021 Lucy Poulton https://lucyy.me
 
-Source code available at https://git.lucyy.me/Lucy/ProNouns
+Source code available at https://github.com/lucyy-mc/ProNouns
 
 ProNouns is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

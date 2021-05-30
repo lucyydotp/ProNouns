@@ -31,6 +31,14 @@ public class AnyPronounSet extends PronounSet {
                 base.getPossessivePronoun(), base.getReflexive());
     }
 
+	/**
+	 * @return the string "Any"
+	 */
+	@Override
+	public String getShortenedName() {
+		return "Any";
+	}
+
     /**
      * @return the string "Any"
      */

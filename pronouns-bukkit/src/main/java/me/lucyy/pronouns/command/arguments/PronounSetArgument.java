@@ -68,7 +68,7 @@ public class PronounSetArgument implements CommandArgument<Set<PronounSet>> {
 	@Override
 	public String toString() {
 		return "<pronouns> [pronouns]...\n" +
-				"If you're trying to use neopronouns, that's ok! You just need to write the set out in full." +
-				"See https://docs.lucyy.me/pronouns/";
+				"If you're trying to use neopronouns, that's ok! You just need to write the set out in full. " +
+				"See https://docs.lucyy.me/pronouns/#setting-your-pronouns for more help.\n";
 	}
 }
