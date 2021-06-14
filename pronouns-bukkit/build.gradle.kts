@@ -6,9 +6,9 @@ plugins {
 
 dependencies {
     implementation(project(":pronouns-api"))
-    implementation("me.lucyy:squirtgun-api:2.0.0-pre2")
-    implementation("me.lucyy:squirtgun-bukkit:2.0.0-pre2")
-    implementation("me.lucyy:squirtgun-commands:2.0.0-pre2")
+    implementation("me.lucyy:squirtgun-api:2.0.0-pre3")
+    implementation("me.lucyy:squirtgun-bukkit:2.0.0-pre3")
+    implementation("me.lucyy:squirtgun-commands:2.0.0-pre3")
     implementation("com.zaxxer:HikariCP:4.0.2")
     implementation("org.bstats:bstats-bukkit:2.2.1")
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
