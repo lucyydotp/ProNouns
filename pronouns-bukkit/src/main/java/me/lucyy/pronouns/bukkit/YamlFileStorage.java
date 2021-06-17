@@ -16,12 +16,12 @@
  * along with ProNouns.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.lucyy.pronouns.storage;
+package me.lucyy.pronouns.bukkit;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
-import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
+import me.lucyy.pronouns.storage.Storage;
 import me.lucyy.squirtgun.util.UuidUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -34,7 +34,7 @@ import java.util.*;
 
 public class YamlFileStorage implements Storage {
 
-    private final ProNouns pl;
+    private final ProNounsBukkit pl;
     private File configFile;
     private FileConfiguration config;
 
@@ -46,7 +46,7 @@ public class YamlFileStorage implements Storage {
         }
     }
 
-    public YamlFileStorage(ProNouns plugin) {
+    public YamlFileStorage(ProNounsBukkit plugin) {
         this.pl = plugin;
 
         try {
@@ -56,7 +56,7 @@ public class YamlFileStorage implements Storage {
                 InputStream defaultCfg = pl.getResource("datastore.yml");
                 // the resource should always be provided by the plugin,
                 // if people are screwing with it then that's their problem
-                assert defaultCfg != null;
+                Objects.requireNonNull(defaultCfg);
                 byte[] buffer = new byte[defaultCfg.available()];
                 defaultCfg.read(buffer);
                 FileOutputStream out = new FileOutputStream(configFile);
@@ -82,7 +82,7 @@ public class YamlFileStorage implements Storage {
         List<String> setStrings = new ArrayList<>();
         for (PronounSet set : sets)  {
             try {
-                PronounSet parsed = pl.getPronounHandler().fromString(set.getSubjective());
+                PronounSet parsed = pl.getPlugin().getPronounHandler().fromString(set.getSubjective());
                 if (parsed.equals(set)) setStrings.add(set.getSubjective());
                 else setStrings.add(set.toString());
             } catch (IllegalArgumentException e) {

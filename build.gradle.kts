@@ -1,3 +1,4 @@
+
 plugins {
     `maven-publish`
     java
@@ -28,6 +29,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal() // TODO remove
         maven("https://papermc.io/repo/repository/maven-public/")
     }
 }

@@ -1,4 +1,4 @@
-package me.lucyy.pronouns.api.event;
+package me.lucyy.pronouns.bukkit.event;
 
 import me.lucyy.pronouns.api.set.PronounSet;
 import org.bukkit.event.Event;

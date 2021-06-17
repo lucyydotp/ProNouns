@@ -24,7 +24,7 @@ publishing {
             licenses {
                 license {
                     name.set("GPL-3.0-or-later")
-                    url.set("http://www.gnu.org/licenses/gpl-3.0.txt")
+                    url.set("https://www.gnu.org/licenses/gpl-3.0.txt")
                 }
             }
             developers {
@@ -53,14 +53,6 @@ signing {
         logger.warn("No signatories available, skipping signing.")
     }
     sign(publishing.publications["mavenJava"])
-}
-
-repositories {
-    maven("https://papermc.io/repo/repository/maven-public/")
-}
-
-dependencies {
-    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
 }
 
 description = "pronouns-api"

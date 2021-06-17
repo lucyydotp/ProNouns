@@ -19,28 +19,30 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.api.PronounHandler;
+import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.platform.PermissionHolder;
-import me.lucyy.squirtgun.platform.SquirtgunPlayer;
+import me.lucyy.squirtgun.format.TextFormatter;
+import me.lucyy.squirtgun.platform.audience.PermissionHolder;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-public class ClearPronounsNode implements CommandNode<PermissionHolder> {
+
+public class ListPronounsNode implements CommandNode<PermissionHolder> {
 	private final PronounHandler pronounHandler;
 
-	public ClearPronounsNode(PronounHandler pronounHandler) {
+	public ListPronounsNode(PronounHandler pronounHandler) {
 		this.pronounHandler = pronounHandler;
 	}
 
 	@Override
 	public @NotNull String getName() {
-		return "clear";
+		return "list";
 	}
 
 	public String getDescription() {
-		return "Clears your pronouns.";
+		return "Shows all predefined pronoun sets.";
 	}
 
 	@Override
@@ -51,13 +53,20 @@ public class ClearPronounsNode implements CommandNode<PermissionHolder> {
 	@Override
 	public Component execute(CommandContext<PermissionHolder> context) {
 		final FormatProvider fmt = context.getFormat();
-		if (!(context.getTarget() instanceof SquirtgunPlayer)) {
-			return fmt.getPrefix()
-					.append(fmt.formatMain("This command can only be run by a player."));
+
+		Component out = Component.empty()
+				.append(TextFormatter.formatTitle("All Predefined Pronoun Sets:", fmt))
+				.append(Component.newline());
+
+		StringBuilder listBuilder = new StringBuilder();
+		for (PronounSet set : pronounHandler.getAllPronouns()) {
+			listBuilder.append(set.toString()).append("\n");
 		}
 
+		listBuilder.append("\n");
 
-		pronounHandler.clearUserPronouns(((SquirtgunPlayer) context.getTarget()).getUuid());
-		return fmt.getPrefix().append(fmt.formatMain("Cleared pronouns"));
+		out = out.append(Component.text(listBuilder.toString()))
+				.append(TextFormatter.formatTitle("*", fmt));
+		return out;
 	}
 }

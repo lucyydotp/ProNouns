@@ -1,4 +1,4 @@
-package me.lucyy.pronouns.api.event;
+package me.lucyy.pronouns.bukkit.event;
 
 public interface PronounSetSource {
 	<T> T getId();

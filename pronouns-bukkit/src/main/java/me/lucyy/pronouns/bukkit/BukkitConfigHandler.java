@@ -16,10 +16,11 @@
  * along with ProNouns.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.lucyy.pronouns.config;
+package me.lucyy.pronouns.bukkit;
 
-import me.lucyy.pronouns.ProNouns;
-import me.lucyy.squirtgun.format.FormatProvider;
+import me.lucyy.pronouns.config.ConfigHandler;
+import me.lucyy.pronouns.config.ConnectionType;
+import me.lucyy.pronouns.config.SqlInfoContainer;
 import me.lucyy.squirtgun.format.TextFormatter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -31,11 +32,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class ConfigHandler implements FormatProvider {
-    private final ProNouns pl;
+public class BukkitConfigHandler implements ConfigHandler {
+    private final ProNounsBukkit pl;
     private final HashMap<TextDecoration, Character> decoStrings = new HashMap<>();
 
-    public ConfigHandler(ProNouns plugin) {
+    public BukkitConfigHandler(ProNounsBukkit plugin) {
         pl = plugin;
         FileConfiguration cfg = pl.getConfig();
         cfg.options().copyDefaults(true);

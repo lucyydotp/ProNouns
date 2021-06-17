@@ -19,30 +19,28 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.api.PronounHandler;
-import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.format.TextFormatter;
-import me.lucyy.squirtgun.platform.PermissionHolder;
+import me.lucyy.squirtgun.platform.audience.PermissionHolder;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-
-public class ListPronounsNode implements CommandNode<PermissionHolder> {
+public class ClearPronounsNode implements CommandNode<PermissionHolder> {
 	private final PronounHandler pronounHandler;
 
-	public ListPronounsNode(PronounHandler pronounHandler) {
+	public ClearPronounsNode(PronounHandler pronounHandler) {
 		this.pronounHandler = pronounHandler;
 	}
 
 	@Override
 	public @NotNull String getName() {
-		return "list";
+		return "clear";
 	}
 
 	public String getDescription() {
-		return "Shows all predefined pronoun sets.";
+		return "Clears your pronouns.";
 	}
 
 	@Override
@@ -53,20 +51,13 @@ public class ListPronounsNode implements CommandNode<PermissionHolder> {
 	@Override
 	public Component execute(CommandContext<PermissionHolder> context) {
 		final FormatProvider fmt = context.getFormat();
-
-		Component out = Component.empty()
-				.append(TextFormatter.formatTitle("All Predefined Pronoun Sets:", fmt))
-				.append(Component.newline());
-
-		StringBuilder listBuilder = new StringBuilder();
-		for (PronounSet set : pronounHandler.getAllPronouns()) {
-			listBuilder.append(set.toString()).append("\n");
+		if (!(context.getTarget() instanceof SquirtgunPlayer)) {
+			return fmt.getPrefix()
+					.append(fmt.formatMain("This command can only be run by a player."));
 		}
 
-		listBuilder.append("\n");
 
-		out = out.append(Component.text(listBuilder.toString()))
-				.append(TextFormatter.formatTitle("*", fmt));
-		return out;
+		pronounHandler.clearUserPronouns(((SquirtgunPlayer) context.getTarget()).getUuid());
+		return fmt.getPrefix().append(fmt.formatMain("Cleared pronouns"));
 	}
 }

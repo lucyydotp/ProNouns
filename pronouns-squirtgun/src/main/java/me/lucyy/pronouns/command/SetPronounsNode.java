@@ -27,10 +27,9 @@ import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.context.CommandContext;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.platform.PermissionHolder;
-import me.lucyy.squirtgun.platform.SquirtgunPlayer;
+import me.lucyy.squirtgun.platform.audience.PermissionHolder;
+import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -67,11 +66,17 @@ public class SetPronounsNode implements CommandNode<PermissionHolder> {
 
 	private void warnAdmins(String player, String content) {
         final ConfigHandler cfg = pl.getConfigHandler();
-        Bukkit.broadcast(cfg.getPrefix().append(cfg.formatMain("Player "))
+        final Component message = cfg.getPrefix().append(cfg.formatMain("Player "))
                         .append(cfg.formatAccent(player))
                         .append(cfg.formatMain(" tried to use prohibited pronoun set "))
-                        .append(cfg.formatAccent(content)),
-                "pronouns.admin");
+                        .append(cfg.formatAccent(content));
+
+        pl.getPlatform().getConsole().sendMessage(message);
+        for (SquirtgunPlayer sgPlayer : pl.getPlatform().getOnlinePlayers()) {
+            if (sgPlayer.hasPermission("pronouns.admin")) {
+                sgPlayer.sendMessage(message);
+            }
+        }
     }
 
     private boolean checkInput(String arg, SquirtgunPlayer sender) {
@@ -102,6 +107,7 @@ public class SetPronounsNode implements CommandNode<PermissionHolder> {
         Set<PronounSet> setList;
         try {
 	        setList = context.getArgumentValue(sets);
+	        Objects.requireNonNull(setList); // required arg - this is safe
         } catch (IllegalArgumentException e) {
             return fmt.getPrefix()
                     .append(fmt.formatMain("The pronoun '"))

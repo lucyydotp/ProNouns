@@ -3,6 +3,8 @@ package me.lucyy.pronouns.command.arguments;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
+import me.lucyy.squirtgun.command.context.CommandContext;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
@@ -15,7 +17,7 @@ public class PronounSetArgument implements CommandArgument<Set<PronounSet>> {
 	}
 
 	@Override
-	public String getName() {
+	public @NotNull String getName() {
 		return "set";
 	}
 
@@ -25,7 +27,7 @@ public class PronounSetArgument implements CommandArgument<Set<PronounSet>> {
 	}
 
 	@Override
-	public Set<PronounSet> getValue(Queue<String> args) {
+	public Set<PronounSet> getValue(Queue<String> args, CommandContext<?> context) {
 		try {
 			Set<PronounSet> out =  handler.parseSets(args.toArray(new String[0]));
 			return out == null || out.size() == 0 ? null : out;
@@ -35,7 +37,7 @@ public class PronounSetArgument implements CommandArgument<Set<PronounSet>> {
 	}
 
 	@Override
-	public @Nullable List<String> tabComplete(Queue<String> args) {
+	public @Nullable List<String> tabComplete(Queue<String> args, CommandContext<?> context) {
 		List<String> allPronouns = new ArrayList<>();
 
 		allPronouns.add("<custom>");
