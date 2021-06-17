@@ -1,7 +1,7 @@
 name: ProNouns
 version: @version@
 main: me.lucyy.pronouns.bukkit.ProNounsBukkit
-api-version: 1.16
+api-version: 1.17
 authors: [ __lucyy ]
 description: Putting the "pro" in "pronouns".
 website: https://lucyy.me
@@ -9,6 +9,7 @@ loadbefore: [ PlaceholderAPI ]
 commands:
   pronouns:
     usage: 'Usage: /pronouns'
+    aliases: [ 'pn' ]
 
 permissions:
   pronouns.bypass:

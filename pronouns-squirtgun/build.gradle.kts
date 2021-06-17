@@ -1,7 +1,7 @@
 dependencies {
     implementation(project(":pronouns-api"))
-    implementation("me.lucyy:squirtgun-api:2.0.0-pre4-SNAPSHOT")
-    implementation("me.lucyy:squirtgun-commands:2.0.0-pre4-SNAPSHOT")
+    implementation("me.lucyy:squirtgun-api:2.0.0-pre4")
+    implementation("me.lucyy:squirtgun-commands:2.0.0-pre4")
     implementation("com.zaxxer:HikariCP:4.0.2")
 
     implementation("net.kyori:adventure-api:4.8.1")

@@ -28,8 +28,9 @@ subprojects {
     }
 
     repositories {
+        maven("https://papermc.io/repo/repository/maven-public/")
+        maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         mavenCentral()
         mavenLocal() // TODO remove
-        maven("https://papermc.io/repo/repository/maven-public/")
     }
 }

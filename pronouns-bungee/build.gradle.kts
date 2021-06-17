@@ -5,16 +5,20 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
+repositories {
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+}
+
 dependencies {
     implementation(project(":pronouns-api"))
     implementation(project(":pronouns-squirtgun"))
     implementation("me.lucyy:squirtgun-api:2.0.0-pre4")
-    implementation("me.lucyy:squirtgun-platform-bukkit:2.0.0-pre4")
+    implementation("me.lucyy:squirtgun-platform-bungee:2.0.0-pre4")
     implementation("me.lucyy:squirtgun-commands:2.0.0-pre4")
     implementation("com.zaxxer:HikariCP:4.0.2")
-    implementation("org.bstats:bstats-bukkit:2.2.1")
+    implementation("org.bstats:bstats-bungeecord:2.2.1")
 
-    compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
+    compileOnly("net.md-5:bungeecord-api:1.17-R0.1-SNAPSHOT")
     compileOnly("net.kyori:adventure-api:4.8.1")
     compileOnly("com.google.guava:guava:30.1.1-jre")
     compileOnly("org.jetbrains:annotations:13.0")
@@ -54,4 +58,4 @@ tasks {
     }
 }
 
-description = "pronouns-bukkit"
+description = "pronouns-bungee"

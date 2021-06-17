@@ -21,7 +21,6 @@ package me.lucyy.pronouns.storage;
 import com.google.common.collect.Multimap;
 import me.lucyy.pronouns.api.set.PronounSet;
 
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
