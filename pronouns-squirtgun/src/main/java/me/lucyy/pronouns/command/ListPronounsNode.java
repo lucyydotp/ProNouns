@@ -21,6 +21,7 @@ package me.lucyy.pronouns.command;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.squirtgun.command.context.CommandContext;
+import me.lucyy.squirtgun.command.node.AbstractNode;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.format.TextFormatter;
@@ -29,25 +30,12 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 
-public class ListPronounsNode implements CommandNode<PermissionHolder> {
+public class ListPronounsNode extends AbstractNode<PermissionHolder> {
 	private final PronounHandler pronounHandler;
 
 	public ListPronounsNode(PronounHandler pronounHandler) {
+		super("list", "Shows all predefined pronoun sets.", null);
 		this.pronounHandler = pronounHandler;
-	}
-
-	@Override
-	public @NotNull String getName() {
-		return "list";
-	}
-
-	public String getDescription() {
-		return "Shows all predefined pronoun sets.";
-	}
-
-	@Override
-	public String getPermission() {
-		return null;
 	}
 
 	@Override

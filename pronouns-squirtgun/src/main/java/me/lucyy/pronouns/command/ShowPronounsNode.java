@@ -24,6 +24,7 @@ import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.argument.OnlinePlayerArgument;
 import me.lucyy.squirtgun.command.context.CommandContext;
+import me.lucyy.squirtgun.command.node.AbstractNode;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.platform.Platform;
@@ -34,24 +35,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class ShowPronounsNode implements CommandNode<PermissionHolder> {
+public class ShowPronounsNode extends AbstractNode<PermissionHolder> {
 	private final PronounHandler handler;
 	private final CommandArgument<SquirtgunPlayer> playerArgument;
 
 	public ShowPronounsNode(Platform platform, PronounHandler handler) {
+		super("show", "Shows your, or another player's, pronouns.", null);
 		this.handler = handler;
 		playerArgument = new OnlinePlayerArgument("player", "the player to get pronouns for",
 				true, platform);
-	}
-
-	@Override
-	public @NotNull String getName() {
-		return "show";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Shows your, or another player's, pronouns.";
 	}
 
 	@Override

@@ -22,6 +22,7 @@ import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.context.CommandContext;
+import me.lucyy.squirtgun.command.node.AbstractNode;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
@@ -33,26 +34,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-public class PreviewNode implements CommandNode<PermissionHolder> {
+public class PreviewNode extends AbstractNode<PermissionHolder> {
 	private final ProNouns pl;
 
 	public PreviewNode(ProNouns plugin) {
+		super("preview", "Test out your pronoun selection", null);
 		pl = plugin;
-	}
-
-	@Override
-	public @NotNull String getName() {
-		return "preview";
-	}
-
-	@Override
-	public String getDescription() {
-		return "Test out your pronoun selection!";
-	}
-
-	@Override
-	public String getPermission() {
-		return null;
 	}
 
 	@Override

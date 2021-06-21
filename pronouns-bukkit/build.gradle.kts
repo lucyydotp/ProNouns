@@ -21,7 +21,6 @@ dependencies {
 }
 
 tasks {
-
     withType<Jar> {
         archiveClassifier.set("nodeps")
     }

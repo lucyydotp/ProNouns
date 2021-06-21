@@ -86,7 +86,7 @@ public class MysqlFileStorage implements Storage {
             }
             stmt.close();
             set.close();
-            return new HashSet<>(cache.get(uuid)); // fixme - move to Set.of() when MC 1.17
+            return new HashSet<>(cache.get(uuid));
         } catch (SQLException e) {
             plugin.getPlatform().getLogger().severe("Error getting player pronouns from MySQL - " + e);
             return null;

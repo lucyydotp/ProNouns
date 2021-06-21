@@ -1,5 +1,6 @@
 package me.lucyy.pronouns;
 
+import com.google.common.io.CharStreams;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.command.*;
 import me.lucyy.pronouns.config.ConfigHandler;
@@ -14,12 +15,27 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Objects;
+
 public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
 
     private PronounHandlerImpl pronounHandler;
 
+    private final String version;
+
     public ProNouns(@NotNull ProNounsPlatform platform) {
         super(platform);
+        String version;
+        try (InputStream stream = ProNouns.class.getResourceAsStream("/pronouns-version.txt")) {
+            version = CharStreams.toString(new InputStreamReader(Objects.requireNonNull(stream)));
+        } catch (IOException e) {
+            e.printStackTrace();
+            version = "ERROR - see console";
+        }
+        this.version = version;
     }
 
     @Override
@@ -29,12 +45,12 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
 
     @Override
     public @NotNull String getPluginVersion() {
-        return "VERSION"; // TODO
+        return version;
     }
 
     @Override
     public @NotNull String[] getAuthors() {
-        return new String[] {"__lucyy"};
+        return new String[]{"__lucyy"};
     }
 
 

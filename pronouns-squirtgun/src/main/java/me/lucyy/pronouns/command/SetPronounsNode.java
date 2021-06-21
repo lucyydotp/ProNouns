@@ -25,6 +25,7 @@ import me.lucyy.pronouns.command.arguments.PronounSetArgument;
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.context.CommandContext;
+import me.lucyy.squirtgun.command.node.AbstractNode;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
@@ -35,28 +36,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class SetPronounsNode implements CommandNode<PermissionHolder> {
+public class SetPronounsNode extends AbstractNode<PermissionHolder> {
     private final ProNouns pl;
     private final PronounSetArgument sets;
 
     public SetPronounsNode(ProNouns plugin) {
+        super("set", "Sets your pronouns.", null);
         pl = plugin;
         sets = new PronounSetArgument(pl.getPronounHandler());
-    }
-
-    @Override
-    public @NotNull String getName() {
-        return "set";
-    }
-
-	@Override
-	public String getDescription() {
-		return "Sets your pronouns.";
-	}
-
-	@Override
-	public @Nullable String getPermission() {
-    	return null;
     }
 
 	@Override

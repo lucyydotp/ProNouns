@@ -20,6 +20,7 @@ package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.squirtgun.command.context.CommandContext;
+import me.lucyy.squirtgun.command.node.AbstractNode;
 import me.lucyy.squirtgun.command.node.CommandNode;
 import me.lucyy.squirtgun.format.FormatProvider;
 import me.lucyy.squirtgun.platform.audience.PermissionHolder;
@@ -27,25 +28,12 @@ import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-public class ClearPronounsNode implements CommandNode<PermissionHolder> {
+public class ClearPronounsNode extends AbstractNode<PermissionHolder> {
 	private final PronounHandler pronounHandler;
 
 	public ClearPronounsNode(PronounHandler pronounHandler) {
+		super("clear", "Clears your pronouns.", null);
 		this.pronounHandler = pronounHandler;
-	}
-
-	@Override
-	public @NotNull String getName() {
-		return "clear";
-	}
-
-	public String getDescription() {
-		return "Clears your pronouns.";
-	}
-
-	@Override
-	public String getPermission() {
-		return null;
 	}
 
 	@Override

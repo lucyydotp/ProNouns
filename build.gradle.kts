@@ -14,11 +14,8 @@ subprojects {
     apply<JavaPlugin>()
 
     java {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-
-        withJavadocJar()
-        withSourcesJar()
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 
     tasks {
@@ -31,6 +28,9 @@ subprojects {
         maven("https://papermc.io/repo/repository/maven-public/")
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         mavenCentral()
-        mavenLocal() // TODO remove
+    }
+
+    dependencies {
+        implementation("me.lucyy:squirtgun-api:2.0.0-pre4")
     }
 }
