@@ -5,6 +5,10 @@ plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
 }
 
+repositories {
+    maven("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+}
+
 dependencies {
     implementation(project(":pronouns-api"))
     implementation(project(":pronouns-squirtgun"))
@@ -18,6 +22,7 @@ dependencies {
     compileOnly("net.kyori:adventure-api:4.8.1")
     compileOnly("com.google.guava:guava:30.1.1-jre")
     compileOnly("org.jetbrains:annotations:13.0")
+    compileOnly("me.clip:placeholderapi:2.10.9")
 }
 
 tasks {

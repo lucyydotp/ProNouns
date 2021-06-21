@@ -16,9 +16,10 @@
  * along with ProNouns.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package me.lucyy.pronouns;
+package me.lucyy.pronouns.bukkit;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
+import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.api.set.UnsetPronounSet;
@@ -27,37 +28,32 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class ProNounsPapi extends PlaceholderExpansion {
-    private final String VERSION = getClass().getPackage().getImplementationVersion();
-    private PronounHandler handler;
+    private final ProNouns plugin;
 
-    @Override
-    public boolean canRegister() {
-        try {
-            Class.forName("me.lucyy.pronouns.api.PronounHandler");
-        } catch (ClassNotFoundException ignored) {
-            return false;
-        }
-
-        RegisteredServiceProvider<PronounHandler> rsp = Bukkit.getServer().getServicesManager().getRegistration(PronounHandler.class);
-        if (rsp == null) return false;
-        handler = rsp.getProvider();
-        return true;
-
+    public ProNounsPapi(ProNouns plugin) {
+        this.plugin = plugin;
     }
 
     @Override
-    public String getRequiredPlugin() {
-        return "ProNouns";
+    public boolean canRegister() {
+        return true;
+    }
+
+    @Override
+    public boolean persist() {
+        return true;
     }
 
     @Override
     public @NotNull String getAuthor() {
-        return "__lucyy";
+        return String.join(", ", plugin.getAuthors());
     }
 
     @Override
@@ -67,7 +63,7 @@ public class ProNounsPapi extends PlaceholderExpansion {
 
     @Override
     public @NotNull String getVersion() {
-        return VERSION;
+        return plugin.getPluginVersion();
     }
 
     @Override
@@ -75,12 +71,12 @@ public class ProNounsPapi extends PlaceholderExpansion {
 
         if (player == null) return "";
 
-        Set<PronounSet> allSets = handler.getPronouns(player.getUniqueId());
+        Set<PronounSet> allSets = plugin.getPronounHandler().getPronouns(player.getUniqueId());
         PronounSet mainPronouns;
         try {
             mainPronouns = allSets.iterator().next();
         } catch (NoSuchElementException e) {
-            mainPronouns = new UnsetPronounSet(handler.fromString("they"));
+            mainPronouns = new UnsetPronounSet(plugin.getPronounHandler().fromString("they"));
         }
         String ident = identifier.split("_")[0];
         String mod;

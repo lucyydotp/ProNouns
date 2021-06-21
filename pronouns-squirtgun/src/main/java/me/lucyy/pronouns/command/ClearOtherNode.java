@@ -19,8 +19,6 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.ProNouns;
-import me.lucyy.pronouns.api.set.PronounSet;
-import me.lucyy.pronouns.command.arguments.PronounSetArgument;
 import me.lucyy.squirtgun.command.argument.CommandArgument;
 import me.lucyy.squirtgun.command.argument.OnlinePlayerArgument;
 import me.lucyy.squirtgun.command.context.CommandContext;
@@ -31,48 +29,34 @@ import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
 
-public class SetOtherNode extends AbstractNode<PermissionHolder> {
+public class ClearOtherNode extends AbstractNode<PermissionHolder> {
     private final ProNouns pl;
-    private final PronounSetArgument setsArg;
     private final CommandArgument<SquirtgunPlayer> playerArg;
 
-    public SetOtherNode(ProNouns plugin) {
-        super("setother", "Sets another player's pronouns.", "pronouns.admin");
+    public ClearOtherNode(ProNouns plugin) {
+        super("clearother", "Clears another player's pronouns.", "pronouns.admin");
         pl = plugin;
         playerArg = new OnlinePlayerArgument("player", "The player to set pronouns for",
                 false, pl.getPlatform());
-        setsArg = new PronounSetArgument(pl.getPronounHandler());
     }
 
     @Override
     public @NotNull List<CommandArgument<?>> getArguments() {
-        return List.of(playerArg, setsArg);
+        return List.of(playerArg);
     }
 
     @Override
     public Component execute(CommandContext<PermissionHolder> context) {
         final FormatProvider fmt = context.getFormat();
 
-        Set<PronounSet> setList;
-        try {
-            setList = context.getArgumentValue(setsArg);
-            Objects.requireNonNull(setList); // required arg - this is safe
-        } catch (IllegalArgumentException e) {
-            return fmt.getPrefix()
-                    .append(fmt.formatMain("The pronoun '"))
-                    .append(fmt.formatAccent(e.getMessage()))
-                    .append(fmt.formatMain("' is unrecognised.\n"
-                            + "To use it, just write it out like it's shown in /pronouns list."));
-        }
-
         SquirtgunPlayer target = context.getArgumentValue(playerArg);
         Objects.requireNonNull(target); // required arg - this is safe
 
-        pl.getPronounHandler().setUserPronouns(target.getUuid(), setList);
+        pl.getPronounHandler().clearUserPronouns(target.getUuid());
         return fmt.getPrefix()
-                .append(fmt.formatMain("Set " + target.getUsername() + "'s pronouns to "))
-                .append(fmt.formatAccent(PronounSet.friendlyPrintSet(setList)));
+                .append(fmt.formatMain("Cleared " + target.getUsername() + "'s pronouns."));
     }
 }

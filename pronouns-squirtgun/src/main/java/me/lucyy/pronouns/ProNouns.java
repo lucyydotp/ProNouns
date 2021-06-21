@@ -75,6 +75,8 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
                 new ClearPronounsNode(pronounHandler),
                 new ListPronounsNode(pronounHandler),
                 new PluginInfoNode<>("version", this),
+                new SetOtherNode(this),
+                new ClearOtherNode(this),
                 new NodeBuilder<>()
                         .name("reload")
                         .description("Reloads the plugin.")

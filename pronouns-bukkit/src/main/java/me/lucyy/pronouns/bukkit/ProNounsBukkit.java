@@ -76,5 +76,9 @@ public final class ProNounsBukkit extends JavaPlugin {
                 this, ServicePriority.Normal);
 
         plugin.onEnable();
+
+        if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null){
+            new ProNounsPapi(plugin).register();
+        }
     }
 }
