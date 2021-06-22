@@ -18,6 +18,8 @@
 
 package me.lucyy.pronouns.bukkit;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.ProNounsPlatform;
 import me.lucyy.pronouns.api.PronounHandler;
@@ -27,8 +29,13 @@ import me.lucyy.pronouns.storage.MysqlFileStorage;
 import me.lucyy.pronouns.storage.Storage;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public final class ProNounsBukkit extends JavaPlugin {
 
@@ -58,6 +65,21 @@ public final class ProNounsBukkit extends JavaPlugin {
         ProNounsPlatform platform = new ProNounsBukkitPlatform(this);
         plugin = new ProNouns(platform);
 
+        Path oldPapi = Path.of(getDataFolder().getParent(), "PlaceholderAPI/expansions/Expansion-pronouns.jar");
+
+        if (Files.exists(oldPapi)) {
+            try {
+                Files.delete(oldPapi);
+                getLogger().warning("Deleted the old PlaceholderAPI expansion. ProNouns doesn't use the eCloud anymore.");
+                PlaceholderAPIPlugin.getInstance().reloadConf(Bukkit.getConsoleSender());
+            } catch (IOException e) {
+                getLogger().warning("Encountered an error trying to remove the old PlaceholderAPI expansion");
+                e.printStackTrace();
+            }
+        }
+
+        new ProNounsPapi(plugin).register();
+
         switch (configHandler.getConnectionType()) {
             case YML:
                 storage = new YamlFileStorage(this);
@@ -76,9 +98,5 @@ public final class ProNounsBukkit extends JavaPlugin {
                 this, ServicePriority.Normal);
 
         plugin.onEnable();
-
-        if(getServer().getPluginManager().getPlugin("PlaceholderAPI") != null){
-            new ProNounsPapi(plugin).register();
-        }
     }
 }
