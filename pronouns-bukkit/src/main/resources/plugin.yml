@@ -1,14 +1,16 @@
 name: ProNouns
-version: ${project.version}
-main: me.lucyy.pronouns.ProNouns
-api-version: 1.16
+version: @version@
+main: me.lucyy.pronouns.bukkit.ProNounsBukkit
+api-version: 1.13
 authors: [ __lucyy ]
 description: Putting the "pro" in "pronouns".
 website: https://lucyy.me
 loadbefore: [ PlaceholderAPI ]
+softdepend:  [ PlaceholderAPI ]
 commands:
   pronouns:
     usage: 'Usage: /pronouns'
+    aliases: [ 'pn' ]
 
 permissions:
   pronouns.bypass:

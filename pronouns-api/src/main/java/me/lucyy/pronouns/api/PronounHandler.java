@@ -51,6 +51,7 @@ public interface PronounHandler {
 	/**
 	 * @deprecated use {@link #getPronouns(UUID)}
 	 */
+	@Deprecated
 	default Collection<PronounSet> getUserPronouns(UUID uuid) {
 		return getPronouns(uuid);
 	}

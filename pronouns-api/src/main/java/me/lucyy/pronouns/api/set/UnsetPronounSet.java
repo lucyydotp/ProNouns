@@ -31,7 +31,15 @@ public class UnsetPronounSet extends PronounSet {
                 base.getPossessivePronoun(), base.getReflexive());
     }
 
-    /**
+	/**
+	 * @return the string "Unset"
+	 */
+	@Override
+	public String getShortenedName() {
+		return "Unset";
+	}
+
+	/**
      * @return the string "Unset"
      */
     @Override

@@ -1,0 +1,23 @@
+# ProNouns Config File
+# Make changes here and update them by either using /pronouns reload
+# or by restarting the server
+# NOTE: if you're using predefined sets with MySQL, make sure they match on
+# all servers!
+# Documentation at https://docs.lucyy.me/pronouns
+# Support discord at https://support.lucyy.me
+checkForUpdates: 'true'
+accent: '{#fa9efa>}%s{#9dacfa<}'
+main: '&f'
+connection: yml
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  database: pronouns
+  username: pronouns
+  password: password
+predefinedSets: []
+filter:
+  enabled: 'true'
+  patterns:
+    - apache+
+    - hel+icop+ter

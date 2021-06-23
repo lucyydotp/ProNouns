@@ -1,0 +1,4 @@
+name: ProNouns
+version: @version@
+main: me.lucyy.pronouns.bungee.ProNounsBungee
+author: '__lucyy'
