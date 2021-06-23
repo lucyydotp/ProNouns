@@ -6,6 +6,7 @@ authors: [ __lucyy ]
 description: Putting the "pro" in "pronouns".
 website: https://lucyy.me
 loadbefore: [ PlaceholderAPI ]
+softdepend:  [ PlaceholderAPI ]
 commands:
   pronouns:
     usage: 'Usage: /pronouns'

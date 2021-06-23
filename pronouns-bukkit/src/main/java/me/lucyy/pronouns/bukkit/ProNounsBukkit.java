@@ -18,8 +18,6 @@
 
 package me.lucyy.pronouns.bukkit;
 
-import me.clip.placeholderapi.PlaceholderAPI;
-import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.ProNounsPlatform;
 import me.lucyy.pronouns.api.PronounHandler;
@@ -29,7 +27,6 @@ import me.lucyy.pronouns.storage.MysqlFileStorage;
 import me.lucyy.pronouns.storage.Storage;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -71,7 +68,6 @@ public final class ProNounsBukkit extends JavaPlugin {
             try {
                 Files.delete(oldPapi);
                 getLogger().warning("Deleted the old PlaceholderAPI expansion. ProNouns doesn't use the eCloud anymore.");
-                PlaceholderAPIPlugin.getInstance().reloadConf(Bukkit.getConsoleSender());
             } catch (IOException e) {
                 getLogger().warning("Encountered an error trying to remove the old PlaceholderAPI expansion");
                 e.printStackTrace();

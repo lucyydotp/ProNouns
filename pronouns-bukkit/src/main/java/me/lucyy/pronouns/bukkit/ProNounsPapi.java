@@ -20,18 +20,13 @@ package me.lucyy.pronouns.bukkit;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import me.lucyy.pronouns.ProNouns;
-import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.api.set.UnsetPronounSet;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("unused")
 public class ProNounsPapi extends PlaceholderExpansion {
