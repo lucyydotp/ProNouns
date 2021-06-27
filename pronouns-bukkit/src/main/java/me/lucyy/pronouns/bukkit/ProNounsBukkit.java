@@ -27,6 +27,7 @@ import me.lucyy.pronouns.storage.MysqlFileStorage;
 import me.lucyy.pronouns.storage.Storage;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.ServicePriority;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -74,8 +75,9 @@ public final class ProNounsBukkit extends JavaPlugin {
             }
         }
 
-        new ProNounsPapi(plugin).register();
-
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new ProNounsPapi(plugin).register();
+        }
         switch (configHandler.getConnectionType()) {
             case YML:
                 storage = new YamlFileStorage(this);
