@@ -25,11 +25,15 @@ import me.lucyy.pronouns.api.set.UnsetPronounSet;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
-@SuppressWarnings("unused")
 public class ProNounsPapi extends PlaceholderExpansion {
+
+    private PronounSet unsetPronounSet;
+
     private final ProNouns plugin;
 
     public ProNounsPapi(ProNouns plugin) {
@@ -64,22 +68,17 @@ public class ProNounsPapi extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player player, @NotNull String identifier) {
 
+        if (unsetPronounSet == null) {
+            unsetPronounSet = new UnsetPronounSet(plugin.getPronounHandler().fromString("they"));
+        }
+
         if (player == null) return "";
 
         Set<PronounSet> allSets = plugin.getPronounHandler().getPronouns(player.getUniqueId());
-        PronounSet mainPronouns;
-        try {
-            mainPronouns = allSets.iterator().next();
-        } catch (NoSuchElementException e) {
-            mainPronouns = new UnsetPronounSet(plugin.getPronounHandler().fromString("they"));
-        }
-        String ident = identifier.split("_")[0];
-        String mod;
-        try {
-            mod = identifier.split("_")[1];
-        } catch (ArrayIndexOutOfBoundsException ignored) {
-            mod = "";
-        }
+        PronounSet mainPronouns = allSets.size() > 0 ? allSets.iterator().next() : unsetPronounSet;
+
+        String[] split = identifier.split("_");
+        String ident = split[0];
 
         String feedback;
 
@@ -112,16 +111,21 @@ public class ProNounsPapi extends PlaceholderExpansion {
                 return "";
         }
 
-        switch (mod) {
-            case "upper":
-                feedback = feedback.toUpperCase();
-                break;
-            case "lower":
-                feedback = feedback.toLowerCase();
-                break;
-            case "capital":
-                feedback = feedback.substring(0, 1).toUpperCase() + feedback.substring(1).toLowerCase();
-                break;
+        for (int idx = 1; idx < split.length; idx++) {
+            String mod = split[idx];
+            switch (mod.toLowerCase(Locale.ROOT)) {
+                case "upper":
+                    feedback = feedback.toUpperCase();
+                    break;
+                case "lower":
+                    feedback = feedback.toLowerCase();
+                    break;
+                case "capital":
+                    feedback = feedback.substring(0, 1).toUpperCase() + feedback.substring(1).toLowerCase();
+                    break;
+                case "nounset":
+                    if (feedback.equalsIgnoreCase("unset")) return "";
+            }
         }
         return feedback;
     }
