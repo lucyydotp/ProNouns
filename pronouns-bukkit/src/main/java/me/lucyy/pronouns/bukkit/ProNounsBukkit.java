@@ -18,6 +18,8 @@
 
 package me.lucyy.pronouns.bukkit;
 
+import me.clip.placeholderapi.PlaceholderAPI;
+import me.clip.placeholderapi.PlaceholderAPIPlugin;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.ProNounsPlatform;
 import me.lucyy.pronouns.api.PronounHandler;
@@ -63,19 +65,19 @@ public final class ProNounsBukkit extends JavaPlugin {
         ProNounsPlatform platform = new ProNounsBukkitPlatform(this);
         plugin = new ProNouns(platform);
 
-        Path oldPapi = Path.of(getDataFolder().getParent(), "PlaceholderAPI/expansions/Expansion-pronouns.jar");
-
-        if (Files.exists(oldPapi)) {
-            try {
-                Files.delete(oldPapi);
-                getLogger().warning("Deleted the old PlaceholderAPI expansion. ProNouns doesn't use the eCloud anymore.");
-            } catch (IOException e) {
-                getLogger().warning("Encountered an error trying to remove the old PlaceholderAPI expansion");
-                e.printStackTrace();
-            }
-        }
 
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            Path oldPapi = Path.of(getDataFolder().getParent(), "PlaceholderAPI/expansions/Expansion-pronouns.jar");
+            if (Files.exists(oldPapi)) {
+                try {
+                    Files.delete(oldPapi);
+                    getLogger().warning("Deleted the old PlaceholderAPI expansion. ProNouns doesn't use the eCloud anymore.");
+                } catch (IOException e) {
+                    getLogger().warning("Encountered an error trying to remove the old PlaceholderAPI expansion");
+                    e.printStackTrace();
+                }
+                PlaceholderAPIPlugin.getInstance().reloadConf(Bukkit.getConsoleSender());
+            }
             new ProNounsPapi(plugin).register();
         }
         switch (configHandler.getConnectionType()) {
