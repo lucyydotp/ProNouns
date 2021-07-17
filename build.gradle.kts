@@ -31,6 +31,6 @@ subprojects {
     }
 
     dependencies {
-        implementation("me.lucyy:squirtgun-api:2.0.0-pre4")
+        implementation("me.lucyy:squirtgun-api:2.0.0-pre5")
     }
 }
