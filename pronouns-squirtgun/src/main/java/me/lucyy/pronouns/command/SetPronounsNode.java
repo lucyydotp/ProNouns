@@ -23,12 +23,13 @@ import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.command.arguments.PronounSetArgument;
 import me.lucyy.pronouns.config.ConfigHandler;
-import me.lucyy.squirtgun.command.argument.CommandArgument;
-import me.lucyy.squirtgun.command.context.CommandContext;
-import me.lucyy.squirtgun.command.node.AbstractNode;
-import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.platform.audience.PermissionHolder;
-import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.command.argument.CommandArgument;
+import net.lucypoulton.squirtgun.command.condition.Condition;
+import net.lucypoulton.squirtgun.command.context.CommandContext;
+import net.lucypoulton.squirtgun.command.node.AbstractNode;
+import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,7 @@ public class SetPronounsNode extends AbstractNode<PermissionHolder> {
     private final PronounSetArgument sets;
 
     public SetPronounsNode(ProNouns plugin) {
-        super("set", "Sets your pronouns.", null);
+        super("set", "Sets your pronouns.", Condition.alwaysTrue());
         pl = plugin;
         sets = new PronounSetArgument(pl.getPronounHandler());
     }
@@ -78,7 +79,7 @@ public class SetPronounsNode extends AbstractNode<PermissionHolder> {
     }
 
     @Override
-    public Component execute(CommandContext<PermissionHolder> context) {
+    public Component execute(CommandContext context) {
         final FormatProvider fmt = context.getFormat();
         if (!(context.getTarget() instanceof SquirtgunPlayer)) {
             return fmt.getPrefix().append(fmt.formatMain("This command can only be run by a player."));

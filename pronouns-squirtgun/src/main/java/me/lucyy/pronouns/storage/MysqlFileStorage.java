@@ -24,9 +24,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.config.SqlInfoContainer;
 import me.lucyy.pronouns.api.set.PronounSet;
-import me.lucyy.squirtgun.platform.Platform;
-import me.lucyy.squirtgun.platform.scheduler.Task;
-import me.lucyy.squirtgun.util.UuidUtils;
+import net.lucypoulton.squirtgun.platform.Platform;
+import net.lucypoulton.squirtgun.platform.scheduler.Task;
+import net.lucypoulton.squirtgun.util.UuidUtils;
 
 import java.sql.*;
 import java.util.*;

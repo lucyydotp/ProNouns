@@ -2,9 +2,9 @@ package me.lucyy.pronouns;
 
 import me.lucyy.pronouns.config.ConnectionType;
 import me.lucyy.pronouns.storage.MysqlFileStorage;
-import me.lucyy.squirtgun.platform.EventListener;
-import me.lucyy.squirtgun.platform.Platform;
-import me.lucyy.squirtgun.platform.scheduler.Task;
+import net.lucypoulton.squirtgun.platform.EventListener;
+import net.lucypoulton.squirtgun.platform.Platform;
+import net.lucypoulton.squirtgun.platform.scheduler.Task;
 
 import java.util.UUID;
 

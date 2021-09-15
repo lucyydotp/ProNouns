@@ -6,7 +6,7 @@ plugins {
 }
 
 subprojects {
-    version = "1.3.2"
+    version = "1.3.3-SNAPSHOT"
     group = "me.lucyy"
 
     apply<MavenPublishPlugin>()
@@ -28,9 +28,10 @@ subprojects {
         maven("https://papermc.io/repo/repository/maven-public/")
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         mavenCentral()
+        mavenLocal() // FOR TESTING ONLY - TODO REMOVE
     }
 
     dependencies {
-        implementation("me.lucyy:squirtgun-api:2.0.0-pre5")
+        implementation("net.lucypoulton:squirtgun-api:2.0.0-pre6-SNAPSHOT")
     }
 }

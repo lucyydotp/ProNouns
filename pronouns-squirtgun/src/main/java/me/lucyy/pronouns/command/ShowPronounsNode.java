@@ -21,14 +21,15 @@ package me.lucyy.pronouns.command;
 import com.google.common.collect.ImmutableList;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.api.set.PronounSet;
-import me.lucyy.squirtgun.command.argument.CommandArgument;
-import me.lucyy.squirtgun.command.argument.OnlinePlayerArgument;
-import me.lucyy.squirtgun.command.context.CommandContext;
-import me.lucyy.squirtgun.command.node.AbstractNode;
-import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.platform.Platform;
-import me.lucyy.squirtgun.platform.audience.PermissionHolder;
-import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.command.argument.CommandArgument;
+import net.lucypoulton.squirtgun.command.argument.OnlinePlayerArgument;
+import net.lucypoulton.squirtgun.command.condition.Condition;
+import net.lucypoulton.squirtgun.command.context.CommandContext;
+import net.lucypoulton.squirtgun.command.node.AbstractNode;
+import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.platform.Platform;
+import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,7 @@ public class ShowPronounsNode extends AbstractNode<PermissionHolder> {
 	private final CommandArgument<SquirtgunPlayer> playerArgument;
 
 	public ShowPronounsNode(Platform platform, PronounHandler handler) {
-		super("show", "Shows your, or another player's, pronouns.", null);
+		super("show", "Shows your, or another player's, pronouns.", Condition.alwaysTrue());
 		this.handler = handler;
 		playerArgument = new OnlinePlayerArgument("player", "the player to get pronouns for",
 				true, platform);
@@ -51,7 +52,7 @@ public class ShowPronounsNode extends AbstractNode<PermissionHolder> {
 	}
 
 	@Override
-	public Component execute(CommandContext<PermissionHolder> context) {
+	public Component execute(CommandContext context) {
 		final FormatProvider fmt = context.getFormat();
 
 		SquirtgunPlayer commandTarget = context.getArgumentValue(playerArgument);

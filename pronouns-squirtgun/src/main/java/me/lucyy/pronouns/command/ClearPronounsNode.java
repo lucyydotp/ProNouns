@@ -19,23 +19,24 @@
 package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.api.PronounHandler;
-import me.lucyy.squirtgun.command.context.CommandContext;
-import me.lucyy.squirtgun.command.node.AbstractNode;
-import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.platform.audience.PermissionHolder;
-import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.command.condition.Condition;
+import net.lucypoulton.squirtgun.command.context.CommandContext;
+import net.lucypoulton.squirtgun.command.node.AbstractNode;
+import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
 
 public class ClearPronounsNode extends AbstractNode<PermissionHolder> {
 	private final PronounHandler pronounHandler;
 
 	public ClearPronounsNode(PronounHandler pronounHandler) {
-		super("clear", "Clears your pronouns.", null);
+		super("clear", "Clears your pronouns.", Condition.alwaysTrue());
 		this.pronounHandler = pronounHandler;
 	}
 
 	@Override
-	public Component execute(CommandContext<PermissionHolder> context) {
+	public Component execute(CommandContext context) {
 		final FormatProvider fmt = context.getFormat();
 		if (!(context.getTarget() instanceof SquirtgunPlayer)) {
 			return fmt.getPrefix()

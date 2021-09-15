@@ -20,12 +20,13 @@ package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.api.set.PronounSet;
-import me.lucyy.squirtgun.command.argument.CommandArgument;
-import me.lucyy.squirtgun.command.context.CommandContext;
-import me.lucyy.squirtgun.command.node.AbstractNode;
-import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.platform.audience.PermissionHolder;
-import me.lucyy.squirtgun.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.command.argument.CommandArgument;
+import net.lucypoulton.squirtgun.command.condition.Condition;
+import net.lucypoulton.squirtgun.command.context.CommandContext;
+import net.lucypoulton.squirtgun.command.node.AbstractNode;
+import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
+import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +38,7 @@ public class PreviewNode extends AbstractNode<PermissionHolder> {
 	private final ProNouns pl;
 
 	public PreviewNode(ProNouns plugin) {
-		super("preview", "Test out your pronoun selection", null);
+		super("preview", "Test out your pronoun selection", Condition.alwaysTrue());
 		pl = plugin;
 	}
 
@@ -51,7 +52,7 @@ public class PreviewNode extends AbstractNode<PermissionHolder> {
 	}
 
 	@Override
-	public Component execute(final CommandContext<PermissionHolder> context) {
+	public Component execute(final CommandContext context) {
 		final FormatProvider fmt = context.getFormat();
 		if (!(context.getTarget() instanceof SquirtgunPlayer)) {
 			return fmt.getPrefix()

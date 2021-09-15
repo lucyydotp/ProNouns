@@ -12,9 +12,8 @@ repositories {
 dependencies {
     implementation(project(":pronouns-api"))
     implementation(project(":pronouns-squirtgun"))
-    implementation("me.lucyy:squirtgun-api:2.0.0-pre5")
-    implementation("me.lucyy:squirtgun-platform-bungee:2.0.0-pre5")
-    implementation("me.lucyy:squirtgun-commands:2.0.0-pre5")
+    implementation("net.lucypoulton:squirtgun-api:2.0.0-pre6-SNAPSHOT")
+    implementation("net.lucypoulton:squirtgun-platform-bungee:2.0.0-pre6-SNAPSHOT")
     implementation("com.zaxxer:HikariCP:4.0.2")
     implementation("org.bstats:bstats-bungeecord:2.2.1")
 

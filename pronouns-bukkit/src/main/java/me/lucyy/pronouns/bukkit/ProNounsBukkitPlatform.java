@@ -5,10 +5,10 @@ import me.lucyy.pronouns.bukkit.event.PronounsSetEvent;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.storage.Storage;
-import me.lucyy.squirtgun.bukkit.BukkitNodeExecutor;
-import me.lucyy.squirtgun.bukkit.BukkitPlatform;
-import me.lucyy.squirtgun.command.node.CommandNode;
-import me.lucyy.squirtgun.platform.audience.PermissionHolder;
+import net.lucypoulton.squirtgun.bukkit.BukkitNodeExecutor;
+import net.lucypoulton.squirtgun.bukkit.BukkitPlatform;
+import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.command.TabExecutor;
@@ -48,15 +48,6 @@ public class ProNounsBukkitPlatform extends BukkitPlatform implements ProNounsPl
                 Bukkit.getServer().getPluginManager().callEvent(new PronounsSetEvent(uuid, sets));
             }
         }.runTask(plugin);
-    }
-
-    @Override
-    public void registerCommand(CommandNode<PermissionHolder> node) {
-        PluginCommand command = plugin.getCommand(node.getName());
-        Objects.requireNonNull(command);
-        TabExecutor executor = new BukkitNodeExecutor(node, plugin.getConfigHandler(), this);
-        command.setExecutor(executor);
-        command.setTabCompleter(executor);
     }
 
     @Override

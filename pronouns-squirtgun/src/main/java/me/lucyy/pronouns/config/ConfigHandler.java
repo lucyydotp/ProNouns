@@ -1,6 +1,6 @@
 package me.lucyy.pronouns.config;
 
-import me.lucyy.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.format.FormatProvider;
 
 import java.util.List;
 

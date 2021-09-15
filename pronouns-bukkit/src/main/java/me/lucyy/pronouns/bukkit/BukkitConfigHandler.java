@@ -21,7 +21,7 @@ package me.lucyy.pronouns.bukkit;
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.config.ConnectionType;
 import me.lucyy.pronouns.config.SqlInfoContainer;
-import me.lucyy.squirtgun.format.TextFormatter;
+import net.lucypoulton.squirtgun.format.TextFormatter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;

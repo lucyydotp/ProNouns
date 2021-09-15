@@ -22,7 +22,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.storage.Storage;
-import me.lucyy.squirtgun.util.UuidUtils;
+import net.lucypoulton.squirtgun.util.UuidUtils;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 

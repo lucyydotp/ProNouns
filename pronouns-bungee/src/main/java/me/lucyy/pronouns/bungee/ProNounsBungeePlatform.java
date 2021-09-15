@@ -3,10 +3,10 @@ package me.lucyy.pronouns.bungee;
 import me.lucyy.pronouns.ProNounsPlatform;
 import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.storage.Storage;
-import me.lucyy.squirtgun.bungee.BungeeNodeExecutor;
-import me.lucyy.squirtgun.bungee.BungeePlatform;
-import me.lucyy.squirtgun.command.node.CommandNode;
-import me.lucyy.squirtgun.platform.audience.PermissionHolder;
+import net.lucypoulton.squirtgun.bungee.BungeeNodeExecutor;
+import net.lucypoulton.squirtgun.bungee.BungeePlatform;
+import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 
 import java.io.IOException;
 import java.util.Set;
@@ -41,12 +41,6 @@ public class ProNounsBungeePlatform extends BungeePlatform implements ProNounsPl
     // unused
     @Override
     public void onPronounsSet(UUID uuid, Set<PronounSet> sets) { }
-
-    @Override
-    public void registerCommand(CommandNode<PermissionHolder> node) {
-        plugin.getProxy().getPluginManager().registerCommand(plugin,
-                new BungeeNodeExecutor(node, getConfigHandler(), this));
-    }
 
     @Override
     public String name() {

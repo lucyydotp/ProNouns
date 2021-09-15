@@ -4,13 +4,14 @@ import com.google.common.io.CharStreams;
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.command.*;
 import me.lucyy.pronouns.config.ConfigHandler;
-import me.lucyy.squirtgun.command.node.CommandNode;
-import me.lucyy.squirtgun.command.node.NodeBuilder;
-import me.lucyy.squirtgun.command.node.PluginInfoNode;
-import me.lucyy.squirtgun.command.node.subcommand.SubcommandNode;
-import me.lucyy.squirtgun.platform.audience.PermissionHolder;
-import me.lucyy.squirtgun.plugin.SquirtgunPlugin;
-import me.lucyy.squirtgun.update.PolymartUpdateChecker;
+import net.lucypoulton.squirtgun.command.condition.Condition;
+import net.lucypoulton.squirtgun.command.node.CommandNode;
+import net.lucypoulton.squirtgun.command.node.NodeBuilder;
+import net.lucypoulton.squirtgun.command.node.PluginInfoNode;
+import net.lucypoulton.squirtgun.command.node.subcommand.SubcommandNode;
+import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
+import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
+import net.lucypoulton.squirtgun.update.PolymartUpdateChecker;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.NotNull;
@@ -68,26 +69,26 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
 
         final CommandNode<PermissionHolder> rootNode = SubcommandNode.withHelp("pronouns",
                 "ProNouns root command",
-                null,
+                Condition.alwaysTrue(),
                 new SetPronounsNode(this),
                 new ShowPronounsNode(getPlatform(), getPronounHandler()),
                 new PreviewNode(this),
                 new ClearPronounsNode(pronounHandler),
                 new ListPronounsNode(pronounHandler),
-                new PluginInfoNode<>("version", this),
+                new PluginInfoNode("version", this),
                 new SetOtherNode(this),
                 new ClearOtherNode(this),
                 new NodeBuilder<>()
                         .name("reload")
                         .description("Reloads the plugin.")
-                        .permission("pronouns.admin")
+                        .condition(Condition.hasPermission("pronouns.admin"))
                         .executes(x -> {
                             getPlatform().reloadConfig();
                             return x.getFormat().getPrefix()
                                     .append(x.getFormat().formatMain("Reloaded"));
                         }).build()
         );
-        getPlatform().registerCommand(rootNode);
+        getPlatform().registerCommand(rootNode, getConfigHandler());
 
         if (getConfigHandler().checkForUpdates()) {
             new PolymartUpdateChecker(this,

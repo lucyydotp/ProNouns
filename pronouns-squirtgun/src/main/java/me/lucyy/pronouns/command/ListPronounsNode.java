@@ -20,11 +20,12 @@ package me.lucyy.pronouns.command;
 
 import me.lucyy.pronouns.api.PronounHandler;
 import me.lucyy.pronouns.api.set.PronounSet;
-import me.lucyy.squirtgun.command.context.CommandContext;
-import me.lucyy.squirtgun.command.node.AbstractNode;
-import me.lucyy.squirtgun.format.FormatProvider;
-import me.lucyy.squirtgun.format.TextFormatter;
-import me.lucyy.squirtgun.platform.audience.PermissionHolder;
+import net.lucypoulton.squirtgun.command.condition.Condition;
+import net.lucypoulton.squirtgun.command.context.CommandContext;
+import net.lucypoulton.squirtgun.command.node.AbstractNode;
+import net.lucypoulton.squirtgun.format.FormatProvider;
+import net.lucypoulton.squirtgun.format.TextFormatter;
+import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 import net.kyori.adventure.text.Component;
 
 
@@ -32,16 +33,16 @@ public class ListPronounsNode extends AbstractNode<PermissionHolder> {
 	private final PronounHandler pronounHandler;
 
 	public ListPronounsNode(PronounHandler pronounHandler) {
-		super("list", "Shows all predefined pronoun sets.", null);
+		super("list", "Shows all predefined pronoun sets.", Condition.alwaysTrue());
 		this.pronounHandler = pronounHandler;
 	}
 
 	@Override
-	public Component execute(CommandContext<PermissionHolder> context) {
+	public Component execute(CommandContext context) {
 		final FormatProvider fmt = context.getFormat();
 
 		Component out = Component.empty()
-				.append(TextFormatter.formatTitle("All Predefined Pronoun Sets:", fmt))
+				.append(fmt.formatTitle("All Predefined Pronoun Sets:"))
 				.append(Component.newline());
 
 		StringBuilder listBuilder = new StringBuilder();
@@ -52,7 +53,7 @@ public class ListPronounsNode extends AbstractNode<PermissionHolder> {
 		listBuilder.append("\n");
 
 		out = out.append(Component.text(listBuilder.toString()))
-				.append(TextFormatter.formatTitle("*", fmt));
+				.append(fmt.formatFooter("*"));
 		return out;
 	}
 }
