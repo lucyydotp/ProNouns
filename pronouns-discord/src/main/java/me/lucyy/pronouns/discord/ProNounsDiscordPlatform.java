@@ -5,10 +5,8 @@ import me.lucyy.pronouns.api.set.PronounSet;
 import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.storage.Storage;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
+import net.lucypoulton.squirtgun.discord.command.CommandPredicate;
 import net.lucypoulton.squirtgun.discord.standalone.StandaloneDiscordPlatform;
 
 import java.util.Objects;
@@ -21,8 +19,8 @@ public class ProNounsDiscordPlatform extends StandaloneDiscordPlatform implement
     private final ConfigHandler handler;
     private final ProNounsDiscordStandalone host;
 
-    public ProNounsDiscordPlatform(JDA jda, ConfigHandler handler, ProNounsDiscordStandalone host) {
-        super(jda);
+    public ProNounsDiscordPlatform(JDA jda, TestConfigHandler handler, ProNounsDiscordStandalone host) {
+        super(jda, handler.getCommandPrefix(), CommandPredicate.NO_BOTS.and(Message::isFromGuild));
         this.jda = jda;
         this.handler = handler;
         this.host = host;
@@ -56,13 +54,13 @@ public class ProNounsDiscordPlatform extends StandaloneDiscordPlatform implement
             }
         }
 
-        for (PronounSet set : sets) {
-            Role matchingRole = guild.getRoleCache().streamUnordered()
-                .filter(role -> role.getName().equals("Pronouns " + set.getName()) && role.getPermissionsRaw() == 0)
-                .findFirst().orElseGet(() ->
-                    guild.createRole().setName("Pronouns "+ set.getName()).setPermissions(0L).complete()
-                );
-            guild.addRoleToMember(member, matchingRole).queue();
-        }
+        String setName = PronounSet.friendlyPrintSet(sets);
+        Role matchingRole = guild.getRoleCache().streamUnordered()
+            .filter(role -> role.getName().equals("Pronouns " + setName) && role.getPermissionsRaw() == 0)
+            .findFirst().orElseGet(() ->
+                guild.createRole().setName("Pronouns " + setName).setPermissions(0L).complete()
+            );
+
+        guild.addRoleToMember(member, matchingRole).queue();
     }
 }

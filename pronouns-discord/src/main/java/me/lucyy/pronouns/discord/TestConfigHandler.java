@@ -39,6 +39,10 @@ public class TestConfigHandler implements ConfigHandler {
         return properties.getProperty("discordToken");
     }
 
+    public String getCommandPrefix() {
+        return properties.getProperty("prefix", "-");
+    }
+
     @Override
     public List<String> getPredefinedSets() {
         return List.of();
