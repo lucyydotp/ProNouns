@@ -43,24 +43,26 @@ public class ProNounsDiscordPlatform extends StandaloneDiscordPlatform implement
 
     @Override
     public void onPronounsSet(UUID uuid, Set<PronounSet> sets) {
-        // FIXME - hardcoded. if we get an npe here then something is seriously wrong
         User user = Objects.requireNonNull(getPlayer(uuid)).discordUser();
-        Guild guild = Objects.requireNonNull(jda.getGuildById(814933329215619083L));
-        Member member = Objects.requireNonNull(guild.getMember(user));
 
-        for (Role role : member.getRoles()) {
-            if (role.getName().startsWith("Pronouns ")) {
-                guild.removeRoleFromMember(member, role).queue();
+        for (Guild guild : user.getMutualGuilds()) {
+
+            Member member = Objects.requireNonNull(guild.getMember(user));
+
+            for (Role role : member.getRoles()) {
+                if (role.getName().startsWith("Pronouns ")) {
+                    guild.removeRoleFromMember(member, role).queue();
+                }
             }
+
+            String setName = PronounSet.friendlyPrintSet(sets);
+            Role matchingRole = guild.getRoleCache().streamUnordered()
+                .filter(role -> role.getName().equals("Pronouns " + setName) && role.getPermissionsRaw() == 0)
+                .findFirst().orElseGet(() ->
+                    guild.createRole().setName("Pronouns " + setName).setPermissions(0L).complete()
+                );
+
+            guild.addRoleToMember(member, matchingRole).queue();
         }
-
-        String setName = PronounSet.friendlyPrintSet(sets);
-        Role matchingRole = guild.getRoleCache().streamUnordered()
-            .filter(role -> role.getName().equals("Pronouns " + setName) && role.getPermissionsRaw() == 0)
-            .findFirst().orElseGet(() ->
-                guild.createRole().setName("Pronouns " + setName).setPermissions(0L).complete()
-            );
-
-        guild.addRoleToMember(member, matchingRole).queue();
     }
 }

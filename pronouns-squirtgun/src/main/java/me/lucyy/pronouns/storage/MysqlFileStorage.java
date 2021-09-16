@@ -57,7 +57,15 @@ public class MysqlFileStorage implements Storage {
         ds.addDataSourceProperty("useServerPrepStmts ", "true");
 
         try (Connection connection = ds.getConnection()) {
-            connection.createStatement().execute("CREATE TABLE IF NOT EXISTS pronouns_players ( playerUuid VARCHAR(36), pronouns TEXT )");
+            connection.createStatement().execute("CREATE TABLE IF NOT EXISTS pronouns_players ( playerUuid VARCHAR(36), pronouns TEXT, priority INT )");
+
+            // ensure priority column is present
+            ResultSet table = connection.prepareStatement("SHOW COLUMNS FROM pronouns_players WHERE FIELD='priority'").executeQuery();
+            if (!table.next()) {
+                connection.createStatement().execute("ALTER TABLE pronouns_players ADD priority INT DEFAULT 0");
+                plugin.getPlatform().getLogger().warning("Migrated MySQL schema (added priority column).");
+            }
+
             plugin.getPlatform().getLogger().info("Connected to MySQL.");
         } catch (SQLException e) {
             plugin.getPlatform().getLogger().severe("Failed to connect to MySQL! - " + e);
@@ -76,9 +84,9 @@ public class MysqlFileStorage implements Storage {
     }
 
     public Set<String> getPronouns(UUID uuid, boolean useCache) {
-        if (useCache && cache.containsKey(uuid)) return new HashSet<>(cache.get(uuid));
+        if (useCache && cache.containsKey(uuid)) return new LinkedHashSet<>(cache.get(uuid));
         try (Connection connection = ds.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT pronouns FROM pronouns_players WHERE playerUUID=?");
+            PreparedStatement stmt = connection.prepareStatement("SELECT pronouns FROM pronouns_players WHERE playerUUID=? order by priority");
             stmt.setString(1, uuid.toString());
             ResultSet set = stmt.executeQuery();
             while (set.next()) {
@@ -86,7 +94,7 @@ public class MysqlFileStorage implements Storage {
             }
             stmt.close();
             set.close();
-            return new HashSet<>(cache.get(uuid));
+            return new LinkedHashSet<>(cache.get(uuid));
         } catch (SQLException e) {
             plugin.getPlatform().getLogger().severe("Error getting player pronouns from MySQL - " + e);
             return null;
@@ -106,9 +114,12 @@ public class MysqlFileStorage implements Storage {
                         stmt.execute();
                         stmt.close();
 
-                        PreparedStatement insStmt = connection.prepareStatement("INSERT INTO pronouns_players VALUES (?,?)");
+                        PreparedStatement insStmt = connection.prepareStatement("INSERT INTO pronouns_players VALUES (?,?,?)");
+
+                        int i = 0;
                         for (PronounSet set : sets) {
                             insStmt.setString(1, uuid.toString());
+                            insStmt.setInt(3, i);
 
                             try {
                                 PronounSet parsed = plugin.getPronounHandler().fromString(set.getSubjective());
@@ -118,6 +129,7 @@ public class MysqlFileStorage implements Storage {
                                 insStmt.setString(2, set.toString());
                             }
                             insStmt.addBatch();
+                            i++;
                         }
                         insStmt.executeBatch();
                         insStmt.close();
@@ -147,7 +159,7 @@ public class MysqlFileStorage implements Storage {
     @Override
     public Multimap<UUID, String> getAllPronouns() {
         try (Connection connection = ds.getConnection()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT pronouns FROM pronouns_players");
+            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM pronouns_players ORDER BY priority");
             ResultSet set = stmt.executeQuery();
             Multimap<UUID, String> results = MultimapBuilder.hashKeys().hashSetValues().build();
             while (set.next()) {
