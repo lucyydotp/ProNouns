@@ -6,7 +6,6 @@ import me.lucyy.pronouns.config.ConfigHandler;
 import me.lucyy.pronouns.storage.Storage;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.*;
-import net.lucypoulton.squirtgun.discord.command.CommandPredicate;
 import net.lucypoulton.squirtgun.discord.standalone.StandaloneDiscordPlatform;
 
 import java.util.Objects;
@@ -15,13 +14,11 @@ import java.util.UUID;
 
 public class ProNounsDiscordPlatform extends StandaloneDiscordPlatform implements ProNounsPlatform {
 
-    private final JDA jda;
     private final ConfigHandler handler;
     private final ProNounsDiscordStandalone host;
 
     public ProNounsDiscordPlatform(JDA jda, TestConfigHandler handler, ProNounsDiscordStandalone host) {
-        super(jda, handler.getCommandPrefix(), CommandPredicate.NO_BOTS.and(Message::isFromGuild));
-        this.jda = jda;
+        super(jda, handler.getCommandPrefix());
         this.handler = handler;
         this.host = host;
     }

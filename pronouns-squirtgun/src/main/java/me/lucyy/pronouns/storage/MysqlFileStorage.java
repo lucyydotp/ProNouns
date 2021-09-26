@@ -18,6 +18,7 @@
 
 package me.lucyy.pronouns.storage;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import com.zaxxer.hikari.HikariDataSource;
@@ -35,12 +36,12 @@ public class MysqlFileStorage implements Storage {
 
     private final HikariDataSource ds = new HikariDataSource();
     private final ProNouns plugin;
-    private final Multimap<UUID, String> cache = MultimapBuilder.hashKeys().linkedHashSetValues().build();
+    private final Multimap<UUID, String> cache = ArrayListMultimap.create();
 
     public MysqlFileStorage(ProNouns plugin) throws MysqlConnectionException {
         this.plugin = plugin;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             plugin.getPlatform().getLogger().severe("MySQL driver not found! Unable to continue!");
             throw new MysqlConnectionException();

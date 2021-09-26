@@ -3,14 +3,15 @@ package me.lucyy.pronouns.discord;
 import me.lucyy.pronouns.ProNouns;
 import me.lucyy.pronouns.ProNounsPlatform;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.squirtgun.command.condition.Condition;
-import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.command.node.NodeBuilder;
 import net.lucypoulton.squirtgun.command.node.subcommand.SubcommandNode;
 import net.lucypoulton.squirtgun.discord.DiscordFormatProvider;
-import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
+import net.lucypoulton.squirtgun.discord.DiscordUser;
+import net.lucypoulton.squirtgun.discord.command.DiscordConditions;
 import net.lucypoulton.squirtgun.platform.scheduler.Task;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,9 +50,9 @@ public class ProNounsDiscord extends ProNouns {
         super(platform);
         this.jda = jda;
 
-        CommandNode<PermissionHolder> node = SubcommandNode.withHelp("pnda",
+        SubcommandNode node = SubcommandNode.withHelp("pnda",
             "ProNouns Discord admin commands",
-            Condition.hasPermission("pronouns.discord.admin"),
+            DiscordConditions.DISCORD_USER.and(DiscordConditions.discordPermission(Permission.ADMINISTRATOR)),
             new NodeBuilder<>()
                 .name("clean")
                 .description("Cleans all roles")
