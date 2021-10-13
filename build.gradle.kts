@@ -32,6 +32,6 @@ subprojects {
     }
 
     dependencies {
-        implementation("net.lucypoulton:squirtgun-api:2.0.0-pre6-SNAPSHOT")
+        implementation("net.lucypoulton:squirtgun-api:2.0.0-pre6")
     }
 }

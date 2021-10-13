@@ -12,13 +12,13 @@ repositories {
 dependencies {
     implementation(project(":pronouns-api"))
     implementation(project(":pronouns-squirtgun"))
-    implementation("net.lucypoulton:squirtgun-api:2.0.0-pre6-SNAPSHOT")
-    implementation("net.lucypoulton:squirtgun-platform-bukkit:2.0.0-pre6-SNAPSHOT")
+    implementation("net.lucypoulton:squirtgun-api:2.0.0-pre6")
+    implementation("net.lucypoulton:squirtgun-platform-bukkit:2.0.0-pre6")
     implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("org.bstats:bstats-bukkit:2.2.1")
 
     compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
-    compileOnly("net.kyori:adventure-api:4.9.0")
+    compileOnly("net.kyori:adventure-api:4.9.2")
     compileOnly("com.google.guava:guava:30.1.1-jre")
     compileOnly("org.jetbrains:annotations:22.0.0")
     compileOnly("me.clip:placeholderapi:2.10.9")
