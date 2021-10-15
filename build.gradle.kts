@@ -6,8 +6,8 @@ plugins {
 }
 
 subprojects {
-    version = "1.3.3-SNAPSHOT"
-    group = "me.lucyy"
+    version = "2.0.0-SNAPSHOT"
+    group = "net.lucypoulton"
 
     apply<MavenPublishPlugin>()
     apply<SigningPlugin>()
@@ -32,6 +32,6 @@ subprojects {
     }
 
     dependencies {
-        implementation("net.lucypoulton:squirtgun-api:2.0.0-pre6")
+        implementation("net.lucypoulton:squirtgun-api:2.0.0-pre7-SNAPSHOT")
     }
 }

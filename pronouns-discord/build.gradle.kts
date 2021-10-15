@@ -20,7 +20,7 @@ tasks {
     jar {
         manifest {
             attributes(
-                "Main-Class" to "me.lucyy.pronouns.discord.ProNounsDiscordStandalone"
+                "Main-Class" to "net.lucypoulton.pronouns.discord.ProNounsDiscordStandalone"
             )
         }
     }

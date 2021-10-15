@@ -41,11 +41,11 @@ tasks {
             exclude(dependency("com.google..*:.*:.*"))
         }
         // slf4j is transitive from hikari
-        relocate("org.slf4j", "me.lucyy.pronouns.deps.slf4j")
-        relocate("me.lucyy.squirtgun", "me.lucyy.pronouns.deps.squirtgun")
-        relocate("net.kyori", "me.lucyy.pronouns.deps.kyori")
-        relocate("org.bstats", "me.lucyy.pronouns.deps.bstats")
-        relocate("com.zaxxer.hikari", "me.lucyy.pronouns.deps.hikari")
+        relocate("org.slf4j", "net.lucypoulton.pronouns.deps.slf4j")
+        relocate("me.lucyy.squirtgun", "net.lucypoulton.pronouns.deps.squirtgun")
+        relocate("net.kyori", "net.lucypoulton.pronouns.deps.kyori")
+        relocate("org.bstats", "net.lucypoulton.pronouns.deps.bstats")
+        relocate("com.zaxxer.hikari", "net.lucypoulton.pronouns.deps.hikari")
     }
 
     named("build") {
