@@ -56,7 +56,7 @@ public class ClearOtherNode extends AbstractNode<PermissionHolder> {
         SquirtgunPlayer target = context.getArgumentValue(playerArg);
         Objects.requireNonNull(target); // required arg - this is safe
 
-        pl.getPronounHandler().clearUserPronouns(target.getUuid());
+        pl.getPronounHandler().clearUserPronouns(target);
         return fmt.getPrefix()
                 .append(fmt.formatMain("Cleared " + target.getUsername() + "'s pronouns."));
     }

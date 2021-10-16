@@ -27,7 +27,7 @@ import java.util.UUID;
 
 public interface Storage {
     Set<String> getPronouns(UUID uuid);
-    void setPronouns(UUID uuid, Set<PronounSet> set);
+    void setPronouns(UUID uuid, Set<String> set);
     void clearPronouns(UUID uuid);
     SetMultimap<UUID, String> getAllPronouns();
 }

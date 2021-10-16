@@ -54,7 +54,8 @@ public class SetOtherNode extends AbstractNode<PermissionHolder> {
 
     @Override
     public Component execute(CommandContext context) {
-        final FormatProvider fmt = context.getFormat();
+        // TODO - stubbed for testing
+        /*final FormatProvider fmt = context.getFormat();
 
         Set<OldPronounSet> setList;
         try {
@@ -75,5 +76,7 @@ public class SetOtherNode extends AbstractNode<PermissionHolder> {
         return fmt.getPrefix()
                 .append(fmt.formatMain("Set " + target.getUsername() + "'s pronouns to "))
                 .append(fmt.formatAccent(OldPronounSet.friendlyPrintSet(setList)));
+         */
+        return Component.text("COMMAND STUBBED FOR TESTING");
     }
 }

@@ -24,6 +24,11 @@ public class SpecialPronounSet extends PronounSet {
     }
 
     @Override
+    public String nameForConcatenation() {
+        return formatted;
+    }
+
+    @Override
     public String subjective() {
         return parent.subjective();
     }

@@ -20,6 +20,7 @@ package net.lucypoulton.pronouns.command;
 
 import com.google.common.collect.ImmutableList;
 import net.lucypoulton.pronouns.api.PronounHandler;
+import net.lucypoulton.pronouns.api.set.PronounSet;
 import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.argument.OnlinePlayerArgument;
@@ -67,9 +68,7 @@ public class ShowPronounsNode extends AbstractNode<PermissionHolder> {
 		return fmt.getPrefix()
 				.append(fmt.formatMain(commandTarget.getUsername() + "'s pronouns are "))
 				.append(fmt.formatAccent(
-						OldPronounSet.friendlyPrintSet(
-								handler.getPronouns(commandTarget.getUuid()))
-						)
+						PronounSet.format(handler.getPronouns(commandTarget)))
 				);
 	}
 }

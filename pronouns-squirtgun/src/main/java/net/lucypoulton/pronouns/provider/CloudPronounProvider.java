@@ -92,6 +92,11 @@ public class CloudPronounProvider implements PronounProvider {
         }
     }
 
+    public void submit(PronounSet set) {
+        // TODO
+        // ensure that he/she/they are rejected
+    }
+
     @Override
     public Set<PronounSet> get() {
         return dataFileContent.sets;

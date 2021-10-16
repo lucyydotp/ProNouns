@@ -1,6 +1,7 @@
 package net.lucypoulton.pronouns.discord;
 
 import net.lucypoulton.pronouns.ProNounsPlatform;
+import net.lucypoulton.pronouns.api.set.PronounSet;
 import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.pronouns.config.ConfigHandler;
 import net.lucypoulton.pronouns.storage.Storage;
@@ -38,8 +39,7 @@ public class ProNounsDiscordPlatform extends StandaloneDiscordPlatform implement
 
     }
 
-    @Override
-    public void onPronounsSet(UUID uuid, Set<OldPronounSet> sets) {
+    public void setRoles(UUID uuid, Set<PronounSet> sets) {
         User user = Objects.requireNonNull(getPlayer(uuid)).discordUser();
 
         for (Guild guild : user.getMutualGuilds()) {
@@ -53,7 +53,7 @@ public class ProNounsDiscordPlatform extends StandaloneDiscordPlatform implement
                 }
             }
 
-            String setName = OldPronounSet.friendlyPrintSet(sets);
+            String setName = PronounSet.format(sets);
 
             Role matchingRole = guild.getRolesByName("Pronouns " + setName, false).stream()
                 .filter(role -> role.getPermissionsRaw() == 0)

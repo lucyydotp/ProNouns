@@ -19,6 +19,7 @@
 package net.lucypoulton.pronouns.command;
 
 import net.lucypoulton.pronouns.ProNouns;
+import net.lucypoulton.pronouns.api.set.PronounSet;
 import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.condition.Condition;
@@ -33,6 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class PreviewNode extends AbstractNode<PermissionHolder> {
 	private final ProNouns pl;
@@ -61,22 +63,22 @@ public class PreviewNode extends AbstractNode<PermissionHolder> {
 
 		final SquirtgunPlayer player = (SquirtgunPlayer) context.getTarget();
 
-		final Collection<OldPronounSet> sets = pl.getPronounHandler().getPronouns(player.getUuid());
+		final Set<PronounSet> sets = pl.getPronounHandler().getPronouns(player);
 		if (sets.size() == 0) {
 			return fmt.getPrefix()
 					.append(fmt.formatMain("You haven't set any pronouns yet!"));
 		}
 
-		final OldPronounSet set = sets.iterator().next();
+		final PronounSet set = sets.iterator().next();
 
 		// yes, this is messy, but java compiles it to a stringbuilder so its all good
-		String builder = player.getUsername() + " is testing " + set.getPossessiveAdjective() +
+		String builder = player.getUsername() + " is testing " + set.possessiveAdjective() +
 				" pronoun selection.\n" +
 				"Have you seen " + player.getUsername() + "? " +
-				capitalise(set.getSubjective()) + " asked me to help with " +
-				set.getObjective() + " build.\n" +
-				player.getUsername() + " has been spending all " + set.getPossessiveAdjective() +
-				" time on this server. I hope " + set.getProgressive() + " doing okay.";
+				capitalise(set.subjective()) + " asked me to help with " +
+				set.objective() + " build.\n" +
+				player.getUsername() + " has been spending all " + set.possessiveAdjective() +
+				" time on this server. I hope " + set.progressive() + " doing okay.";
 		return Component.text(builder);
 	}
 }

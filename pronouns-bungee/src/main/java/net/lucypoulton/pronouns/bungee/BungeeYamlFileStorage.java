@@ -69,18 +69,8 @@ public class BungeeYamlFileStorage implements Storage {
     }
 
     @Override
-    public void setPronouns(UUID uuid, Set<OldPronounSet> sets) {
-        List<String> setStrings = new ArrayList<>();
-        for (OldPronounSet set : sets)  {
-            try {
-                OldPronounSet parsed = pl.getPlugin().getPronounHandler().fromString(set.getSubjective());
-                if (parsed.equals(set)) setStrings.add(set.getSubjective());
-                else setStrings.add(set.toString());
-            } catch (IllegalArgumentException e) {
-                setStrings.add(set.toString());
-            }
-        }
-        config.set("players." + uuid.toString(), setStrings);
+    public void setPronouns(UUID uuid, Set<String> sets) {
+        config.set("players." + uuid.toString(), sets);
         save();
     }
 

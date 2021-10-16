@@ -35,10 +35,6 @@ public class ProNounsBungeePlatform extends BungeePlatform implements ProNounsPl
         }
     }
 
-    // unused
-    @Override
-    public void onPronounsSet(UUID uuid, Set<OldPronounSet> sets) { }
-
     @Override
     public String name() {
         return "BungeeCord (ProNouns)";

@@ -45,7 +45,7 @@ public class ProNounsDiscord extends ProNouns {
             }
         }
 
-        getPronounHandler().getAllUserPronouns().forEach(getPlatform()::onPronounsSet);
+        // TODO actually update roles
         getPlatform().getLogger().info("Updated roles successfully");
     }
 

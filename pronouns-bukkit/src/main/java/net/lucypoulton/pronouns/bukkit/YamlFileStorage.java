@@ -20,6 +20,7 @@ package net.lucypoulton.pronouns.bukkit;
 
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
+import net.lucypoulton.pronouns.api.set.PronounSet;
 import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.pronouns.storage.Storage;
 import net.lucypoulton.squirtgun.util.UuidUtils;
@@ -78,18 +79,8 @@ public class YamlFileStorage implements Storage {
     }
 
     @Override
-    public void setPronouns(UUID uuid, Set<OldPronounSet> sets) {
-        List<String> setStrings = new ArrayList<>();
-        for (OldPronounSet set : sets)  {
-            try {
-                OldPronounSet parsed = pl.getPlugin().getPronounHandler().fromString(set.getSubjective());
-                if (parsed.equals(set)) setStrings.add(set.getSubjective());
-                else setStrings.add(set.toString());
-            } catch (IllegalArgumentException e) {
-                setStrings.add(set.toString());
-            }
-        }
-        config.set("players." + uuid.toString(), setStrings);
+    public void setPronouns(UUID uuid, Set<String> sets) {
+        config.set("players." + uuid.toString(), new ArrayList<>(sets));
         save();
     }
 

@@ -25,13 +25,17 @@ import com.google.common.collect.SetMultimap;
 import com.zaxxer.hikari.HikariDataSource;
 import net.lucypoulton.pronouns.ProNouns;
 import net.lucypoulton.pronouns.config.SqlInfoContainer;
-import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.scheduler.Task;
 import net.lucypoulton.squirtgun.util.UuidUtils;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.UUID;
 
 public class MysqlFileStorage implements Storage {
 
@@ -50,7 +54,7 @@ public class MysqlFileStorage implements Storage {
         SqlInfoContainer sqlData = plugin.getConfigHandler().getSqlConnectionData();
 
         ds.setJdbcUrl("jdbc:mysql://" + sqlData.getHost() + ":" + sqlData.getPort() + "/"
-                + sqlData.getDatabase() + "?useSSL=false");
+            + sqlData.getDatabase() + "?useSSL=false");
         ds.setUsername(sqlData.getUsername());
         ds.setPassword(sqlData.getPassword());
         ds.addDataSourceProperty("cachePrepStmts", "true");
@@ -104,58 +108,51 @@ public class MysqlFileStorage implements Storage {
     }
 
     @Override
-    public void setPronouns(UUID uuid, Set<OldPronounSet> sets) {
-        for (OldPronounSet set : sets) {
-            cache.put(uuid, set.toString());
-        }
+    public void setPronouns(UUID uuid, Set<String> sets) {
+        cache.removeAll(uuid);
+        cache.putAll(uuid, sets);
         Task.builder()
-                .action((Platform ignored) -> {
-                    try (Connection connection = ds.getConnection()) {
-                        PreparedStatement stmt = connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
-                        stmt.setString(1, uuid.toString());
-                        stmt.execute();
-                        stmt.close();
+            .action((Platform ignored) -> {
+                try (Connection connection = ds.getConnection()) {
+                    PreparedStatement stmt = connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
+                    stmt.setString(1, uuid.toString());
+                    stmt.execute();
+                    stmt.close();
 
-                        PreparedStatement insStmt = connection.prepareStatement("INSERT INTO pronouns_players VALUES (?,?,?)");
+                    PreparedStatement insStmt = connection.prepareStatement("INSERT INTO pronouns_players VALUES (?,?,?)");
 
-                        int i = 0;
-                        for (OldPronounSet set : sets) {
-                            insStmt.setString(1, uuid.toString());
-                            insStmt.setInt(3, i);
+                    int i = 0;
+                    for (String set : sets) {
+                        insStmt.setString(1, uuid.toString());
+                        insStmt.setInt(3, i);
+                        insStmt.setString(2, set);
 
-                            try {
-                                OldPronounSet parsed = plugin.getPronounHandler().fromString(set.getSubjective());
-                                if (parsed.equals(set)) insStmt.setString(2, set.getSubjective());
-                                else insStmt.setString(2, set.toString());
-                            } catch (IllegalArgumentException e) {
-                                insStmt.setString(2, set.toString());
-                            }
-                            insStmt.addBatch();
-                            i++;
-                        }
-                        insStmt.executeBatch();
-                        insStmt.close();
-                    } catch (SQLException e) {
-                        plugin.getPlatform().getLogger().severe("Error settings player pronouns through MySQL - " + e);
+                        insStmt.addBatch();
+                        i++;
                     }
-                })
-                .async()
-                .build().execute(plugin.getPlatform());
+                    insStmt.executeBatch();
+                    insStmt.close();
+                } catch (SQLException e) {
+                    plugin.getPlatform().getLogger().severe("Error settings player pronouns through MySQL - " + e);
+                }
+            })
+            .async()
+            .build().execute(plugin.getPlatform());
     }
 
     @Override
     public void clearPronouns(UUID uuid) {
         Task.builder()
-                .action((Platform ignored) -> {
-                    try (Connection connection = ds.getConnection()) {
-                        PreparedStatement stmt = connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
-                        stmt.setString(1, uuid.toString());
-                        stmt.execute();
-                        stmt.close();
-                    } catch (SQLException e) {
-                        plugin.getPlatform().getLogger().severe("Error clearing player pronouns through MySQL - " + e);
-                    }
-                }).async().build().execute(plugin.getPlatform());
+            .action((Platform ignored) -> {
+                try (Connection connection = ds.getConnection()) {
+                    PreparedStatement stmt = connection.prepareStatement("DELETE FROM pronouns_players WHERE playerUuid=?");
+                    stmt.setString(1, uuid.toString());
+                    stmt.execute();
+                    stmt.close();
+                } catch (SQLException e) {
+                    plugin.getPlatform().getLogger().severe("Error clearing player pronouns through MySQL - " + e);
+                }
+            }).async().build().execute(plugin.getPlatform());
     }
 
     @Override

@@ -19,6 +19,7 @@
 package net.lucypoulton.pronouns.command;
 
 import net.lucypoulton.pronouns.api.PronounHandler;
+import net.lucypoulton.pronouns.api.set.PronounSet;
 import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
@@ -45,7 +46,7 @@ public class ListPronounsNode extends AbstractNode<PermissionHolder> {
 				.append(Component.newline());
 
 		StringBuilder listBuilder = new StringBuilder();
-		for (OldPronounSet set : pronounHandler.getAllPronouns()) {
+		for (PronounSet set : pronounHandler.getAllPronouns()) {
 			listBuilder.append(set.toString()).append("\n");
 		}
 

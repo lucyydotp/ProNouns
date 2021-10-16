@@ -20,8 +20,7 @@ package net.lucypoulton.pronouns.bukkit;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import net.lucypoulton.pronouns.ProNouns;
-import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
-import net.lucypoulton.pronouns.api.set.old.UnsetPronounSet;
+import net.lucypoulton.pronouns.api.set.PronounSet;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,7 +29,7 @@ import java.util.Set;
 
 public class ProNounsPapi extends PlaceholderExpansion {
 
-    private OldPronounSet unsetPronounSet;
+    private PronounSet unsetPronounSet;
 
     private final ProNouns plugin;
 
@@ -67,13 +66,13 @@ public class ProNounsPapi extends PlaceholderExpansion {
     public String onPlaceholderRequest(Player player, @NotNull String identifier) {
 
         if (unsetPronounSet == null) {
-            unsetPronounSet = new UnsetPronounSet(plugin.getPronounHandler().fromString("they"));
+            unsetPronounSet = plugin.getPronounHandler().parse("unset").results().stream().findFirst().orElseThrow();
         }
 
         if (player == null) return "";
 
-        Set<OldPronounSet> allSets = plugin.getPronounHandler().getPronouns(player.getUniqueId());
-        OldPronounSet mainPronouns = allSets.size() > 0 ? allSets.iterator().next() : unsetPronounSet;
+        Set<PronounSet> allSets = plugin.getPronounHandler().getPronouns(plugin.getPlatform().getPlayer(player.getUniqueId()));
+        PronounSet mainPronouns = allSets.size() > 0 ? allSets.iterator().next() : unsetPronounSet;
 
         String[] split = identifier.split("_");
         String ident = split[0];
@@ -82,28 +81,28 @@ public class ProNounsPapi extends PlaceholderExpansion {
 
         switch (ident) {
             case "pronouns":
-                feedback = OldPronounSet.friendlyPrintSet(allSets);
+                feedback = PronounSet.format(allSets);
                 break;
             case "all":
                 feedback = mainPronouns.toString();
                 break;
             case "objective":
-                feedback = mainPronouns.getObjective();
+                feedback = mainPronouns.objective();
                 break;
             case "subjective":
-                feedback = mainPronouns.getSubjective();
+                feedback = mainPronouns.subjective();
                 break;
             case "progressive":
-                feedback = mainPronouns.getProgressive();
+                feedback = mainPronouns.progressive();
                 break;
             case "possessiveadj":
-                feedback = mainPronouns.getPossessiveAdjective();
+                feedback = mainPronouns.possessiveAdjective();
                 break;
             case "possessivepro":
-                feedback = mainPronouns.getPossessivePronoun();
+                feedback = mainPronouns.possessivePronoun();
                 break;
             case "reflexive":
-                feedback = mainPronouns.getReflexive();
+                feedback = mainPronouns.reflexive();
                 break;
             default:
                 return "";

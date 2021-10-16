@@ -27,24 +27,20 @@ import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
 
-public class ClearPronounsNode extends AbstractNode<PermissionHolder> {
+public class ClearPronounsNode extends AbstractNode<SquirtgunPlayer> {
 	private final PronounHandler pronounHandler;
 
 	public ClearPronounsNode(PronounHandler pronounHandler) {
-		super("clear", "Clears your pronouns.", Condition.alwaysTrue());
+		super("clear", "Clears your pronouns.", Condition.isPlayer());
 		this.pronounHandler = pronounHandler;
 	}
 
 	@Override
 	public Component execute(CommandContext context) {
 		final FormatProvider fmt = context.getFormat();
-		if (!(context.getTarget() instanceof SquirtgunPlayer)) {
-			return fmt.getPrefix()
-					.append(fmt.formatMain("This command can only be run by a player."));
-		}
 
 
-		pronounHandler.clearUserPronouns(((SquirtgunPlayer) context.getTarget()).getUuid());
+		pronounHandler.clearUserPronouns((SquirtgunPlayer) context.getTarget());
 		return fmt.getPrefix().append(fmt.formatMain("Cleared pronouns"));
 	}
 }

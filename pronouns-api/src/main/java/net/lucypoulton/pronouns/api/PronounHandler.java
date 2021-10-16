@@ -18,17 +18,16 @@
 
 package net.lucypoulton.pronouns.api;
 
+import net.kyori.adventure.text.Component;
 import net.lucypoulton.pronouns.api.provider.PronounProvider;
 import net.lucypoulton.pronouns.api.set.PronounSet;
-import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.pronouns.api.set.old.UnsetPronounSet;
-import net.lucypoulton.squirtgun.Squirtgun;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.UUID;
 
 /**
  * Manages users' pronouns. When using sets, take care to use a sorted implementation
@@ -40,7 +39,7 @@ public interface PronounHandler {
     /**
      * Sets a user's pronouns.
      *
-     * @param uuid the player to set pronouns for
+     * @param player the player to set pronouns for
      * @param set  the pronouns to set
      */
     void setUserPronouns(SquirtgunPlayer player, Set<PronounSet> set);
@@ -71,9 +70,8 @@ public interface PronounHandler {
      * Parses a string into a collection of pronoun sets. Appropriate for use in commands.
      *
      * @return the parsed sets
-     * @throws IllegalArgumentException if a set can't be parsed due to either being unknown or censored
      */
-    Set<PronounSet> parse(String... input);
+    ParseResult parse(String input);
 
     /**
      * Registers a {@link PronounProvider} so its pronoun sets can be used.
@@ -82,4 +80,43 @@ public interface PronounHandler {
      * @since 1.4.0
      */
     void registerProvider(PronounProvider provider);
+
+    /**
+     * TODO javadoc
+     */
+    class ParseResult {
+
+        private final boolean success;
+        private final Set<PronounSet> results;
+        private final List<Set<PronounSet>> ambiguities;
+        private final Component reason;
+
+        public ParseResult(boolean success, Set<PronounSet> results,
+                           List<Set<PronounSet>> ambiguities, Component reason) {
+            this.success = success;
+            this.results = results;
+            this.ambiguities = ambiguities;
+            this.reason = reason;
+        }
+
+        public boolean success() {
+            return success;
+        }
+
+        public boolean failure() {
+            return !success();
+        }
+
+        public Set<PronounSet> results() {
+            return results;
+        }
+
+        public List<Set<PronounSet>> ambiguities() {
+            return ambiguities;
+        }
+
+        public @Nullable Component reason() {
+            return reason;
+        }
+    }
 }

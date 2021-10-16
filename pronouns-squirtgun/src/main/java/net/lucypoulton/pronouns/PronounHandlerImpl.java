@@ -20,21 +20,27 @@ package net.lucypoulton.pronouns;
 
 import net.lucypoulton.pronouns.api.PronounHandler;
 import net.lucypoulton.pronouns.api.SetPronounsEvent;
+import net.lucypoulton.pronouns.api.StringUtils;
 import net.lucypoulton.pronouns.api.provider.PronounProvider;
+import net.lucypoulton.pronouns.api.set.ParsedPronounSet;
 import net.lucypoulton.pronouns.api.set.PronounSet;
-import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
+import net.lucypoulton.pronouns.api.set.SpecialPronounSet;
 import net.lucypoulton.pronouns.provider.BuiltinPronounProvider;
 import net.lucypoulton.pronouns.provider.CloudPronounProvider;
 import net.lucypoulton.pronouns.storage.Storage;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.util.Pair;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
-import java.util.Locale;
+import java.util.List;
 import java.util.Set;
-import java.util.UUID;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toUnmodifiableSet;
 
 public class PronounHandlerImpl implements PronounHandler {
     private final Storage storage;
@@ -56,73 +62,90 @@ public class PronounHandlerImpl implements PronounHandler {
     @Override
     public void setUserPronouns(SquirtgunPlayer player, Set<PronounSet> set) {
         if (pl.getPlatform().getEventManager().dispatch(new SetPronounsEvent(player, set)).successful()) {
-            storage.setPronouns(player.getUuid(), set);
+
+            storage.setPronouns(player.getUuid(),
+                set.stream().map(Object::toString).collect(Collectors.toCollection(LinkedHashSet::new)));
         }
-    }
-
-    public Set<PronounSet> getAllPronouns() {
-
-    }
-
-    public Set<OldPronounSet> getPronouns(UUID uuid) {
-        Set<OldPronounSet> pronounsList = new LinkedHashSet<>();
-        for (String pronoun : storage.getPronouns(uuid)) {
-            try {
-                pronounsList.add(fromString(pronoun));
-            } catch (IllegalArgumentException e) {
-                pl.getPlatform().getLogger().warning("No definition for the pronoun set '" + pronoun +
-                    "' could be found!\nIf you're using MySQL, make sure predefinedSets matches on all servers!");
-            }
-        }
-        return pronounsList;
-    }
-
-    public void clearUserPronouns(UUID uuid) {
-        storage.clearPronouns(uuid);
-    }
-
-    public OldPronounSet fromString(String set) throws IllegalArgumentException {
-        String[] pronouns = set.split("/");
-        if (pronouns.length > 6) throw new IllegalArgumentException(set);
-
-        OldPronounSet retrieved = setIndex.getOrDefault(pronouns[0].toLowerCase(), null);
-
-        if (retrieved != null) return retrieved;
-
-        if (pronouns.length != 6) throw new IllegalArgumentException(set);
-
-        return new OldPronounSet(pronouns[0].replace(" ", ""),
-            pronouns[1].replace(" ", ""),
-            pronouns[2].replace(" ", ""),
-            pronouns[3].replace(" ", ""),
-            pronouns[4].replace(" ", ""),
-            pronouns[5].replace(" ", ""));
     }
 
     @Override
-    public Set<OldPronounSet> parseSets(String... input) {
-        Set<OldPronounSet> out = new LinkedHashSet<>();
-        for (String arg : input) {
-            String[] splitArg = arg.split("/");
-            if (splitArg.length == 6) {
-                OldPronounSet parsed = pl.getPronounHandler().fromString(arg);
-                out.add(parsed);
-            } else {
-                for (String _splitArg : splitArg) {
-                    // check for objective
-                    boolean cont = true;
-                    for (OldPronounSet _set : out) {
-                        if (_set.getObjective().toUpperCase(Locale.ROOT).equals(_splitArg.toUpperCase())) {
-                            cont = false;
-                            break;
-                        }
-                    }
-                    if (!cont) continue;
-                    OldPronounSet parsed = pl.getPronounHandler().fromString(_splitArg);
-                    out.add(parsed);
-                }
+    public Set<PronounSet> getAllPronouns() {
+        return providers.stream().flatMap(x -> x.get().stream()).collect((toUnmodifiableSet()));
+    }
+
+    @Override
+    public Set<PronounSet> getPronouns(SquirtgunPlayer player) {
+        return storage.getPronouns(player.getUuid()).stream()
+            .map(this::parse)
+            .flatMap(result -> result.results().stream())
+            .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    @Override
+    public void clearUserPronouns(SquirtgunPlayer player) {
+        storage.clearPronouns(player.getUuid());
+    }
+
+    private int equalityScore(List<String> input, PronounSet two) {
+        if (two instanceof SpecialPronounSet && input.get(0).equalsIgnoreCase(two.nameForConcatenation())) {
+            return 7;
+        }
+        int i = 0;
+        String[] setArray = two.asArray();
+        while (i < input.size() && i < 6 && input.get(i).equalsIgnoreCase(setArray[i])) {
+            i++;
+        }
+        return i;
+    }
+
+    public ParseResult parse(String input) {
+        return parseSplit(StringUtils.splitSet(input));
+    }
+
+    private ParseResult parseSplit(List<String> split) {
+        final Set<PronounSet> out = new LinkedHashSet<>();
+        final List<Set<PronounSet>> ambiguities = new ArrayList<>();
+        for (int i = 0; i < split.size(); ) {
+            String pronoun = split.get(i);
+            int finalI = i;
+            List<Pair<PronounSet, Integer>> sets = providers.stream()
+                .flatMap(provider -> provider.get().stream())
+                .filter(set -> set.nameForConcatenation().equalsIgnoreCase(pronoun))
+                .map(set -> new Pair<>(set, equalityScore(split.subList(finalI, split.size()), set)))
+                .collect(toList());
+
+            int max = sets.stream().mapToInt(Pair::value).max().orElse(0);
+            if (max == 0) {
+                i++;
+                continue;
+            }
+            Set<PronounSet> potentialSets = sets.stream().filter(x -> x.value() == max)
+                .map(Pair::key)
+                .collect(Collectors.toSet());
+            i += max;
+            if (potentialSets.size() != 1) {
+                ambiguities.add(potentialSets);
+            }
+            out.add(potentialSets.stream().findFirst().orElseThrow());
+        }
+
+        if (out.isEmpty() && split.size() % 6 == 0) {
+            for (int i = 0; i < split.size(); i += 6) {
+                out.add(new ParsedPronounSet(split.get(i),
+                    split.get(i + 1),
+                    split.get(i + 2),
+                    split.get(i + 3),
+                    split.get(i + 4),
+                    split.get(i + 5)
+                ));
             }
         }
-        return out;
+
+        return new ParseResult(!out.isEmpty(), out, ambiguities, null);
+    }
+
+    @Override
+    public void registerProvider(PronounProvider provider) {
+        this.providers.add(provider);
     }
 }

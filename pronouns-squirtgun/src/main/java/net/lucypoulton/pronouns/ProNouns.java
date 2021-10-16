@@ -59,14 +59,6 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
     public void onEnable() {
         pronounHandler = new PronounHandlerImpl(this, getPlatform().getStorage());
 
-        for (String set : getConfigHandler().getPredefinedSets()) {
-            try {
-                pronounHandler.addToIndex(pronounHandler.fromString(set));
-            } catch (IllegalArgumentException e) {
-                getPlatform().getLogger().warning("'" + set + "' is an invalid set, ignoring");
-            }
-        }
-
         final CommandNode<PermissionHolder> rootNode = SubcommandNode.withHelp("pronouns",
                 "ProNouns root command",
                 Condition.alwaysTrue(),
