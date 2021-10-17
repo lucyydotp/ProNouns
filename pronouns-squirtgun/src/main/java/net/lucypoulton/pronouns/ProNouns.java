@@ -4,6 +4,10 @@ import com.google.common.io.CharStreams;
 import net.lucypoulton.pronouns.api.PronounHandler;
 import net.lucypoulton.pronouns.command.*;
 import net.lucypoulton.pronouns.config.ConfigHandler;
+import net.lucypoulton.pronouns.listener.CloudUploadListener;
+import net.lucypoulton.pronouns.listener.JoinLeaveListener;
+import net.lucypoulton.pronouns.provider.BuiltinPronounProvider;
+import net.lucypoulton.pronouns.provider.CloudPronounProvider;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.command.node.NodeBuilder;
@@ -58,6 +62,13 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
     @Override
     public void onEnable() {
         pronounHandler = new PronounHandlerImpl(this, getPlatform().getStorage());
+
+        CloudPronounProvider provider = new CloudPronounProvider(this);
+
+        pronounHandler.registerProvider(new BuiltinPronounProvider());
+        pronounHandler.registerProvider(provider);
+
+        getPlatform().getEventManager().register(new CloudUploadListener(this, provider));
 
         final CommandNode<PermissionHolder> rootNode = SubcommandNode.withHelp("pronouns",
                 "ProNouns root command",

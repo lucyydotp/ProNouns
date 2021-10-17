@@ -55,8 +55,6 @@ public class PronounHandlerImpl implements PronounHandler {
     public PronounHandlerImpl(ProNouns pl, Storage storage) {
         this.pl = pl;
         this.storage = storage;
-        providers.add(new BuiltinPronounProvider());
-        providers.add(new CloudPronounProvider(pl));
     }
 
     @Override

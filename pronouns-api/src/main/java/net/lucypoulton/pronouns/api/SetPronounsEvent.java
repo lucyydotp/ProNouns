@@ -1,7 +1,6 @@
 package net.lucypoulton.pronouns.api;
 
 import net.lucypoulton.pronouns.api.set.PronounSet;
-import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.event.player.AbstractCancellablePlayerEvent;
 import org.jetbrains.annotations.NotNull;

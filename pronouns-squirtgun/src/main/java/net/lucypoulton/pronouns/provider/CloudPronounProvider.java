@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Date;
+import java.util.Map;
 import java.util.Set;
 
 public class CloudPronounProvider implements PronounProvider {
@@ -93,8 +94,26 @@ public class CloudPronounProvider implements PronounProvider {
     }
 
     public void submit(PronounSet set) {
-        // TODO
-        // ensure that he/she/they are rejected
+        try {
+            String body = gson.toJson(Map.of(
+                "set", set.toString(),
+                "source", plugin.getPluginName() + " " + plugin.getPluginVersion()
+            ));
+
+            HttpRequest request = HttpRequest.newBuilder()
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .uri(URI.create("https://pn.lucypoulton.net/api/"))
+                .header("Content-Type", "application/json")
+                .timeout(Duration.ofSeconds(3))
+                .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            var temp = 0;
+        } catch (IOException | InterruptedException e) {
+            plugin.getPlatform().getLogger()
+                .warning("There was an error submitting a set to the cloud database. Please report this!" +
+                    e.getMessage());
+        }
     }
 
     @Override

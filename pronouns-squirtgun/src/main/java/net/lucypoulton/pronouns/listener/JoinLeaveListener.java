@@ -1,5 +1,6 @@
-package net.lucypoulton.pronouns;
+package net.lucypoulton.pronouns.listener;
 
+import net.lucypoulton.pronouns.ProNouns;
 import net.lucypoulton.pronouns.config.ConnectionType;
 import net.lucypoulton.pronouns.storage.MysqlFileStorage;
 import net.lucypoulton.squirtgun.platform.Platform;
