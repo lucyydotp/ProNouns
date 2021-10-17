@@ -104,8 +104,22 @@ public class PronounHandlerImpl implements PronounHandler {
 
     private ParseResult parseSplit(List<String> split) {
         final Set<PronounSet> out = new LinkedHashSet<>();
+
+        int i = 0;
+
+        while (split.size() - i >= 6) {
+            out.add(new ParsedPronounSet(split.get(i),
+                split.get(i + 1),
+                split.get(i + 2),
+                split.get(i + 3),
+                split.get(i + 4),
+                split.get(i + 5)
+            ));
+            i += 6;
+        }
+
         final List<Set<PronounSet>> ambiguities = new ArrayList<>();
-        for (int i = 0; i < split.size(); ) {
+        while (i < split.size()) {
             String pronoun = split.get(i);
             int finalI = i;
             List<Pair<PronounSet, Integer>> sets = providers.stream()
@@ -127,18 +141,6 @@ public class PronounHandlerImpl implements PronounHandler {
                 ambiguities.add(potentialSets);
             }
             out.add(potentialSets.stream().findFirst().orElseThrow());
-        }
-
-        if (out.isEmpty() && split.size() % 6 == 0) {
-            for (int i = 0; i < split.size(); i += 6) {
-                out.add(new ParsedPronounSet(split.get(i),
-                    split.get(i + 1),
-                    split.get(i + 2),
-                    split.get(i + 3),
-                    split.get(i + 4),
-                    split.get(i + 5)
-                ));
-            }
         }
 
         return new ParseResult(!out.isEmpty(), out, ambiguities, null);
