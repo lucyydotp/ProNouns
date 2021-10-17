@@ -108,7 +108,9 @@ public class CloudPronounProvider implements PronounProvider {
                 .build();
 
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            var temp = 0;
+            if (response.statusCode() / 100 != 2) {
+                throw new IOException("Error " + response.statusCode());
+            }
         } catch (IOException | InterruptedException e) {
             plugin.getPlatform().getLogger()
                 .warning("There was an error submitting a set to the cloud database. Please report this!" +
