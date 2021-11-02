@@ -20,7 +20,6 @@ package net.lucypoulton.pronouns.command;
 
 import net.lucypoulton.pronouns.api.PronounHandler;
 import net.lucypoulton.pronouns.api.set.PronounSet;
-import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.command.node.AbstractNode;

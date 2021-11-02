@@ -20,7 +20,6 @@ package net.lucypoulton.pronouns.bungee;
 
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
-import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.pronouns.storage.Storage;
 import net.lucypoulton.squirtgun.util.UuidUtils;
 import net.md_5.bungee.config.Configuration;

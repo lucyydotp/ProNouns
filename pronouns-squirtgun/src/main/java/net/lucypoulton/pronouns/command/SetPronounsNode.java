@@ -24,13 +24,13 @@ import net.lucypoulton.pronouns.ProNouns;
 import net.lucypoulton.pronouns.api.PronounHandler;
 import net.lucypoulton.pronouns.api.set.PronounSet;
 import net.lucypoulton.pronouns.command.arguments.PronounSetArgument;
-import net.lucypoulton.pronouns.config.ConfigHandler;
 import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
 import net.lucypoulton.squirtgun.command.node.AbstractNode;
 import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.util.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedHashSet;
@@ -53,32 +53,32 @@ public class SetPronounsNode extends AbstractNode<SquirtgunPlayer> {
         return ImmutableList.of(sets);
     }
 
-    private void warnAdmins(String player, String content) {
-        final ConfigHandler cfg = pl.getConfigHandler();
-        final Component message = cfg.getPrefix().append(cfg.formatMain("Player "))
-            .append(cfg.formatAccent(player))
-            .append(cfg.formatMain(" tried to use prohibited pronoun set "))
-            .append(cfg.formatAccent(content));
+    static Pair<Set<PronounSet>, Component> parse(Set<PronounHandler.ParseResult> parseResult, FormatProvider format) {
+        Set<PronounSet> newSets = new LinkedHashSet<>();
+        Component errorMessages = Component.empty();
 
-        pl.getPlatform().getConsole().sendMessage(message);
-        for (SquirtgunPlayer sgPlayer : pl.getPlatform().getOnlinePlayers()) {
-            if (sgPlayer.hasPermission("pronouns.admin")) {
-                sgPlayer.sendMessage(message);
+        // required argument - this is safe
+        for (PronounHandler.ParseResult results : Objects.requireNonNull(parseResult)) {
+            if (results.success()) {
+                newSets.addAll(results.results());
+            } else {
+                Component reason = results.reason();
+                return new Pair<>(Set.of(),
+                    format.getPrefix().append(reason != null ? reason : format.formatMain("There was an error."))
+                );
             }
-        }
-    }
-
-    private boolean checkInput(String arg, SquirtgunPlayer sender) {
-        final ConfigHandler cfg = pl.getConfigHandler();
-        if (!cfg.filterEnabled()) return true;
-        if (!sender.hasPermission("pronouns.bypass"))
-            for (String pattern : cfg.getFilterPatterns()) {
-                if (arg.toLowerCase().matches(".*" + pattern + ".*")) {
-                    warnAdmins(sender.getUsername(), arg);
-                    return false;
+            if (!results.ambiguities().isEmpty()) {
+                for (Set<PronounSet> ambiguity : results.ambiguities()) {
+                    errorMessages = errorMessages.append(
+                        format.formatMain("Ambiguous set detected, assuming you meant ")
+                            .append(format.formatAccent(ambiguity.stream().findFirst().orElseThrow().toString()))
+                            .append(format.formatMain("."))
+                            .append(Component.newline())
+                    );
                 }
             }
-        return true;
+        }
+        return new Pair<>(newSets, errorMessages);
     }
 
     @Override
@@ -86,36 +86,19 @@ public class SetPronounsNode extends AbstractNode<SquirtgunPlayer> {
         final FormatProvider fmt = context.getFormat();
 
         SquirtgunPlayer player = (SquirtgunPlayer) context.getTarget();
-
-        if (!checkInput(context.getRaw(), player)) {
-            return fmt.getPrefix().append(fmt.formatMain("You can't use that set."));
-        }
         Set<PronounHandler.ParseResult> setList = context.getArgumentValue(sets);
-        Set<PronounSet> newSets = new LinkedHashSet<>();
-        Component errorMessages = Component.empty();
 
-        // required argument - this is safe
-        for (PronounHandler.ParseResult results : Objects.requireNonNull(setList)) {
-            if (results.success()) {
-                newSets.addAll(results.results());
-            }
-            if (!results.ambiguities().isEmpty()) {
-                for (Set<PronounSet> ambiguity : results.ambiguities()) {
-                    errorMessages = errorMessages.append(
-                        fmt.formatMain("Ambiguous set detected, assuming you meant ")
-                            .append(fmt.formatAccent(ambiguity.stream().findFirst().orElseThrow().toString()))
-                            .append(fmt.formatMain("."))
-                            .append(Component.newline())
-                    );
-                }
-            }
-            // todo error message for failed sets
+        Pair<Set<PronounSet>, Component> result = parse(setList, fmt);
+        Set<PronounSet> newSets = result.key();
+        Component errorMessages = result.value();
+
+        if (!newSets.isEmpty()) {
+            pl.getPronounHandler().setUserPronouns(player, newSets);
+            errorMessages = errorMessages.append(fmt.getPrefix()
+                .append(fmt.formatMain("Set pronouns to "))
+                .append(fmt.formatAccent(PronounSet.format(newSets)))
+            );
         }
-
-        pl.getPronounHandler().setUserPronouns(player, newSets);
-        return errorMessages.append(fmt.getPrefix()
-            .append(fmt.formatMain("Set pronouns to "))
-            .append(fmt.formatAccent(PronounSet.format(newSets)))
-        );
+        return errorMessages;
     }
 }

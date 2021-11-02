@@ -25,11 +25,12 @@ import net.lucypoulton.pronouns.api.provider.PronounProvider;
 import net.lucypoulton.pronouns.api.set.ParsedPronounSet;
 import net.lucypoulton.pronouns.api.set.PronounSet;
 import net.lucypoulton.pronouns.api.set.SpecialPronounSet;
-import net.lucypoulton.pronouns.provider.BuiltinPronounProvider;
-import net.lucypoulton.pronouns.provider.CloudPronounProvider;
 import net.lucypoulton.pronouns.storage.Storage;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
+import net.lucypoulton.squirtgun.platform.event.EventHandler;
+import net.lucypoulton.squirtgun.platform.event.PluginReloadEvent;
 import net.lucypoulton.squirtgun.util.Pair;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,13 +38,15 @@ import java.util.IdentityHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toUnmodifiableSet;
+import static java.util.stream.Collectors.toSet;
 
 public class PronounHandlerImpl implements PronounHandler {
     private final Storage storage;
+    private final List<Pattern> filterPatterns = new ArrayList<>();
 
     public Storage getStorage() {
         return storage;
@@ -55,10 +58,19 @@ public class PronounHandlerImpl implements PronounHandler {
     public PronounHandlerImpl(ProNouns pl, Storage storage) {
         this.pl = pl;
         this.storage = storage;
+        pl.getPlatform().getEventManager().register(EventHandler.executes(PluginReloadEvent.class, e -> reloadFilterPatterns()));
+        reloadFilterPatterns();
+    }
+
+    private void reloadFilterPatterns() {
+        filterPatterns.clear();
+        for (String pattern : pl.getConfigHandler().getFilterPatterns()) {
+            filterPatterns.add(Pattern.compile(pattern));
+        }
     }
 
     @Override
-    public void setUserPronouns(SquirtgunPlayer player, Set<PronounSet> set) {
+    public void setUserPronouns(SquirtgunPlayer player, @NotNull Set<PronounSet> set) {
         if (pl.getPlatform().getEventManager().dispatch(new SetPronounsEvent(player, set)).successful()) {
 
             storage.setPronouns(player.getUuid(),
@@ -68,11 +80,11 @@ public class PronounHandlerImpl implements PronounHandler {
 
     @Override
     public Set<PronounSet> getAllPronouns() {
-        return providers.stream().flatMap(x -> x.get().stream()).collect((toUnmodifiableSet()));
+        return providers.stream().flatMap(x -> x.get().stream()).collect((toSet()));
     }
 
     @Override
-    public Set<PronounSet> getPronouns(SquirtgunPlayer player) {
+    public @NotNull Set<PronounSet> getPronouns(SquirtgunPlayer player) {
         return storage.getPronouns(player.getUuid()).stream()
             .map(this::parse)
             .flatMap(result -> result.results().stream())
@@ -96,11 +108,15 @@ public class PronounHandlerImpl implements PronounHandler {
         return i;
     }
 
-    public ParseResult parse(String input) {
-        return parseSplit(StringUtils.splitSet(input));
-    }
+    @Override
+    public ParseResult parse(String input, boolean enforceFilter) {
+        final List<String> split = StringUtils.splitSet(input);
 
-    private ParseResult parseSplit(List<String> split) {
+        if (enforceFilter && filterPatterns.stream().anyMatch(pattern -> pattern.matcher(input).find())) {
+            return new ParseResult(false, Set.of(), List.of(),
+                pl.getConfigHandler().formatMain("You can't use that set."));
+        }
+
         final Set<PronounSet> out = new LinkedHashSet<>();
 
         int i = 0;

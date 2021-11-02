@@ -19,8 +19,6 @@
 package net.lucypoulton.pronouns.storage;
 
 import com.google.common.collect.SetMultimap;
-import net.lucypoulton.pronouns.api.set.PronounSet;
-import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 
 import java.util.Set;
 import java.util.UUID;

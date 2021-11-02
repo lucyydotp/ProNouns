@@ -40,8 +40,8 @@ public class JoinLeaveListener implements EventListener {
     }
 
     private final List<EventHandler<?>> handlers = List.of(
-        new EventHandler.Builder<PlayerJoinEvent>().eventType(PlayerJoinEvent.class).handle(this::onJoin).build(),
-        new EventHandler.Builder<PlayerLeaveEvent>().eventType(PlayerLeaveEvent.class).handle(this::onLeave).build()
+        EventHandler.executes(PlayerJoinEvent.class, this::onJoin),
+        EventHandler.executes(PlayerLeaveEvent.class, this::onLeave)
     );
 
     @Override

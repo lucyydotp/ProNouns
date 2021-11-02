@@ -20,7 +20,6 @@ package net.lucypoulton.pronouns.command;
 
 import net.lucypoulton.pronouns.ProNouns;
 import net.lucypoulton.pronouns.api.set.PronounSet;
-import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.squirtgun.command.argument.CommandArgument;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.context.CommandContext;
@@ -31,7 +30,6 @@ import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;

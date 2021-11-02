@@ -7,7 +7,6 @@ import net.lucypoulton.pronouns.api.set.PronounSet;
 import net.lucypoulton.pronouns.provider.CloudPronounProvider;
 import net.lucypoulton.squirtgun.platform.event.EventHandler;
 import net.lucypoulton.squirtgun.platform.event.EventListener;
-import net.lucypoulton.squirtgun.platform.event.EventPriority;
 import net.lucypoulton.squirtgun.platform.scheduler.Task;
 
 import java.util.List;
@@ -17,7 +16,6 @@ public class CloudUploadListener implements EventListener {
 
     private final ProNouns plugin;
     private final CloudPronounProvider cloudPronounProvider;
-    private final Gson gson = new Gson();
 
     public CloudUploadListener(ProNouns plugin, CloudPronounProvider cloudPronounProvider) {
         this.plugin = plugin;
@@ -35,10 +33,8 @@ public class CloudUploadListener implements EventListener {
     }
 
     private final List<EventHandler<?>> handlers = List.of(
-        new EventHandler<>(SetPronounsEvent.class,
-            EventPriority.NORMAL,
-            true,
-            this::onSet));
+        EventHandler.builder(SetPronounsEvent.class).executeOnCancel().handle(this::onSet).build()
+    );
 
     @Override
     public List<EventHandler<?>> handlers() {

@@ -5,6 +5,7 @@ import net.lucypoulton.pronouns.api.PronounHandler;
 import net.lucypoulton.pronouns.command.*;
 import net.lucypoulton.pronouns.config.ConfigHandler;
 import net.lucypoulton.pronouns.listener.CloudUploadListener;
+import net.lucypoulton.pronouns.listener.FilteredSetAttemptListener;
 import net.lucypoulton.pronouns.listener.JoinLeaveListener;
 import net.lucypoulton.pronouns.provider.BuiltinPronounProvider;
 import net.lucypoulton.pronouns.provider.CloudPronounProvider;
@@ -14,6 +15,8 @@ import net.lucypoulton.squirtgun.command.node.NodeBuilder;
 import net.lucypoulton.squirtgun.command.node.PluginInfoNode;
 import net.lucypoulton.squirtgun.command.node.subcommand.SubcommandNode;
 import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
+import net.lucypoulton.squirtgun.platform.event.EventHandler;
+import net.lucypoulton.squirtgun.platform.event.PluginReloadEvent;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.lucypoulton.squirtgun.update.PolymartUpdateChecker;
 import net.kyori.adventure.text.event.ClickEvent;
@@ -69,6 +72,7 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
         pronounHandler.registerProvider(provider);
 
         getPlatform().getEventManager().register(new CloudUploadListener(this, provider));
+        getPlatform().getEventManager().register(EventHandler.executes(PluginReloadEvent.class, e -> getPlatform().reloadConfig()));
 
         final CommandNode<PermissionHolder> rootNode = SubcommandNode.withHelp("pronouns",
                 "ProNouns root command",
@@ -86,9 +90,8 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
                         .description("Reloads the plugin.")
                         .condition(Condition.hasPermission("pronouns.admin"))
                         .executes(x -> {
-                            getPlatform().reloadConfig();
-                            return x.getFormat().getPrefix()
-                                    .append(x.getFormat().formatMain("Reloaded"));
+                            reload();
+                            return x.getFormat().getPrefix().append(x.getFormat().formatMain("Reloaded"));
                         }).build()
         );
         getPlatform().registerCommand(rootNode, getConfigHandler());
@@ -107,6 +110,7 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
         }
 
         getPlatform().getEventManager().register(new JoinLeaveListener(this));
+        getPlatform().getEventManager().register(new FilteredSetAttemptListener(this.getPlatform()));
     }
 
     public PronounHandler getPronounHandler() {

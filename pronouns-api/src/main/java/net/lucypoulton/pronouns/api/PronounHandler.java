@@ -21,9 +21,8 @@ package net.lucypoulton.pronouns.api;
 import net.kyori.adventure.text.Component;
 import net.lucypoulton.pronouns.api.provider.PronounProvider;
 import net.lucypoulton.pronouns.api.set.PronounSet;
-import net.lucypoulton.pronouns.api.set.old.UnsetPronounSet;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
-import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -42,7 +41,7 @@ public interface PronounHandler {
      * @param player the player to set pronouns for
      * @param set  the pronouns to set
      */
-    void setUserPronouns(SquirtgunPlayer player, Set<PronounSet> set);
+    void setUserPronouns(SquirtgunPlayer player, @NotNull Set<PronounSet> set);
 
     /**
      * Gets a list of all current pronoun sets in use by players.
@@ -52,11 +51,11 @@ public interface PronounHandler {
     Set<PronounSet> getAllPronouns();
 
     /**
-     * Gets a user's pronouns, or an {@link UnsetPronounSet} if they haven't specified any.
+     * Gets a user's pronouns. If none have been specified, a {@link net.lucypoulton.pronouns.api.set.SpecialPronounSet} indicating this will be returned.
      *
      * @return the user's pronouns
      */
-    Set<PronounSet> getPronouns(SquirtgunPlayer player);
+    @NotNull Set<PronounSet> getPronouns(SquirtgunPlayer player);
 
     /**
     /**
@@ -71,7 +70,17 @@ public interface PronounHandler {
      *
      * @return the parsed sets
      */
-    ParseResult parse(String input);
+    default ParseResult parse(String input) {
+        return parse(input, true);
+    }
+
+    /**
+     * Parses a string into a collection of pronoun sets. Appropriate for use in commands.
+     *
+     * @param enforceFilter whether to enforce the filter
+     * @return the parsed sets
+     */
+    ParseResult parse(String input, boolean enforceFilter);
 
     /**
      * Registers a {@link PronounProvider} so its pronoun sets can be used.

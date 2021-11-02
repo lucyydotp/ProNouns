@@ -20,8 +20,6 @@ package net.lucypoulton.pronouns.bukkit;
 
 import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.SetMultimap;
-import net.lucypoulton.pronouns.api.set.PronounSet;
-import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.pronouns.storage.Storage;
 import net.lucypoulton.squirtgun.util.UuidUtils;
 import org.bukkit.configuration.file.FileConfiguration;

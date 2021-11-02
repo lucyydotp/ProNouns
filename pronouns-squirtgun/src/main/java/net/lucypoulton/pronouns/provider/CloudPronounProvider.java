@@ -97,7 +97,7 @@ public class CloudPronounProvider implements PronounProvider {
         try {
             String body = gson.toJson(Map.of(
                 "set", set.toString(),
-                "source", plugin.getPluginName() + " " + plugin.getPluginVersion()
+                "source", plugin.getPluginName() + " " + plugin.getPluginVersion() + " (" + plugin.getPlatform().name() + ")"
             ));
 
             HttpRequest request = HttpRequest.newBuilder()

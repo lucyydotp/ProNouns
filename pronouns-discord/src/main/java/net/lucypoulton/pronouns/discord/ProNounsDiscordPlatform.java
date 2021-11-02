@@ -2,7 +2,6 @@ package net.lucypoulton.pronouns.discord;
 
 import net.lucypoulton.pronouns.ProNounsPlatform;
 import net.lucypoulton.pronouns.api.set.PronounSet;
-import net.lucypoulton.pronouns.api.set.old.OldPronounSet;
 import net.lucypoulton.pronouns.config.ConfigHandler;
 import net.lucypoulton.pronouns.storage.Storage;
 import net.dv8tion.jda.api.JDA;

@@ -4,6 +4,7 @@ import net.lucypoulton.pronouns.api.StringUtils;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public abstract class PronounSet {
@@ -44,6 +45,11 @@ public abstract class PronounSet {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof PronounSet && toString().equals(obj.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash((Object[]) asArray());
     }
 
     public static PronounSet parse(String input) {
