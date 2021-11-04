@@ -18,6 +18,7 @@
 
 package net.lucypoulton.pronouns;
 
+import net.kyori.adventure.text.event.ClickEvent;
 import net.lucypoulton.pronouns.api.PronounHandler;
 import net.lucypoulton.pronouns.api.SetPronounsEvent;
 import net.lucypoulton.pronouns.api.StringUtils;
@@ -26,6 +27,7 @@ import net.lucypoulton.pronouns.api.set.ParsedPronounSet;
 import net.lucypoulton.pronouns.api.set.PronounSet;
 import net.lucypoulton.pronouns.api.set.SpecialPronounSet;
 import net.lucypoulton.pronouns.storage.Storage;
+import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
 import net.lucypoulton.squirtgun.platform.event.EventHandler;
 import net.lucypoulton.squirtgun.platform.event.PluginReloadEvent;
@@ -158,7 +160,17 @@ public class PronounHandlerImpl implements PronounHandler {
             out.add(potentialSets.stream().findFirst().orElseThrow());
         }
 
-        return new ParseResult(!out.isEmpty(), out, ambiguities, null);
+        if (out.isEmpty()) {
+            final FormatProvider fmt = pl.getConfigHandler();
+            return new ParseResult(false, out, ambiguities,
+                fmt.formatMain("Unrecognised pronoun ")
+                    .append(fmt.formatAccent(input))
+                    .append(fmt.formatMain(". Click here for help.")
+                        .clickEvent(ClickEvent.openUrl("https://docs.lucypoulton.net/pronouns/formats/#setting-your-pronouns"))
+                    )
+            );
+        }
+        return new ParseResult(true, out, ambiguities, null);
     }
 
     @Override

@@ -28,7 +28,6 @@ subprojects {
         maven("https://papermc.io/repo/repository/maven-public/")
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         mavenCentral()
-        mavenLocal() // FOR TESTING ONLY - TODO REMOVE
     }
 
     dependencies {

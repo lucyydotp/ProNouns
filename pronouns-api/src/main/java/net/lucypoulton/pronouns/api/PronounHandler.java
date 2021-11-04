@@ -91,7 +91,7 @@ public interface PronounHandler {
     void registerProvider(PronounProvider provider);
 
     /**
-     * TODO javadoc
+     * The result of an attempt to parse a string to a set of pronoun sets.
      */
     class ParseResult {
 
@@ -108,22 +108,38 @@ public interface PronounHandler {
             this.reason = reason;
         }
 
+        /**
+         * Whether the set could (at least partially) successfully be parsed into sets.
+         * When this is true, {@link #results()} will not be empty.
+         */
         public boolean success() {
             return success;
         }
 
+        /**
+         * Inverse of {@link #success()}
+         */
         public boolean failure() {
             return !success();
         }
 
-        public Set<PronounSet> results() {
+        /**
+         * The pronoun sets that the input was parsed into.
+         */
+        public @NotNull Set<PronounSet> results() {
             return results;
         }
 
-        public List<Set<PronounSet>> ambiguities() {
+        /**
+         * A list of sets derived from an ambiguous input.
+         */
+        public @NotNull List<Set<PronounSet>> ambiguities() {
             return ambiguities;
         }
 
+        /**
+         * The reason for failure, if provided. When {@link #success()} is true, this will return null.
+         */
         public @Nullable Component reason() {
             return reason;
         }
