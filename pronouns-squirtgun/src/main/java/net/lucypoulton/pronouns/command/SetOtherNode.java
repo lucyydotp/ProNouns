@@ -65,9 +65,10 @@ public class SetOtherNode extends AbstractNode<PermissionHolder> {
         Component errorMessages = result.value();
 
         if (!newSets.isEmpty()) {
-            pl.getPronounHandler().setUserPronouns(context.getArgumentValue(playerArg), newSets);
+            SquirtgunPlayer player = Objects.requireNonNull(context.getArgumentValue(playerArg));
+            pl.getPronounHandler().setUserPronouns(player, newSets);
             errorMessages = errorMessages.append(fmt.getPrefix()
-                .append(fmt.formatMain("Set pronouns to "))
+                .append(fmt.formatMain("Set " + player.getUsername() + "'s pronouns to "))
                 .append(fmt.formatAccent(PronounSet.format(newSets)))
             );
         }

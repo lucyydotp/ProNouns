@@ -19,6 +19,7 @@
 package net.lucypoulton.pronouns.command;
 
 import com.google.common.collect.ImmutableList;
+import net.kyori.adventure.text.Component;
 import net.lucypoulton.pronouns.api.PronounHandler;
 import net.lucypoulton.pronouns.api.set.PronounSet;
 import net.lucypoulton.squirtgun.command.argument.CommandArgument;
@@ -30,44 +31,47 @@ import net.lucypoulton.squirtgun.format.FormatProvider;
 import net.lucypoulton.squirtgun.platform.Platform;
 import net.lucypoulton.squirtgun.platform.audience.PermissionHolder;
 import net.lucypoulton.squirtgun.platform.audience.SquirtgunPlayer;
-import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 public class ShowPronounsNode extends AbstractNode<PermissionHolder> {
-	private final PronounHandler handler;
-	private final CommandArgument<SquirtgunPlayer> playerArgument;
+    private final PronounHandler handler;
+    private final CommandArgument<SquirtgunPlayer> playerArgument;
 
-	public ShowPronounsNode(Platform platform, PronounHandler handler) {
-		super("show", "Shows your, or another player's, pronouns.", Condition.alwaysTrue());
-		this.handler = handler;
-		playerArgument = new OnlinePlayerArgument("player", "the player to get pronouns for",
-				true, platform);
-	}
+    public ShowPronounsNode(Platform platform, PronounHandler handler) {
+        super("show", "Shows your, or another player's, pronouns.", Condition.alwaysTrue());
+        this.handler = handler;
+        playerArgument = new OnlinePlayerArgument("player", "the player to get pronouns for",
+            true, platform);
+    }
 
-	@Override
-	public @NotNull List<CommandArgument<?>> getArguments() {
-		return ImmutableList.of(playerArgument);
-	}
+    @Override
+    public @NotNull List<CommandArgument<?>> getArguments() {
+        return ImmutableList.of(playerArgument);
+    }
 
-	@Override
-	public Component execute(CommandContext context) {
-		final FormatProvider fmt = context.getFormat();
+    @Override
+    public Component execute(CommandContext context) {
+        final FormatProvider fmt = context.getFormat();
 
-		SquirtgunPlayer commandTarget = context.getArgumentValue(playerArgument);
+        SquirtgunPlayer commandTarget = context.getArgumentValue(playerArgument);
 
-		if (commandTarget == null) {
-			if (!(context.getTarget() instanceof SquirtgunPlayer)) {
-				return fmt.getPrefix().append(fmt.formatMain("That player could not be found."));
-			}
-			commandTarget = (SquirtgunPlayer) context.getTarget();
-		}
+        if (commandTarget == null) {
+            if (!(context.getTarget() instanceof SquirtgunPlayer)) {
+                return fmt.getPrefix().append(fmt.formatMain("That player could not be found."));
+            }
+            commandTarget = (SquirtgunPlayer) context.getTarget();
+        }
 
-		return fmt.getPrefix()
-				.append(fmt.formatMain(commandTarget.getUsername() + "'s pronouns are "))
-				.append(fmt.formatAccent(
-						PronounSet.format(handler.getPronouns(commandTarget)))
-				);
-	}
+        Set<PronounSet> sets = handler.getPronouns(commandTarget);
+
+        return fmt.getPrefix()
+            .append(fmt.formatMain(commandTarget.getUsername() + "'s pronouns are "))
+            .append(fmt.formatAccent(
+                sets.isEmpty() ? "unset" : PronounSet.format(sets)
+            ));
+    }
 }
