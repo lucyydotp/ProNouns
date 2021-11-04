@@ -16,4 +16,8 @@ public interface ConfigHandler extends FormatProvider {
     boolean checkForUpdates();
 
     ConnectionType getConnectionType();
+
+    boolean shouldSyncWithCloud();
+
+    boolean shouldUploadToCloud();
 }

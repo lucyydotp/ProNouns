@@ -23,6 +23,9 @@ public class CloudUploadListener implements EventListener {
     }
 
     private void onSet(SetPronounsEvent e) {
+        if (!plugin.getConfigHandler().shouldUploadToCloud()) {
+            return;
+        }
         Set<PronounSet> all = plugin.getPronounHandler().getAllPronouns();
         for (PronounSet set : e.getSet()) {
             if (!all.contains(set)) {

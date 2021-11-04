@@ -14,7 +14,8 @@ public class BuiltinPronounProvider implements PronounProvider {
         PronounSet.parse("he/him/he's/his/his/himself"),
         PronounSet.parse("she/her/she's/her/hers/herself"),
         new SpecialPronounSet(baseSet, "Any", "Any"),
-        new SpecialPronounSet(baseSet, "Ask", "Ask")
+        new SpecialPronounSet(baseSet, "Ask", "Ask"),
+        new SpecialPronounSet(baseSet, "Unset", "Unset")
     );
 
     @Override

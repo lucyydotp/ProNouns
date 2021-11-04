@@ -24,6 +24,7 @@ import net.lucypoulton.pronouns.api.set.PronounSet;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Set;
 
@@ -81,7 +82,7 @@ public class ProNounsPapi extends PlaceholderExpansion {
 
         switch (ident) {
             case "pronouns":
-                feedback = PronounSet.format(allSets);
+                feedback = PronounSet.format(allSets.size() == 0 ? Collections.singleton(unsetPronounSet) : allSets);
                 break;
             case "all":
                 feedback = mainPronouns.toString();

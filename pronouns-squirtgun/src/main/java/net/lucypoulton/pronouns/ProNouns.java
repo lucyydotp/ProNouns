@@ -1,8 +1,18 @@
 package net.lucypoulton.pronouns;
 
 import com.google.common.io.CharStreams;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.lucypoulton.pronouns.api.PronounHandler;
-import net.lucypoulton.pronouns.command.*;
+import net.lucypoulton.pronouns.command.ClearOtherNode;
+import net.lucypoulton.pronouns.command.ClearPronounsNode;
+import net.lucypoulton.pronouns.command.ListPronounsNode;
+import net.lucypoulton.pronouns.command.PreviewNode;
+import net.lucypoulton.pronouns.command.SetOtherNode;
+import net.lucypoulton.pronouns.command.SetPronounsNode;
+import net.lucypoulton.pronouns.command.ShowPronounsNode;
+import net.lucypoulton.pronouns.command.cloud.CloudInfoNode;
+import net.lucypoulton.pronouns.command.cloud.CloudSyncNode;
 import net.lucypoulton.pronouns.config.ConfigHandler;
 import net.lucypoulton.pronouns.listener.CloudUploadListener;
 import net.lucypoulton.pronouns.listener.FilteredSetAttemptListener;
@@ -19,8 +29,6 @@ import net.lucypoulton.squirtgun.platform.event.EventHandler;
 import net.lucypoulton.squirtgun.platform.event.PluginReloadEvent;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.lucypoulton.squirtgun.update.PolymartUpdateChecker;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.format.TextDecoration;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -75,36 +83,42 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
         getPlatform().getEventManager().register(EventHandler.executes(PluginReloadEvent.class, e -> getPlatform().reloadConfig()));
 
         final CommandNode<PermissionHolder> rootNode = SubcommandNode.withHelp("pronouns",
-                "ProNouns root command",
-                Condition.alwaysTrue(),
-                new SetPronounsNode(this),
-                new ShowPronounsNode(getPlatform(), getPronounHandler()),
-                new PreviewNode(this),
-                new ClearPronounsNode(pronounHandler),
-                new ListPronounsNode(pronounHandler),
-                new PluginInfoNode("version", this),
-                new SetOtherNode(this),
-                new ClearOtherNode(this),
-                new NodeBuilder<>()
-                        .name("reload")
-                        .description("Reloads the plugin.")
-                        .condition(Condition.hasPermission("pronouns.admin"))
-                        .executes(x -> {
-                            reload();
-                            return x.getFormat().getPrefix().append(x.getFormat().formatMain("Reloaded"));
-                        }).build()
+            "ProNouns root command",
+            Condition.alwaysTrue(),
+            new SetPronounsNode(this),
+            new ShowPronounsNode(getPlatform(), getPronounHandler()),
+            new PreviewNode(this),
+            new ClearPronounsNode(pronounHandler),
+            new ListPronounsNode(pronounHandler),
+            new PluginInfoNode("version", this),
+            new SetOtherNode(this),
+            new ClearOtherNode(this),
+            new NodeBuilder<>()
+                .name("reload")
+                .description("Reloads the plugin.")
+                .condition(Condition.hasPermission("pronouns.admin"))
+                .executes(x -> {
+                    reload();
+                    return x.getFormat().getPrefix().append(x.getFormat().formatMain("Reloaded"));
+                }).build(),
+            SubcommandNode.withHelp("cloud",
+                "Cloud admin commands",
+                Condition.hasPermission("pronouns.cloud"),
+                new CloudInfoNode(provider),
+                new CloudSyncNode(provider, getConfigHandler())
+            )
         );
         getPlatform().registerCommand(rootNode, getConfigHandler());
 
         if (getConfigHandler().checkForUpdates()) {
             new PolymartUpdateChecker(this,
-                    921,
-                    getConfigHandler().getPrefix()
-                            .append(getConfigHandler().formatMain("A new version of ProNouns is available!\nFind it at "))
-                            .append(getConfigHandler().formatAccent("https://lucyy.me/pronouns",
-                                    new TextDecoration[]{TextDecoration.UNDERLINED})
-                                    .clickEvent(ClickEvent.openUrl("https://lucyy.me/pronouns"))),
-                    "pronouns.admin");
+                921,
+                getConfigHandler().getPrefix()
+                    .append(getConfigHandler().formatMain("A new version of ProNouns is available!\nFind it at "))
+                    .append(getConfigHandler().formatAccent("https://lucyy.me/pronouns",
+                            new TextDecoration[]{TextDecoration.UNDERLINED})
+                        .clickEvent(ClickEvent.openUrl("https://lucyy.me/pronouns"))),
+                "pronouns.admin");
         } else {
             getPlatform().getLogger().warning("Update checking is disabled. You might be running an old version!");
         }

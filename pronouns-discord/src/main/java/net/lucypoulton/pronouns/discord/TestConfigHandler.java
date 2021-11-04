@@ -78,6 +78,16 @@ public class TestConfigHandler implements ConfigHandler {
     }
 
     @Override
+    public boolean shouldSyncWithCloud() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldUploadToCloud() {
+        return false;
+    }
+
+    @Override
     public Component formatMain(@NotNull String input, @NotNull TextDecoration[] formatters) {
         return DiscordFormatProvider.INSTANCE.formatMain(input, formatters);
     }

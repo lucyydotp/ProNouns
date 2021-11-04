@@ -77,7 +77,7 @@ public interface PronounHandler {
     /**
      * Parses a string into a collection of pronoun sets. Appropriate for use in commands.
      *
-     * @param enforceFilter whether to enforce the filter
+     * @param enforceFilter whether to enforce the filter. Note that this field is ignored if the filter is disabled.
      * @return the parsed sets
      */
     ParseResult parse(String input, boolean enforceFilter);

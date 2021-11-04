@@ -21,7 +21,7 @@ import java.util.Set;
 
 public class CloudPronounProvider implements PronounProvider {
 
-    private static class DatabaseFile {
+    public static class DatabaseFile {
         public String source;
         public Date updatedAt;
         public Set<PronounSet> sets;
@@ -52,7 +52,6 @@ public class CloudPronounProvider implements PronounProvider {
         this.plugin = plugin;
         dataFilePath = plugin.getPlatform().getConfigPath(plugin).resolve("cloud.json");
         update();
-        reload();
     }
 
     public void reload() {
@@ -76,6 +75,9 @@ public class CloudPronounProvider implements PronounProvider {
      * Updates the stored list. This method blocks while it makes HTTP requests.
      */
     public void update() {
+        if (!plugin.getConfigHandler().shouldSyncWithCloud()) {
+            return;
+        }
         try {
             plugin.getPlatform().getLogger().info("Updating the cloud database...");
             HttpRequest request = HttpRequest.newBuilder()
@@ -91,6 +93,8 @@ public class CloudPronounProvider implements PronounProvider {
             plugin.getPlatform().getLogger().warning("There was an issue trying to update the cloud database: "
                 + e.getMessage());
         }
+
+        reload();
     }
 
     public void submit(PronounSet set) {
@@ -121,5 +125,9 @@ public class CloudPronounProvider implements PronounProvider {
     @Override
     public Set<PronounSet> get() {
         return dataFileContent.sets;
+    }
+
+    public DatabaseFile getDatabase() {
+        return dataFileContent;
     }
 }

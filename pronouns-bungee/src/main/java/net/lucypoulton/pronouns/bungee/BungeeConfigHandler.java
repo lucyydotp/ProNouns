@@ -125,12 +125,30 @@ public class BungeeConfigHandler implements ConfigHandler {
         return cfg.getStringList("filter.patterns");
     }
 
-    public boolean filterEnabled() {
-        return !"false".equals(cfg.getString("filter.enabled"));
-    }
-
     public ConnectionType getConnectionType() {
         return ConnectionType.valueOf(getString("connection").toUpperCase());
+    }
+
+    private boolean getBoolValue(String key) {
+        return !"false".equals(cfg.getString(key, "true"));
+    }
+
+    public boolean filterEnabled() {
+        return getBoolValue("filter.enabled");
+    }
+
+    public boolean checkForUpdates() {
+        return getBoolValue("checkForUpdates");
+    }
+
+    @Override
+    public boolean shouldSyncWithCloud() {
+        return getBoolValue("cloud.sync");
+    }
+
+    @Override
+    public boolean shouldUploadToCloud() {
+        return getBoolValue("cloud.upload");
     }
 
     public SqlInfoContainer getSqlConnectionData() {
@@ -141,9 +159,5 @@ public class BungeeConfigHandler implements ConfigHandler {
                 getString("mysql.username"),
                 getString("mysql.password")
         );
-    }
-
-    public boolean checkForUpdates() {
-        return !"false".equals(cfg.getString("checkForUpdates"));
     }
 }

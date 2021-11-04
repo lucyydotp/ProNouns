@@ -41,12 +41,12 @@ public class BukkitConfigHandler implements ConfigHandler {
         FileConfiguration cfg = pl.getConfig();
         cfg.options().copyDefaults(true);
         cfg.options().header("ProNouns Config File\n" +
-                "Make changes here and update them by either using /pronouns reload\n" +
+                "Make changes here and update them by either using /pn reload\n" +
                 "or by restarting the server\n" +
                 "NOTE: if you're using predefined sets with MySQL, make sure they match on\n" +
                 "all servers!\n" +
-                "Documentation at https://docs.lucyy.me/pronouns\n" +
-                "Support discord at https://support.lucyy.me");
+                "Documentation at https://docs.lucypoulton.net/pronouns\n" +
+                "Support discord at https://discord.lucypoulton.net");
 
         cfg.addDefault("checkForUpdates", "true");
         cfg.addDefault("accent", "{#fa9efa>}%s{#9dacfa<}");
@@ -63,6 +63,9 @@ public class BukkitConfigHandler implements ConfigHandler {
 
         cfg.addDefault("filter.enabled", "true");
         cfg.addDefault("filter.patterns", new String[]{"apache+", "hel+icop+ter"});
+
+        cfg.addDefault("cloud.sync", true);
+        cfg.addDefault("cloud.upload", true);
 
         pl.saveConfig();
 
@@ -128,6 +131,10 @@ public class BukkitConfigHandler implements ConfigHandler {
         return TextFormatter.format(getString("format.prefix"));
     }
 
+    private boolean getBoolValue(String key) {
+        return !"false".equals(getString(key, "true"));
+    }
+
     public List<String> getPredefinedSets() {
         return pl.getConfig().getStringList("predefinedSets");
     }
@@ -137,11 +144,21 @@ public class BukkitConfigHandler implements ConfigHandler {
     }
 
     public boolean filterEnabled() {
-        return !"false".equals(pl.getConfig().getString("filter.enabled"));
+        return getBoolValue("filter.enabled");
     }
 
     public ConnectionType getConnectionType() {
         return ConnectionType.valueOf(getString("connection").toUpperCase());
+    }
+
+    @Override
+    public boolean shouldSyncWithCloud() {
+        return getBoolValue("cloud.sync");
+    }
+
+    @Override
+    public boolean shouldUploadToCloud() {
+        return getBoolValue("cloud.upload");
     }
 
     public SqlInfoContainer getSqlConnectionData() {
@@ -155,6 +172,6 @@ public class BukkitConfigHandler implements ConfigHandler {
     }
 
     public boolean checkForUpdates() {
-        return !"false".equals(pl.getConfig().getString("checkForUpdates"));
+        return getBoolValue("checkForUpdates");
     }
 }

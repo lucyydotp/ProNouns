@@ -112,7 +112,8 @@ public class PronounHandlerImpl implements PronounHandler {
     public ParseResult parse(String input, boolean enforceFilter) {
         final List<String> split = StringUtils.splitSet(input);
 
-        if (enforceFilter && filterPatterns.stream().anyMatch(pattern -> pattern.matcher(input).find())) {
+        if (pl.getConfigHandler().filterEnabled() && enforceFilter
+            && filterPatterns.stream().anyMatch(pattern -> pattern.matcher(input).find())) {
             return new ParseResult(false, Set.of(), List.of(),
                 pl.getConfigHandler().formatMain("You can't use that set."));
         }
