@@ -12,16 +12,15 @@ repositories {
 dependencies {
     implementation(project(":pronouns-api"))
     implementation(project(":pronouns-squirtgun"))
-    implementation("me.lucyy:squirtgun-api:2.0.0-pre5")
-    implementation("me.lucyy:squirtgun-platform-bukkit:2.0.0-pre5")
-    implementation("me.lucyy:squirtgun-commands:2.0.0-pre5")
-    implementation("com.zaxxer:HikariCP:4.0.2")
+    implementation("net.lucypoulton:squirtgun-api:2.0.0-pre7")
+    implementation("net.lucypoulton:squirtgun-platform-bukkit:2.0.0-pre7")
+    implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("org.bstats:bstats-bukkit:2.2.1")
 
     compileOnly("org.spigotmc:spigot-api:1.17-R0.1-SNAPSHOT")
-    compileOnly("net.kyori:adventure-api:4.8.1")
+    compileOnly("net.kyori:adventure-api:4.9.2")
     compileOnly("com.google.guava:guava:30.1.1-jre")
-    compileOnly("org.jetbrains:annotations:13.0")
+    compileOnly("org.jetbrains:annotations:22.0.0")
     compileOnly("me.clip:placeholderapi:2.10.9")
 }
 
@@ -42,11 +41,11 @@ tasks {
             exclude(dependency("com.google..*:.*:.*"))
         }
         // slf4j is transitive from hikari
-        relocate("org.slf4j", "me.lucyy.pronouns.deps.slf4j")
-        relocate("me.lucyy.squirtgun", "me.lucyy.pronouns.deps.squirtgun")
-        relocate("net.kyori", "me.lucyy.pronouns.deps.kyori")
-        relocate("org.bstats", "me.lucyy.pronouns.deps.bstats")
-        relocate("com.zaxxer.hikari", "me.lucyy.pronouns.deps.hikari")
+        relocate("org.slf4j", "net.lucypoulton.pronouns.deps.slf4j")
+        relocate("me.lucyy.squirtgun", "net.lucypoulton.pronouns.deps.squirtgun")
+        relocate("net.kyori", "net.lucypoulton.pronouns.deps.kyori")
+        relocate("org.bstats", "net.lucypoulton.pronouns.deps.bstats")
+        relocate("com.zaxxer.hikari", "net.lucypoulton.pronouns.deps.hikari")
     }
 
     named("build") {

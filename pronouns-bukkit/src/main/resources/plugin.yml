@@ -1,6 +1,6 @@
 name: ProNouns
 version: @version@
-main: me.lucyy.pronouns.bukkit.ProNounsBukkit
+main: net.lucypoulton.pronouns.bukkit.ProNounsBukkit
 api-version: 1.13
 authors: [ __lucyy ]
 description: Putting the "pro" in "pronouns".

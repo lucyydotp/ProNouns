@@ -3,7 +3,10 @@
  */
 
 rootProject.name = "pronouns"
-include(":pronouns-api")
-include(":pronouns-squirtgun")
-include(":pronouns-bukkit")
-include(":pronouns-bungee")
+include(
+    "pronouns-api",
+    "pronouns-squirtgun",
+    "pronouns-bukkit",
+    "pronouns-bungee",
+    "pronouns-discord"
+)

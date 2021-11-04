@@ -116,3 +116,5 @@ run/
 **/build/
 !src/**/build/
 !gradle-wrapper.jar
+
+pronouns.properties
