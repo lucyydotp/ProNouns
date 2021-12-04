@@ -29,6 +29,7 @@ import net.lucypoulton.squirtgun.platform.event.EventHandler;
 import net.lucypoulton.squirtgun.platform.event.PluginReloadEvent;
 import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.lucypoulton.squirtgun.update.PolymartUpdateChecker;
+import net.lucypoulton.squirtgun.util.SemanticVersion;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -40,7 +41,7 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
 
     private PronounHandlerImpl pronounHandler;
 
-    private final String version;
+    private final SemanticVersion version;
 
     public ProNouns(@NotNull ProNounsPlatform platform) {
         super(platform);
@@ -51,7 +52,7 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
             e.printStackTrace();
             version = "ERROR - see console";
         }
-        this.version = version;
+        this.version = SemanticVersion.parse(version);
     }
 
     @Override
@@ -60,7 +61,7 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
     }
 
     @Override
-    public @NotNull String getPluginVersion() {
+    public @NotNull SemanticVersion getPluginVersion() {
         return version;
     }
 

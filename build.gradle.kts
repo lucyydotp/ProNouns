@@ -28,9 +28,11 @@ subprojects {
         maven("https://papermc.io/repo/repository/maven-public/")
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         mavenCentral()
+        // TODO remove this, just gotta let ossrh do its thing for a bit
+        mavenLocal()
     }
 
     dependencies {
-        implementation("net.lucypoulton:squirtgun-api:2.0.0-pre7")
+        implementation("net.lucypoulton:squirtgun-api:2.0.0-pre9")
     }
 }

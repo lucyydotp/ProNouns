@@ -3,7 +3,7 @@ version: @version@
 main: net.lucypoulton.pronouns.bukkit.ProNounsBukkit
 api-version: 1.13
 authors: [ __lucyy ]
-description: Putting the "pro" in "pronouns".
+description: 'Putting the "pro" in "pronouns".'
 website: https://lucyy.me
 softdepend:  [ PlaceholderAPI ]
 commands:
