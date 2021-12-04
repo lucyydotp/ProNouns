@@ -89,12 +89,11 @@ public class CloudPronounProvider implements PronounProvider {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             Files.writeString(dataFilePath, response.body());
             plugin.getPlatform().getLogger().info("Successfully updated the cloud database.");
+            reload();
         } catch (Exception e) {
             plugin.getPlatform().getLogger().warning("There was an issue trying to update the cloud database: "
                 + e.getMessage());
         }
-
-        reload();
     }
 
     public void submit(PronounSet set) {

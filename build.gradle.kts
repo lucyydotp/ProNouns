@@ -6,7 +6,7 @@ plugins {
 }
 
 subprojects {
-    version = "2.0.1"
+    version = "2.0.2"
     group = "net.lucypoulton"
 
     apply<MavenPublishPlugin>()
