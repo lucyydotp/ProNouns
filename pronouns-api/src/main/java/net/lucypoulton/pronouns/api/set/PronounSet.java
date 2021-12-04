@@ -12,6 +12,10 @@ public abstract class PronounSet {
 
     public abstract String objective();
 
+    /**
+     * @deprecated use {@link #isPlural()}
+     */
+    @Deprecated
     public abstract String progressive();
 
     public abstract String possessiveAdjective();
@@ -19,6 +23,8 @@ public abstract class PronounSet {
     public abstract String possessivePronoun();
 
     public abstract String reflexive();
+
+    public abstract boolean isPlural();
 
     public String nameForConcatenation() {
         return subjective();
@@ -32,14 +38,13 @@ public abstract class PronounSet {
     public String toString() {
         return subjective() + "/" +
             objective() + "/" +
-            progressive() + "/" +
             possessiveAdjective() + "/" +
             possessivePronoun() + "/" +
-            reflexive();
+            reflexive() + (isPlural() ? ":p" : "");
     }
 
     public String[] asArray() {
-        return new String[]{subjective(), objective(), progressive(), possessiveAdjective(), possessivePronoun(), reflexive()};
+        return new String[]{subjective(), objective(), possessiveAdjective(), possessivePronoun(), reflexive()};
     }
 
     @Override
@@ -53,11 +58,28 @@ public abstract class PronounSet {
     }
 
     public static PronounSet parse(String input) {
-        List<String> split = StringUtils.splitSet(input);
-        if (split.size() != 6) {
-            throw new IllegalArgumentException("Invalid number of pronouns in set");
+        List<String> split = StringUtils.splitSet(input.replace('\u2019', '\''));
+        if (input.matches(".*[^A-Za-z'/:]+.*")) {
+            throw new IllegalArgumentException("Bad characters in set");
         }
-        return new ParsedPronounSet(split.get(0), split.get(1), split.get(2), split.get(3), split.get(4), split.get(5));
+        switch (split.size()) {
+            case 5:
+                String last = split.get(4);
+                boolean isPlural = false;
+
+                if (split.get(4).contains(":")) {
+                    String[] lastSplit = last.split(":");
+                    last = lastSplit[0];
+                    isPlural = lastSplit[1].equals("p");
+                }
+
+                return new ParsedPronounSet(split.get(0), split.get(1), split.get(2), split.get(3), last, isPlural);
+            case 6:
+                // try to convert the old format by disregarding the bad one and guessing at plurality
+                return new ParsedPronounSet(split.get(0), split.get(1), split.get(3),
+                        split.get(4), split.get(5), split.get(4).endsWith("re"));
+        }
+        throw new IllegalArgumentException("Invalid number of pronouns in set");
     }
 
     public static String format(Collection<PronounSet> sets) {

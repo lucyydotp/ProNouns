@@ -124,15 +124,11 @@ public class PronounHandlerImpl implements PronounHandler {
 
         int i = 0;
 
-        while (split.size() - i >= 6) {
-            out.add(new ParsedPronounSet(split.get(i),
-                split.get(i + 1),
-                split.get(i + 2),
-                split.get(i + 3),
-                split.get(i + 4),
-                split.get(i + 5)
+        while (split.size() - i >= 5) {
+            out.add(PronounSet.parse(
+                    split.stream().skip(i).limit(5).collect(Collectors.joining("/"))
             ));
-            i += 6;
+            i += 5;
         }
 
         final List<Set<PronounSet>> ambiguities = new ArrayList<>();

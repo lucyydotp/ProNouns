@@ -39,6 +39,7 @@ public class SpecialPronounSet extends PronounSet {
     }
 
     @Override
+    @Deprecated
     public String progressive() {
         return parent.progressive();
     }
@@ -56,5 +57,10 @@ public class SpecialPronounSet extends PronounSet {
     @Override
     public String reflexive() {
         return parent.reflexive();
+    }
+
+    @Override
+    public boolean isPlural() {
+        return parent.isPlural();
     }
 }

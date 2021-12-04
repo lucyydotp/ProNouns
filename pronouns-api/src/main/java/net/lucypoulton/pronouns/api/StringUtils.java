@@ -1,5 +1,6 @@
 package net.lucypoulton.pronouns.api;
 
+import com.google.common.base.CharMatcher;
 import com.google.common.base.Splitter;
 
 import java.util.List;

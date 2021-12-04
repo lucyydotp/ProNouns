@@ -8,5 +8,6 @@ include(
     "pronouns-squirtgun",
     "pronouns-bukkit",
     "pronouns-bungee",
-    "pronouns-discord"
+    "pronouns-discord",
+    "pronouns-cloud-server"
 )

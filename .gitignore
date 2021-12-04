@@ -118,3 +118,4 @@ run/
 !gradle-wrapper.jar
 
 pronouns.properties
+config.json
