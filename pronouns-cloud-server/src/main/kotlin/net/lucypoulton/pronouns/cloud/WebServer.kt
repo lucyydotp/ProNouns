@@ -28,10 +28,7 @@ class WebServer(val listHandler: PronounsListHandler) {
             routing {
                 get("/") {
                     call.respondText {
-                        PronounTier.values()
-                            .map(listHandler::getSets)
-                            .flatten()
-                            .joinToString("\n")
+                        listHandler.getSets(PronounTier.EVERYTHING).joinToString("\n")
                     }
                 }
                 post("/api") {

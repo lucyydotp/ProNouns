@@ -119,3 +119,4 @@ run/
 
 pronouns.properties
 config.json
+*.db

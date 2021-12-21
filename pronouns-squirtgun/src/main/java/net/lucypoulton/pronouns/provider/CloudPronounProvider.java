@@ -123,7 +123,7 @@ public class CloudPronounProvider implements PronounProvider {
 
     @Override
     public Set<PronounSet> get() {
-        return dataFileContent.sets;
+        return dataFileContent == null ? Set.of() : dataFileContent.sets;
     }
 
     public DatabaseFile getDatabase() {

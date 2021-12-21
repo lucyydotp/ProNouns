@@ -25,6 +25,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-serialization:$ktorVersion")
 
+    implementation("org.litote.kmongo:kmongo-coroutine-serialization:4.4.0")
     implementation("com.google.guava:guava:31.0.1-jre")
 
     implementation("ch.qos.logback:logback-classic:1.2.7")

@@ -1,9 +1,11 @@
 package net.lucypoulton.pronouns.cloud
 
+import kotlinx.coroutines.runBlocking
 import net.dv8tion.jda.api.EmbedBuilder
 import net.dv8tion.jda.api.JDA
 import net.dv8tion.jda.api.JDABuilder
 import net.dv8tion.jda.api.Permission
+import net.dv8tion.jda.api.entities.Activity
 import net.dv8tion.jda.api.entities.TextChannel
 import net.dv8tion.jda.api.events.ReadyEvent
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent
@@ -40,6 +42,7 @@ class Discord(private val config: Config, private val list: PronounsListHandler)
         instance.addEventListener(object : ListenerAdapter() {
             override fun onReady(event: ReadyEvent) {
                 channel = instance.getTextChannelById(config.channelId)!!
+                instance.presence.activity = Activity.playing("with Lucy's sanity")
             }
 
             override fun onButtonClick(event: ButtonClickEvent) {
@@ -49,29 +52,32 @@ class Discord(private val config: Config, private val list: PronounsListHandler)
                 ) {
                     event.reply("${event.user.name}, you can't use that.").queue()
                 }
+                event.message?.delete()
 
-                // it's a button click event, there's definitely a button
-                val (tierStr, set) = event.button!!.id!!.split('!')
+                runBlocking {
+                    // it's a button click event, there's definitely a button
+                    val (tierStr, set) = event.button!!.id!!.split('!')
 
-                val setParsed = PronounSet.parse(set)
-                if (list.isInQueue(setParsed)) {
-                    event.message?.delete()?.queue()
+                    val setParsed = PronounSet.parse(set)
+                    if (list.isInQueue(setParsed)) {
+                        event.message?.delete()?.queue()
+                    }
+
+                    val embedBuilder = EmbedBuilder()
+                        .setTimestamp(LocalDateTime.now())
+                        .addField("Set", set, false)
+                        .addField("Done by", event.member?.effectiveName, true)
+
+                    if (tierStr == "reject") {
+                        if (list.rejectSet(setParsed)) embedBuilder.setTitle("Set rejected")
+                    } else {
+                        val tier: PronounTier = PronounTier.valueOf(tierStr)
+                        embedBuilder.setTitle("Set accepted")
+                        embedBuilder.addField("Tier", tier.friendlyName, true)
+                        list.acceptSet(setParsed, tier)
+                    }
+                    event.replyEmbeds(embedBuilder.build()).queue()
                 }
-
-                val embedBuilder = EmbedBuilder()
-                    .setTimestamp(LocalDateTime.now())
-                    .addField("Set", set, false)
-                    .addField("Done by", event.member?.effectiveName, true)
-
-                if (tierStr == "reject") {
-                    embedBuilder.setTitle("Set rejected")
-                } else {
-                    val tier: PronounTier = PronounTier.valueOf(tierStr)
-                    embedBuilder.setTitle("Set accepted")
-                    embedBuilder.addField("Tier", tier.friendlyName, true)
-                    list.acceptSet(PronounSet.parse(set), tier)
-                }
-                event.replyEmbeds(embedBuilder.build()).queue()
             }
         })
     }

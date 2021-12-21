@@ -1,43 +1,78 @@
 package net.lucypoulton.pronouns.cloud
 
-import com.google.common.collect.MultimapBuilder
-import com.google.common.collect.SetMultimap
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import net.lucypoulton.pronouns.api.set.PronounSet
+import org.bson.conversions.Bson
+import org.litote.kmongo.coroutine.coroutine
+import org.litote.kmongo.eq
+import org.litote.kmongo.ne
+import org.litote.kmongo.reactivestreams.KMongo
 
 enum class PronounTier(val friendlyName: String) {
     COMMON_SETS("Common sets"),
     ALL_SETS("All sets"),
     EVERYTHING("Everything");
+}
 
+@Serializable
+data class PronounEntry(val set: @Serializable(PronounSerializer::class) PronounSet, val tier: PronounTier)
+
+@Serializable
+data class ModerationQueueEntry(val set: @Serializable(PronounSerializer::class) PronounSet, val source: String)
+
+class PronounSerializer : KSerializer<PronounSet> {
+    override fun deserialize(decoder: Decoder): PronounSet = PronounSet.parse(decoder.decodeString())
+    override fun serialize(encoder: Encoder, value: PronounSet) = encoder.encodeString(value.toString())
+
+    override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("PronounSet", PrimitiveKind.STRING)
 }
 
 class PronounsListHandler {
 
-    // TODO - make this persistent.
-    @Suppress("UnstableApiUsage")
-    val sets: SetMultimap<PronounTier, PronounSet> = MultimapBuilder.hashKeys().hashSetValues().build()
+    private val client = KMongo.createClient().coroutine
+    private val database = client.getDatabase("pronouns")
+    private val entries = database.getCollection<PronounEntry>("pronouns")
+    private val modQueue = database.getCollection<ModerationQueueEntry>("queue")
 
-    private val modQueue = mutableListOf<Pair<PronounSet, String>>()
     private val queueHandlers = mutableSetOf<(PronounSet, String) -> Unit>()
 
     fun addHandler(handler: (PronounSet, String) -> Unit) {
         queueHandlers.add(handler)
     }
 
-    fun acceptSet(set: PronounSet, tier: PronounTier) {
-        modQueue.removeAll { it.first == set }
-        sets.put(tier, set)
+    suspend fun rejectSet(set: PronounSet): Boolean =
+        modQueue.deleteMany(ModerationQueueEntry::set eq set).deletedCount == 0L
+
+
+    suspend fun acceptSet(set: PronounSet, tier: PronounTier) {
+        entries.insertOne(PronounEntry(set, tier))
+        rejectSet(set)
     }
 
-    fun isInQueue(set: PronounSet): Boolean {
-        return modQueue.any { it.first == set }
-    }
+    suspend fun isInQueue(set: PronounSet): Boolean = modQueue
+        .find("{'set':'${set.toString().replace("\'", "\\\'")}'}")
+        .first() != null
 
-    fun addToQueue(set: PronounSet, source: String) {
-        if (modQueue.any { it.first == set } || sets.values().any { it == set }) return
+
+    suspend fun addToQueue(set: PronounSet, source: String) {
+        if (isInQueue(set)) return
+        modQueue.insertOne(ModerationQueueEntry(set, source))
         queueHandlers.forEach { it.invoke(set, source) }
-        modQueue.add(set to source)
     }
 
-    fun getSets(tier: PronounTier): Set<PronounSet> = sets.get(tier)
+    suspend fun getSets(tier: PronounTier): Set<PronounSet> {
+        val filter: Bson? = when (tier) {
+            PronounTier.EVERYTHING -> null
+            PronounTier.COMMON_SETS -> PronounEntry::tier eq PronounTier.COMMON_SETS
+            PronounTier.ALL_SETS -> PronounEntry::tier ne PronounTier.EVERYTHING
+        }
+
+        return entries.find(filter).toList().map { it.set }.toSet()
+    }
 }
