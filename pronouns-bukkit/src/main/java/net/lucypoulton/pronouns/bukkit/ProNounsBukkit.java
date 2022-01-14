@@ -93,9 +93,9 @@ public final class ProNounsBukkit extends JavaPlugin {
                 }
         }
 
+        plugin.onEnable();
+
         this.getServer().getServicesManager().register(PronounHandler.class, plugin.getPronounHandler(),
                 this, ServicePriority.Normal);
-
-        plugin.onEnable();
     }
 }

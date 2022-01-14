@@ -6,7 +6,7 @@ plugins {
 }
 
 subprojects {
-    version = "2.0.2"
+    version = "2.0.3"
     group = "net.lucypoulton"
 
     apply<MavenPublishPlugin>()
@@ -28,8 +28,6 @@ subprojects {
         maven("https://papermc.io/repo/repository/maven-public/")
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         mavenCentral()
-        // TODO remove this, just gotta let ossrh do its thing for a bit
-        mavenLocal()
     }
 
     dependencies {
