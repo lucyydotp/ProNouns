@@ -2,7 +2,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 dependencies {
     implementation(project(":pronouns-api"))
-    implementation("net.lucypoulton:squirtgun-api:2.0.0-pre9")
+    implementation("net.lucypoulton:squirtgun-api:2.0.0-pre9-patch.1-patch.1")
     implementation("com.zaxxer:HikariCP:5.0.0")
 
     implementation("net.kyori:adventure-api:4.9.2")

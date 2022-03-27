@@ -28,9 +28,10 @@ subprojects {
         maven("https://papermc.io/repo/repository/maven-public/")
         maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
         mavenCentral()
+        mavenLocal()
     }
 
     dependencies {
-        implementation("net.lucypoulton:squirtgun-api:2.0.0-pre9")
+        implementation("net.lucypoulton:squirtgun-api:2.0.0-pre9-patch.1")
     }
 }

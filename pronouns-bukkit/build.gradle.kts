@@ -12,8 +12,8 @@ repositories {
 dependencies {
     implementation(project(":pronouns-api"))
     implementation(project(":pronouns-squirtgun"))
-    implementation("net.lucypoulton:squirtgun-api:2.0.0-pre9")
-    implementation("net.lucypoulton:squirtgun-platform-bukkit:2.0.0-pre9")
+    implementation("net.lucypoulton:squirtgun-api:2.0.0-pre9-patch.1")
+    implementation("net.lucypoulton:squirtgun-platform-bukkit:2.0.0-pre9-patch.1")
     implementation("com.zaxxer:HikariCP:5.0.0")
     implementation("org.bstats:bstats-bukkit:2.2.1")
 
