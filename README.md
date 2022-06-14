@@ -6,6 +6,5 @@
 - Custom **player-defined** pronoun sets
 - **MySQL support** for BungeeCord servers
 - It's **really pretty** and supports RGB throughout
-- Plenty of neopronouns predefined using **[ProNouns Cloud](https://pn.lucypoulton.net)**
 - Configurable **regex-based filter** to prevent abuse
 - Available for **Bukkit** and **BungeeCord** (more platforms coming soon!)
