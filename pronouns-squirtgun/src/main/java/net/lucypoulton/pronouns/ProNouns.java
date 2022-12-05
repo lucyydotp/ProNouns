@@ -11,14 +11,10 @@ import net.lucypoulton.pronouns.command.PreviewNode;
 import net.lucypoulton.pronouns.command.SetOtherNode;
 import net.lucypoulton.pronouns.command.SetPronounsNode;
 import net.lucypoulton.pronouns.command.ShowPronounsNode;
-import net.lucypoulton.pronouns.command.cloud.CloudInfoNode;
-import net.lucypoulton.pronouns.command.cloud.CloudSyncNode;
 import net.lucypoulton.pronouns.config.ConfigHandler;
-import net.lucypoulton.pronouns.listener.CloudUploadListener;
 import net.lucypoulton.pronouns.listener.FilteredSetAttemptListener;
 import net.lucypoulton.pronouns.listener.JoinLeaveListener;
 import net.lucypoulton.pronouns.provider.BuiltinPronounProvider;
-import net.lucypoulton.pronouns.provider.CloudPronounProvider;
 import net.lucypoulton.squirtgun.command.condition.Condition;
 import net.lucypoulton.squirtgun.command.node.CommandNode;
 import net.lucypoulton.squirtgun.command.node.NodeBuilder;
@@ -31,7 +27,6 @@ import net.lucypoulton.squirtgun.plugin.SquirtgunPlugin;
 import net.lucypoulton.squirtgun.update.PolymartUpdateChecker;
 import net.lucypoulton.squirtgun.util.SemanticVersion;
 import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -75,12 +70,8 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
     public void onEnable() {
         pronounHandler = new PronounHandlerImpl(this, getPlatform().getStorage());
 
-        CloudPronounProvider provider = new CloudPronounProvider(this);
 
         pronounHandler.registerProvider(new BuiltinPronounProvider());
-        pronounHandler.registerProvider(provider);
-
-        getPlatform().getEventManager().register(new CloudUploadListener(this, provider));
         getPlatform().getEventManager().register(EventHandler.executes(PluginReloadEvent.class, e -> getPlatform().reloadConfig()));
 
         final CommandNode<PermissionHolder> rootNode = SubcommandNode.withHelp("pronouns",
@@ -104,9 +95,7 @@ public class ProNouns extends SquirtgunPlugin<ProNounsPlatform> {
                 }).build(),
             SubcommandNode.withHelp("cloud",
                 "Cloud admin commands",
-                Condition.hasPermission("pronouns.cloud"),
-                new CloudInfoNode(provider),
-                new CloudSyncNode(provider, getConfigHandler())
+                Condition.hasPermission("pronouns.cloud")
             )
         );
         getPlatform().registerCommand(rootNode, getConfigHandler());

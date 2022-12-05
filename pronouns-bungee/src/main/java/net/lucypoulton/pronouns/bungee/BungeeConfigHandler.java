@@ -141,16 +141,6 @@ public class BungeeConfigHandler implements ConfigHandler {
         return getBoolValue("checkForUpdates");
     }
 
-    @Override
-    public boolean shouldSyncWithCloud() {
-        return getBoolValue("cloud.sync");
-    }
-
-    @Override
-    public boolean shouldUploadToCloud() {
-        return getBoolValue("cloud.upload");
-    }
-
     public SqlInfoContainer getSqlConnectionData() {
         return new SqlInfoContainer(
                 getString("mysql.host"),

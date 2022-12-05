@@ -5,19 +5,15 @@ import net.lucypoulton.squirtgun.format.FormatProvider;
 import java.util.List;
 
 public interface ConfigHandler extends FormatProvider {
-    List<String> getPredefinedSets();
+	List<String> getPredefinedSets();
 
-    List<String> getFilterPatterns();
+	List<String> getFilterPatterns();
 
-    boolean filterEnabled();
+	boolean filterEnabled();
 
-    SqlInfoContainer getSqlConnectionData();
+	SqlInfoContainer getSqlConnectionData();
 
-    boolean checkForUpdates();
+	boolean checkForUpdates();
 
-    ConnectionType getConnectionType();
-
-    boolean shouldSyncWithCloud();
-
-    boolean shouldUploadToCloud();
+	ConnectionType getConnectionType();
 }

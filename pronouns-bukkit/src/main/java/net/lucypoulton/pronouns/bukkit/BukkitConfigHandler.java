@@ -64,9 +64,6 @@ public class BukkitConfigHandler implements ConfigHandler {
         cfg.addDefault("filter.enabled", "true");
         cfg.addDefault("filter.patterns", new String[]{"apache+", "hel+icop+ter"});
 
-        cfg.addDefault("cloud.sync", true);
-        cfg.addDefault("cloud.upload", true);
-
         pl.saveConfig();
 
         decoStrings.put(TextDecoration.OBFUSCATED, 'k');
@@ -149,16 +146,6 @@ public class BukkitConfigHandler implements ConfigHandler {
 
     public ConnectionType getConnectionType() {
         return ConnectionType.valueOf(getString("connection").toUpperCase());
-    }
-
-    @Override
-    public boolean shouldSyncWithCloud() {
-        return getBoolValue("cloud.sync");
-    }
-
-    @Override
-    public boolean shouldUploadToCloud() {
-        return getBoolValue("cloud.upload");
     }
 
     public SqlInfoContainer getSqlConnectionData() {
