@@ -1,3 +1,9 @@
+## ProNouns v2.x (this repo) will not be receiving any future updates.
+I'm currently rewriting the plugin over at [lucyydotp/pronouns3](https://github.com/lucyydotp/pronouns3). Please direct any feedback you may have there.
+Support will be offered for the mean time on [Discord](https://discord.lucypoulton.net).
+
+---
+
 **ProNouns** is a plugin aimed at LGBTQ+-friendly servers allowing players to set their pronouns properly. No more faffing with permission groups, no more nicknaming, no more worrying about people with less common pronoun sets!
 
 - Players can **set their pronouns** individually
